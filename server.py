@@ -172,6 +172,31 @@ def _json_quote(s: str) -> str:
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
+def make_server(lite_url: str = DEFAULT_LITE, host: str = "127.0.0.1",
+                port: int = 8123, verbose: bool = False) -> ThreadingHTTPServer:
+    """Build a configured server instance for programmatic use.
+
+    Start it with ``httpd.serve_forever()`` (optionally in a thread) and stop
+    it with ``httpd.shutdown()``.
+    """
+    logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO,
+                        format="%(asctime)s %(levelname)s %(message)s")
+    lite = LiteClient(lite_url)
+    return ThreadingHTTPServer((host, port), make_handler(lite))
+
+
+def serve(lite_url: str = DEFAULT_LITE, host: str = "127.0.0.1",
+          port: int = 8123, verbose: bool = False) -> None:
+    """Run the orchestrator server in the foreground (Ctrl-C to stop)."""
+    httpd = make_server(lite_url, host, port, verbose)
+    print(f"listening on http://{host}:{port} (lite={lite_url})",
+          file=sys.stderr, flush=True)
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Apple Music ALAC decryption service")
     ap.add_argument("--host", default="127.0.0.1")
@@ -182,18 +207,7 @@ def main(argv=None) -> int:
                     help="log per-chunk streaming progress")
     args = ap.parse_args(argv)
 
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
-                        format="%(asctime)s %(levelname)s %(message)s")
-
-    lite = LiteClient(args.lite)
-    handler = make_handler(lite)
-    httpd = ThreadingHTTPServer((args.host, args.port), handler)
-    print(f"listening on http://{args.host}:{args.port} (lite={args.lite})",
-          file=sys.stderr, flush=True)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        pass
+    serve(lite_url=args.lite, host=args.host, port=args.port, verbose=args.verbose)
     return 0
 
 
