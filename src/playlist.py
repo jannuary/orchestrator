@@ -84,7 +84,11 @@ def _alac_sample_rate(playlist) -> Optional[int]:
         return None
 
 
-_QUALITIES = ("alac", "64", "128", "256")
+_QUALITIES = ("hires", "alac", "256", "128", "64")
+
+#: Sample rates above this are treated as hi-res lossless (88.2/96/176.4/192k);
+#: 44.1k/48k are standard lossless.  Mirrors the Apple Music lossless split.
+_ALAC_HIRES_RATE = 48000
 
 
 def _variant_kbps(v) -> Optional[int]:
@@ -111,36 +115,8 @@ def valid_qualities() -> tuple:
     return _QUALITIES
 
 
-def select_alac_media_url(master_url: str, alac_max: int = 192000) -> str:
-    """Resolve a master playlist to its best ALAC media playlist URL.
-
-    This is a thin wrapper over :func:`select_media_url` passing
-    ``quality="alac"``.  If the URL already points at a media playlist, it is
-    returned unchanged.
-    """
-    return select_media_url(master_url, "alac", alac_max=alac_max)
-
-
-def select_media_url(master_url: str, quality: str = "alac",
-                     alac_max: int = 192000) -> str:
-    """Resolve a master playlist to the media playlist for ``quality``.
-
-    ``quality`` selects a variant by its *tier label* rather than its
-    advertised bandwidth:
-
-    * ``"alac"`` (default) -> the best ALAC variant (highest sample rate <=
-      ``alac_max``), mirroring the original behaviour.
-    * a kbps string (``"64"``, ``"128"``, ``"256"``) -> the AAC variant whose
-      tier label matches that bitrate.
-
-    If ``master_url`` already points at a media playlist (not a variant
-    master), it is returned unchanged.
-    """
-    if quality == "":
-        quality = "alac"
-    if quality != "alac" and quality not in _QUALITIES:
-        raise PlaylistError(
-            f"unknown quality {quality!r}; expected one of {list(_QUALITIES)}")
+def _fetch_variants(master_url: str):
+    """Return the master's variant list, or ``None`` if already a media playlist."""
     try:
         with urllib.request.urlopen(master_url, timeout=60) as resp:
             text = resp.read().decode("utf-8", errors="replace")
@@ -148,13 +124,27 @@ def select_media_url(master_url: str, quality: str = "alac",
         raise PlaylistError(f"failed to fetch master playlist {master_url}: {e}") from e
     obj = m3u8.M3U8(text, base_uri=master_url)
     if not obj.is_variant:
-        return master_url
-    variants = list(obj.playlists)
-    if not variants:
-        raise PlaylistError("master playlist has no variants")
+        return None
+    return list(obj.playlists)
 
-    if quality == "alac":
-        candidates = []
+
+def _best_bandwidth(variants):
+    return sorted(
+        variants,
+        key=lambda v: v.stream_info.average_bandwidth
+        or v.stream_info.bandwidth or 0,
+        reverse=True)
+
+
+def _match_quality(variants, quality: str, alac_max: int):
+    """Return the variant for a single quality tier, or ``None`` if absent.
+
+    ``"hires"`` selects a hi-res (``> 48 kHz``) ALAC variant, ``"alac"`` a
+    standard (``<= 48 kHz``) ALAC variant, and the numeric tiers their AAC
+    counterpart by kbps label.
+    """
+    if quality in ("hires", "alac"):
+        cands = []
         for v in variants:
             codecs = getattr(v.stream_info, "codecs", None) or ""
             if codecs != "alac":
@@ -162,19 +152,71 @@ def select_media_url(master_url: str, quality: str = "alac",
             rate = _alac_sample_rate(v)
             if rate is None or rate > alac_max:
                 continue
-            candidates.append(v)
-        if not candidates:
-            raise PlaylistError("master playlist has no suitable ALAC variant")
-        candidates.sort(key=lambda v: v.stream_info.average_bandwidth
-                        or v.stream_info.bandwidth or 0, reverse=True)
-        return urllib.parse.urljoin(master_url, candidates[0].uri)
-
+            if quality == "hires" and rate <= _ALAC_HIRES_RATE:
+                continue
+            if quality == "alac" and rate > _ALAC_HIRES_RATE:
+                continue
+            cands.append(v)
+        if not cands:
+            return None
+        return _best_bandwidth(cands)[0]
     target = int(quality)
     for v in variants:
         if _variant_kbps(v) == target:
+            return v
+    return None
+
+
+def select_alac_media_url(master_url: str, alac_max: int = 192000) -> str:
+    """Resolve a master playlist to its best ALAC media playlist URL.
+
+    Pure ALAC selection (never falls back to AAC): prefers the hi-res ALAC
+    variant, else standard lossless, highest bandwidth.  If the URL already
+    points at a media playlist, it is returned unchanged.
+    """
+    variants = _fetch_variants(master_url)
+    if variants is None:
+        return master_url
+    for q in ("hires", "alac"):
+        v = _match_quality(variants, q, alac_max)
+        if v is not None:
+            return urllib.parse.urljoin(master_url, v.uri)
+    raise PlaylistError("master playlist has no suitable ALAC variant")
+
+
+def select_media_url(master_url: str, quality: str,
+                     alac_max: int = 192000) -> str:
+    """Resolve a master playlist to the media playlist for ``quality``.
+
+    ``quality`` is a tier label: ``"hires"`` (hi-res ALAC), ``"alac"``
+    (standard lossless), or an AAC kbps tier (``"64"``/``"128"``/``"256"``).
+    If that exact tier is not present, fall back to the *next* tier in the
+    priority chain ``hires -> alac -> 256 -> 128 -> 64``; if nothing matches
+    it raises :class:`PlaylistError`.  An empty ``quality`` is an error.
+
+    If ``master_url`` already points at a media playlist (not a variant
+    master), it is returned unchanged.
+    """
+    if quality == "":
+        raise PlaylistError(
+            f"quality is required; expected one of {list(_QUALITIES)}")
+    if quality not in _QUALITIES:
+        raise PlaylistError(
+            f"unknown quality {quality!r}; expected one of {list(_QUALITIES)}")
+    variants = _fetch_variants(master_url)
+    if variants is None:
+        return master_url
+    if not variants:
+        raise PlaylistError("master playlist has no variants")
+
+    start = _QUALITIES.index(quality)
+    for q in _QUALITIES[start:]:
+        v = _match_quality(variants, q, alac_max)
+        if v is not None:
             return urllib.parse.urljoin(master_url, v.uri)
     raise PlaylistError(
-        f"master playlist has no {target} kbps audio variant")
+        f"master playlist has no audio variant for quality {quality!r} "
+        f"(tried {' -> '.join(_QUALITIES[start:])})")
 
 
 def load_media_playlist_text(text: str, base_uri: str) -> MediaPlaylist:

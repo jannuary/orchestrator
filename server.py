@@ -53,8 +53,10 @@ def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
 
     The first chunk is the fMP4 init segment; subsequent chunks are
     ``moof``+``mdat`` pairs emitted as each fragment is decrypted.
-    ``quality`` selects the encoding (``"alac"`` or an AAC kbps tier such as
-    ``"256"``/``"128"``/``"64"``).
+    ``quality`` selects the encoding: ``"hires"``/``"alac"`` for lossless, or
+    an AAC kbps tier (``"256"``/``"128"``/``"64"``).  If the exact tier is
+    absent the next tier in the chain ``hires -> alac -> 256 -> 128 -> 64``
+    is used.
     """
     m3u8_url = lite.m3u8_url(adam_id)
     if not m3u8_url:
@@ -118,9 +120,12 @@ def make_handler(lite: LiteClient):
 
             self._send_error_json(404, "not found")
 
-        def _handle_decrypt(self, adam_id: str, quality: str = "alac") -> None:
+        def _handle_decrypt(self, adam_id: str, quality: str = "") -> None:
             if quality == "":
-                quality = "alac"
+                self._send_error_json(
+                    400, "quality is required; "
+                         f"expected one of {list(valid_qualities())}")
+                return
             if quality not in valid_qualities():
                 self._send_error_json(
                     400, f"unknown quality {quality!r}; "
@@ -164,7 +169,7 @@ def make_handler(lite: LiteClient):
 
 
 def _json_quote(s: str) -> str:
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
 def main(argv=None) -> int:

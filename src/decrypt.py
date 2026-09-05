@@ -774,13 +774,12 @@ def _fix_tfhd_sample_description(moof: ContainerBox, new_index: int = 1) -> None
         cur = int.from_bytes(payload[pos:pos + 4], "big")
         if cur == new_index:
             continue
+        # Patch the value in place (2 -> 1).  The field must stay present and
+        # the flag set: removing the field or clearing the flag would shift all
+        # subsequent optional fields (default_sample_duration/size) by 4 bytes,
+        # corrupting them and breaking per-sample timing for every demuxer.
         tfhd.payload = (payload[:pos] + struct.pack(">I", new_index)
                         + payload[pos + 4:])
-        # clear the flag so the default (trex, index 1) takes precedence
-        tfhd.payload = (tfhd.payload[:1]
-                        + ((flags & ~TFHD_SAMPLE_DESCRIPTION_INDEX) & 0xffffff)
-                          .to_bytes(3, "big")
-                        + tfhd.payload[4:])
 
 
 def _encode_moof_without_encryption(frag: Fragment) -> bytes:
