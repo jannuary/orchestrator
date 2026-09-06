@@ -39,6 +39,12 @@ from src import (LiteClient, LiteError, PlaylistError,
 
 DEFAULT_LITE = "http://127.0.0.1:8080"
 
+#: FairPlay key URI Apple uses for the shared context template; when a
+#: segment carries it the key request must use adamId "0" (preshare), not
+#: the track's adamId (mirrors the Go runv2/reference downloader).
+PREFETCH_KEY = "skd://itunes.apple.com/P000000000/s1/e1"
+PRESHARE_ADAMID = "0"
+
 log = logging.getLogger("orchestrator")
 
 
@@ -74,7 +80,8 @@ def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
         if not uri:
             raise ValueError("media playlist has no #EXT-X-KEY URI")
         key_uris.append(uri)
-    templates = {uri: lite.key_template(adam_id, uri)
+    templates = {uri: lite.key_template(
+                     PRESHARE_ADAMID if uri == PREFETCH_KEY else adam_id, uri)
                  for uri in dict.fromkeys(key_uris)}
 
     asset = fetch_bytes(pl.file_uri)
