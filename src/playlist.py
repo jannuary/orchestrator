@@ -99,8 +99,9 @@ def _variant_kbps(v) -> Optional[int]:
     """
     name = getattr(v, "uri", "") or ""
     for part in name.split("_"):
-        if part.startswith("gr") and part[2:].isdigit():
-            return int(part[2:])
+        stem = part.split(".")[0] if "." in part else part
+        if stem.startswith("gr") and stem[2:].isdigit():
+            return int(stem[2:])
     audio = getattr(v.stream_info, "audio", None) or ""
     parts = audio.split("-")
     if len(parts) >= 3:
