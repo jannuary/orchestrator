@@ -10,7 +10,8 @@ Endpoints
     Resolve the track's media playlist via the lite-server ``/m3u8`` endpoint,
     fetch the (encrypted, ALAC/SAMPLE-AES) asset, decrypt it with the Temari
     white-box (template from lite-server ``/key``), and stream it back as an
-    ``.m4a``.
+    ``.m4a``.  Single ``Range: bytes=...`` requests are honoured with a
+    ``206 Partial Content`` response, so players can seek.
 
 ``GET /healthz``
     Simple liveness probe.
@@ -18,24 +19,28 @@ Endpoints
 The flow mirrors the Go ``runv4`` downloader: the whole asset (init segment +
 fragments) is fetched, then decrypted and re-serialised in place.
 
-The response is streamed (chunked transfer) so the client starts receiving
-bytes as soon as the init segment is ready, without waiting for all fragments
-to be decrypted.
+The decrypted size is known before anything is decrypted (see
+:class:`src.DecryptedTrack`), so responses carry a ``Content-Length`` and the
+client still starts receiving bytes as soon as the init segment is ready:
+fragments are decrypted as the response reaches them.  Recently used tracks
+stay cached, so a seek does not download the asset again.
 """
 
 from __future__ import annotations
 
 import argparse
 import logging
+import re
 import sys
+import threading
 import time
 import urllib.parse
 import urllib.request
+from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from src import (LiteClient, LiteError, PlaylistError,
-                 decrypt_track_streaming, load_media_playlist,
-                 select_media_url, valid_qualities)
+from src import (DecryptedTrack, LiteClient, LiteError, PlaylistError,
+                 load_media_playlist, select_media_url, valid_qualities)
 
 DEFAULT_LITE = "http://127.0.0.1:8080"
 
@@ -44,6 +49,13 @@ DEFAULT_LITE = "http://127.0.0.1:8080"
 #: the track's adamId (mirrors the Go runv2/reference downloader).
 PREFETCH_KEY = "skd://itunes.apple.com/P000000000/s1/e1"
 PRESHARE_ADAMID = "0"
+
+#: How many decrypted tracks to keep for later range requests: enough for
+#: the playing track plus a preloaded next one.
+TRACK_CACHE_SIZE = 3
+
+#: Bytes per write when sending a response body.
+WRITE_CHUNK = 256 * 1024
 
 log = logging.getLogger("orchestrator")
 
@@ -54,15 +66,13 @@ def fetch_bytes(url: str, timeout: float = 120.0) -> bytes:
         return resp.read()
 
 
-def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
-    """Fetch and decrypt a track, yielding ``bytes`` chunks.
+def load_track(lite: LiteClient, adam_id: str, quality: str = "alac") -> DecryptedTrack:
+    """Fetch a track's encrypted asset and key templates.
 
-    The first chunk is the fMP4 init segment; subsequent chunks are
-    ``moof``+``mdat`` pairs emitted as each fragment is decrypted.
     ``quality`` selects the encoding: ``"hires"``/``"alac"`` for lossless, or
     an AAC kbps tier (``"256"``/``"128"``/``"64"``).  If the exact tier is
     absent the next tier in the chain ``hires -> alac -> 256 -> 128 -> 64``
-    is used.
+    is used.  Fragments are decrypted later, as they are read.
     """
     m3u8_url = lite.m3u8_url(adam_id)
     if not m3u8_url:
@@ -85,10 +95,86 @@ def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
                  for uri in dict.fromkeys(key_uris)}
 
     asset = fetch_bytes(pl.file_uri)
-    yield from decrypt_track_streaming(asset, [templates[u] for u in key_uris])
+    return DecryptedTrack(asset, [templates[u] for u in key_uris])
+
+
+def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
+    """Fetch and decrypt a track, yielding ``bytes`` chunks.
+
+    The first chunk is the fMP4 init segment; subsequent chunks are
+    ``moof``+``mdat`` pairs emitted as each fragment is decrypted.
+    """
+    yield from load_track(lite, adam_id, quality).iter_range()
+
+
+class TrackCache:
+    """Small LRU of :class:`DecryptedTrack`, so range requests for the same
+    track (one per seek) reuse it instead of downloading the asset again.
+    Concurrent requests for the same track wait for a single load."""
+
+    def __init__(self, lite: LiteClient, size: int = TRACK_CACHE_SIZE):
+        self._lite = lite
+        self._size = size
+        self._tracks: "OrderedDict[tuple, DecryptedTrack]" = OrderedDict()
+        self._loading: dict = {}
+        self._lock = threading.Lock()
+
+    def get(self, adam_id: str, quality: str) -> DecryptedTrack:
+        key = (adam_id, quality)
+        with self._lock:
+            if key in self._tracks:
+                self._tracks.move_to_end(key)
+                return self._tracks[key]
+            load_lock = self._loading.setdefault(key, threading.Lock())
+        with load_lock:
+            with self._lock:
+                if key in self._tracks:
+                    return self._tracks[key]
+            try:
+                track = load_track(self._lite, adam_id, quality)
+            finally:
+                with self._lock:
+                    self._loading.pop(key, None)
+            with self._lock:
+                self._tracks[key] = track
+                while len(self._tracks) > self._size:
+                    self._tracks.popitem(last=False)
+            return track
+
+
+class RangeNotSatisfiable(ValueError):
+    pass
+
+
+def parse_range(header, size: int):
+    """Parse a ``Range`` header into an inclusive ``(start, end)`` pair.
+
+    Returns ``None`` when the whole body should be sent: no header, a unit
+    other than bytes, a malformed value, or several ranges (which are
+    allowed to be answered with the full body).  Raises
+    :class:`RangeNotSatisfiable` when the range lies outside the body.
+    """
+    if not header:
+        return None
+    m = re.fullmatch(r"\s*bytes\s*=\s*(\d*)\s*-\s*(\d*)\s*", header)
+    if not m or not (m.group(1) or m.group(2)):
+        return None
+    first, last = m.group(1), m.group(2)
+    if not first:  # suffix range: the last N bytes
+        length = int(last)
+        if length == 0 or size == 0:
+            raise RangeNotSatisfiable(header)
+        return max(size - length, 0), size - 1
+    start = int(first)
+    end = int(last) if last else size - 1
+    if start >= size or end < start:
+        raise RangeNotSatisfiable(header)
+    return start, min(end, size - 1)
 
 
 def make_handler(lite: LiteClient):
+    cache = TrackCache(lite)
+
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
         server_version = "amdlitepy/0.1"
@@ -139,34 +225,54 @@ def make_handler(lite: LiteClient):
                          f"expected one of {list(valid_qualities())}")
                 return
             try:
-                chunks = decrypt_adamid(lite, adam_id, quality)
-                filename = f"{adam_id}.m4a"
-                self.send_response(200)
-                self.send_header("Content-Type", "audio/mp4")
-                self.send_header("Content-Disposition",
-                                 f'attachment; filename="{filename}"')
-                self.send_header("Transfer-Encoding", "chunked")
-                self.end_headers()
+                track = cache.get(adam_id, quality)
+            except Exception as e:
+                log.exception("adamId=%s could not be loaded", adam_id)
+                self._send_error_json(500, f"decryption pipeline failed: {e}")
+                return
 
-                for idx, chunk in enumerate(chunks):
-                    start = time.monotonic()
-                    size_hex = format(len(chunk), "x").encode("ascii")
-                    self.wfile.write(size_hex + b"\r\n" + chunk + b"\r\n")
-                    self.wfile.flush()
-                    log.debug("adamId=%s chunk=%d bytes=%d write_ms=%d",
-                              adam_id, idx, len(chunk),
-                              int((time.monotonic() - start) * 1000))
-                self.wfile.write(b"0\r\n\r\n")
+            try:
+                byte_range = parse_range(self.headers.get("Range"), track.size)
+            except RangeNotSatisfiable:
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{track.size}")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            start, end = byte_range or (0, track.size - 1)
+
+            self.send_response(206 if byte_range else 200)
+            self.send_header("Content-Type", "audio/mp4")
+            self.send_header("Content-Disposition",
+                             f'attachment; filename="{adam_id}.m4a"')
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Length", str(end - start + 1))
+            if byte_range:
+                self.send_header("Content-Range",
+                                 f"bytes {start}-{end}/{track.size}")
+            self.end_headers()
+
+            sent = 0
+            began = time.monotonic()
+            try:
+                for chunk in track.iter_range(start, end):
+                    view = memoryview(chunk)
+                    for pos in range(0, len(view), WRITE_CHUNK):
+                        self.wfile.write(view[pos:pos + WRITE_CHUNK])
+                        sent += min(WRITE_CHUNK, len(view) - pos)
                 self.wfile.flush()
-                log.info("adamId=%s streamed %d chunks", adam_id, idx + 1)
-            except BaseException as e:  # catch BrokenPipeError after headers
-                import traceback
-                log.error("adamId=%s failed after headers: %s\n%s",
-                          adam_id, e, traceback.format_exc())
-                try:
-                    self._send_error_json(500, f"decryption pipeline failed: {e}")
-                except BaseException:
-                    pass
+                log.info("adamId=%s sent bytes %d-%d/%d in %d ms", adam_id,
+                         start, end, track.size,
+                         int((time.monotonic() - began) * 1000))
+            except (BrokenPipeError, ConnectionResetError):
+                # Players drop the connection when they seek or skip.
+                log.debug("adamId=%s client closed the connection after %d bytes",
+                          adam_id, sent)
+                self.close_connection = True
+            except Exception:
+                # Headers are already sent, so all we can do is close.
+                log.exception("adamId=%s failed after %d bytes", adam_id, sent)
+                self.close_connection = True
 
         def log_message(self, fmt, *args):  # noqa: A003
             sys.stderr.write("[%s] %s\n" % (self.log_date_time_string(),

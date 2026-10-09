@@ -20,7 +20,8 @@ from __future__ import annotations
 
 import struct
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+import threading
+from typing import Dict, Iterator, List, Optional
 
 from . import mp4box as b
 from .mp4box import ContainerBox, LeafBox
@@ -1218,6 +1219,23 @@ def decrypt_track_streaming(encrypted_bytes, key_jsons):
     Callers must send HTTP ``Transfer-Encoding: chunked`` (or equivalent)
     because the total ``Content-Length`` is not known up front.
     """
+    init_bytes, fragments = split_fragments(encrypted_bytes)
+    key_jsons = _fragment_key_jsons(key_jsons, len(fragments))
+
+    init = InitInfo(init_bytes)
+    sanitize_init(init)
+    _patch_fragment_duration(init, _fragment_media_samples(fragments))
+    yield b"".join(b.encode_tree(c) for c in init.tree)
+
+    for frag, kjson in zip(fragments, key_jsons):
+        with Temari.from_json(kjson) as temari:
+            decrypt_fragment(frag, init, temari)
+        yield _encode_moof_without_encryption(frag)
+        yield _encode_mdat(frag)
+
+
+def _fragment_key_jsons(key_jsons, n_fragments: int) -> List[str]:
+    """Normalise key templates to one JSON string per fragment."""
     import json as _json
 
     def _normalise(k):
@@ -1232,22 +1250,77 @@ def decrypt_track_streaming(encrypted_bytes, key_jsons):
     else:
         key_jsons = [_normalise(k) for k in key_jsons]
 
-    init_bytes, fragments = split_fragments(encrypted_bytes)
-    if not fragments:
+    if not n_fragments:
         raise DecryptError("no fragments (moof+mdat) found in stream")
     if len(key_jsons) == 1:
-        key_jsons = key_jsons * len(fragments)
-    if len(key_jsons) != len(fragments):
+        key_jsons = key_jsons * n_fragments
+    if len(key_jsons) != n_fragments:
         raise DecryptError(
-            f"expected {len(fragments)} key templates, got {len(key_jsons)}")
+            f"expected {n_fragments} key templates, got {len(key_jsons)}")
+    return key_jsons
 
-    init = InitInfo(init_bytes)
-    sanitize_init(init)
-    _patch_fragment_duration(init, _fragment_media_samples(fragments))
-    yield b"".join(b.encode_tree(c) for c in init.tree)
 
-    for frag, kjson in zip(fragments, key_jsons):
-        with Temari.from_json(kjson) as temari:
-            decrypt_fragment(frag, init, temari)
-        yield _encode_moof_without_encryption(frag)
-        yield _encode_mdat(frag)
+class DecryptedTrack:
+    """A decrypted fMP4 track that can be read by byte range.
+
+    Produces exactly the same bytes as :func:`decrypt_track_streaming`, but
+    the output layout is computed up front: decryption works in place and
+    never changes an ``mdat``'s length, and the rewritten ``moof`` boxes only
+    depend on box structure.  That gives the total :attr:`size` before any
+    decryption, so an HTTP server can send ``Content-Length`` and answer
+    ``Range`` requests.  Fragments are decrypted lazily, the first time a
+    range touches them, so a seek near the end does not decrypt the whole
+    track first.  Safe to read from several threads at once.
+    """
+
+    def __init__(self, encrypted_bytes, key_jsons):
+        init_bytes, fragments = split_fragments(encrypted_bytes)
+        self._keys = _fragment_key_jsons(key_jsons, len(fragments))
+
+        init = InitInfo(init_bytes)
+        sanitize_init(init)
+        _patch_fragment_duration(init, _fragment_media_samples(fragments))
+        self._init = init
+        self._fragments = fragments
+        self._decrypted = [False] * len(fragments)
+        self._lock = threading.Lock()
+
+        # (offset, size, part): part is either the bytes themselves or the
+        # index of a fragment whose mdat is produced on demand.
+        self._parts = []
+        offset = 0
+
+        def add(size, part):
+            nonlocal offset
+            self._parts.append((offset, size, part))
+            offset += size
+
+        init_out = b"".join(b.encode_tree(c) for c in init.tree)
+        add(len(init_out), init_out)
+        for idx, frag in enumerate(fragments):
+            moof = _encode_moof_without_encryption(frag)
+            add(len(moof), moof)
+            add(frag.mdat_header_size + len(frag.mdat), idx)
+        self.size = offset
+
+    def _mdat(self, idx: int) -> bytes:
+        frag = self._fragments[idx]
+        with self._lock:
+            # In-place decryption must only ever run once per fragment.
+            if not self._decrypted[idx]:
+                with Temari.from_json(self._keys[idx]) as temari:
+                    decrypt_fragment(frag, self._init, temari)
+                self._decrypted[idx] = True
+        return _encode_mdat(frag)
+
+    def iter_range(self, start: int = 0, end: Optional[int] = None) -> Iterator[bytes]:
+        """Yield the bytes from ``start`` to ``end`` inclusive (default: to the end)."""
+        if end is None or end >= self.size:
+            end = self.size - 1
+        for offset, size, part in self._parts:
+            if offset + size <= start:
+                continue
+            if offset > end:
+                break
+            data = part if isinstance(part, bytes) else self._mdat(part)
+            yield data[max(start - offset, 0):min(end - offset + 1, size)]

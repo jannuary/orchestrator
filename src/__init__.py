@@ -9,7 +9,8 @@ from .lite import LiteClient, LiteError
 from .playlist import (MediaPlaylist, MediaSegment, PlaylistError,
                         load_media_playlist, load_media_playlist_text,
                         select_alac_media_url, select_media_url, valid_qualities)
-from .decrypt import DecryptError, decrypt_track, decrypt_track_streaming
+from .decrypt import (DecryptError, DecryptedTrack, decrypt_track,
+                      decrypt_track_streaming)
 
 PipelineError = DecryptError
 
@@ -17,6 +18,6 @@ __all__ = [
     "LiteClient", "MediaPlaylist", "MediaSegment",
     "load_media_playlist", "load_media_playlist_text",
     "select_alac_media_url", "select_media_url", "valid_qualities",
-    "decrypt_track", "decrypt_track_streaming",
+    "decrypt_track", "decrypt_track_streaming", "DecryptedTrack",
     "PipelineError", "LiteError", "PlaylistError", "DecryptError",
 ]
