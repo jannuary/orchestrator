@@ -1,0 +1,22 @@
+{
+  "scope": "Public invented-state known answers from pinned original mixer instructions",
+  "artifact_sha256": "cc75fb416f3f03b283d16a22d2ffb130a03c830a6a66f291389472bae524b175",
+  "cases": [
+    {
+      "input": "0000000000000000000000000000000000000000",
+      "output": "0000000000000000000000000000000000000000"
+    },
+    {
+      "input": "000102030405060708090a0b0c0d0e0f10111213",
+      "output": "b75db4b46f2ae17b283a4419f0c452bc19c2be1a"
+    },
+    {
+      "input": "ffffffffffffffffffffffffffffffffffffffff",
+      "output": "0000ff00ffffffffffff0000ff00000000000000"
+    },
+    {
+      "input": "d6218916211e658992f1d6724c5f98b01300900b",
+      "output": "54f9586294bc96a72afc0e9ee002b9ef7aa05563"
+    }
+  ]
+}

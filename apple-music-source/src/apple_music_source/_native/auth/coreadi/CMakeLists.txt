@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(wrapper_coreadi_source C)
+file(GLOB GENERATED CONFIGURE_DEPENDS generated/*_page_*.c generated/image_*.c)
+add_library(wrapper_coreadi_source SHARED coreadi.c ${GENERATED})
+set_target_properties(wrapper_coreadi_source PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED YES)
+set(WRAPPER_ADI_OPTIMIZATION "-O1" CACHE STRING "Optimization for reconstructed semantic C")
+target_compile_options(wrapper_coreadi_source PRIVATE ${WRAPPER_ADI_OPTIMIZATION} -Wall -Wextra)

@@ -1,0 +1,180 @@
+uint32_t wrapper_kg_integrity_group_0(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_1(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_2(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_3(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_4(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_5(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_6(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_7(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_8(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_9(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_10(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_11(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_12(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_13(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_14(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_15(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_16(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_17(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_18(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_19(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_20(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_21(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_22(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_23(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_24(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_25(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_26(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_27(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_28(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_29(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_30(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_31(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_32(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_33(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_34(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_35(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_36(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_37(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_38(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_39(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_40(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_41(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_42(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_43(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_44(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_45(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_46(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_47(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_48(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_49(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_50(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_51(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_52(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_53(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_54(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_55(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_56(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_57(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_58(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_59(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_60(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_61(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_62(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_63(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_64(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_65(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_66(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_67(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_68(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_69(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_70(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_71(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_72(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_73(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_74(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_75(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_76(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_77(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_78(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_79(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_80(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_81(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_82(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_83(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_84(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_85(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_86(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_87(unsigned,uint32_t);
+uint32_t wrapper_kg_integrity_group_88(unsigned,uint32_t);
+static uint32_t (*const kg_integrity_groups[])(unsigned,uint32_t) = {
+wrapper_kg_integrity_group_0,
+wrapper_kg_integrity_group_1,
+wrapper_kg_integrity_group_2,
+wrapper_kg_integrity_group_3,
+wrapper_kg_integrity_group_4,
+wrapper_kg_integrity_group_5,
+wrapper_kg_integrity_group_6,
+wrapper_kg_integrity_group_7,
+wrapper_kg_integrity_group_8,
+wrapper_kg_integrity_group_9,
+wrapper_kg_integrity_group_10,
+wrapper_kg_integrity_group_11,
+wrapper_kg_integrity_group_12,
+wrapper_kg_integrity_group_13,
+wrapper_kg_integrity_group_14,
+wrapper_kg_integrity_group_15,
+wrapper_kg_integrity_group_16,
+wrapper_kg_integrity_group_17,
+wrapper_kg_integrity_group_18,
+wrapper_kg_integrity_group_19,
+wrapper_kg_integrity_group_20,
+wrapper_kg_integrity_group_21,
+wrapper_kg_integrity_group_22,
+wrapper_kg_integrity_group_23,
+wrapper_kg_integrity_group_24,
+wrapper_kg_integrity_group_25,
+wrapper_kg_integrity_group_26,
+wrapper_kg_integrity_group_27,
+wrapper_kg_integrity_group_28,
+wrapper_kg_integrity_group_29,
+wrapper_kg_integrity_group_30,
+wrapper_kg_integrity_group_31,
+wrapper_kg_integrity_group_32,
+wrapper_kg_integrity_group_33,
+wrapper_kg_integrity_group_34,
+wrapper_kg_integrity_group_35,
+wrapper_kg_integrity_group_36,
+wrapper_kg_integrity_group_37,
+wrapper_kg_integrity_group_38,
+wrapper_kg_integrity_group_39,
+wrapper_kg_integrity_group_40,
+wrapper_kg_integrity_group_41,
+wrapper_kg_integrity_group_42,
+wrapper_kg_integrity_group_43,
+wrapper_kg_integrity_group_44,
+wrapper_kg_integrity_group_45,
+wrapper_kg_integrity_group_46,
+wrapper_kg_integrity_group_47,
+wrapper_kg_integrity_group_48,
+wrapper_kg_integrity_group_49,
+wrapper_kg_integrity_group_50,
+wrapper_kg_integrity_group_51,
+wrapper_kg_integrity_group_52,
+wrapper_kg_integrity_group_53,
+wrapper_kg_integrity_group_54,
+wrapper_kg_integrity_group_55,
+wrapper_kg_integrity_group_56,
+wrapper_kg_integrity_group_57,
+wrapper_kg_integrity_group_58,
+wrapper_kg_integrity_group_59,
+wrapper_kg_integrity_group_60,
+wrapper_kg_integrity_group_61,
+wrapper_kg_integrity_group_62,
+wrapper_kg_integrity_group_63,
+wrapper_kg_integrity_group_64,
+wrapper_kg_integrity_group_65,
+wrapper_kg_integrity_group_66,
+wrapper_kg_integrity_group_67,
+wrapper_kg_integrity_group_68,
+wrapper_kg_integrity_group_69,
+wrapper_kg_integrity_group_70,
+wrapper_kg_integrity_group_71,
+wrapper_kg_integrity_group_72,
+wrapper_kg_integrity_group_73,
+wrapper_kg_integrity_group_74,
+wrapper_kg_integrity_group_75,
+wrapper_kg_integrity_group_76,
+wrapper_kg_integrity_group_77,
+wrapper_kg_integrity_group_78,
+wrapper_kg_integrity_group_79,
+wrapper_kg_integrity_group_80,
+wrapper_kg_integrity_group_81,
+wrapper_kg_integrity_group_82,
+wrapper_kg_integrity_group_83,
+wrapper_kg_integrity_group_84,
+wrapper_kg_integrity_group_85,
+wrapper_kg_integrity_group_86,
+wrapper_kg_integrity_group_87,
+wrapper_kg_integrity_group_88,
+};

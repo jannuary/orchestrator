@@ -1,0 +1,53 @@
+{
+  "scope": "Public invented inputs and original-instruction sizes",
+  "cases": [
+    {
+      "input": "30313233343536373839616263646566",
+      "output_size": 147
+    },
+    {
+      "input": "66656463626139383736353433323130",
+      "output_size": 112
+    },
+    {
+      "input": "30303131323233333434353536363737",
+      "output_size": 106
+    },
+    {
+      "input": "66666565646463636262616139393838",
+      "output_size": 153
+    },
+    {
+      "input": "812aee139d237740",
+      "output_size": 83
+    },
+    {
+      "input": "650c3f061202cd4b5f",
+      "output_size": 176
+    },
+    {
+      "input": "6cfdccbb60bdde10be958e906213f5",
+      "output_size": 85
+    },
+    {
+      "input": "52a77894a1522628645966def6f215c186",
+      "output_size": 93
+    },
+    {
+      "input": "c7cb5fcf4e91ff147d756f1641adf2f695b842fa07db17e1050efdb227da12fb",
+      "output_size": 125
+    },
+    {
+      "input": "7bd2ecccbf582ffe677dbd2a646eeb26b5b879ec634831da9e52d41cf63acc7ac0173bf469ec78321df22191ec1e8781588ac506e7003f32b6d35f2d663000f9",
+      "output_size": 149
+    },
+    {
+      "input": "5d8c7401f228d0015b48f6a1d36de782d424d2c2559f2c023c5aa15c3208899da41f8ea96570071a908ca77005bd4035a5621b6f43e5669c6062b539e934e5a6961156c65a96a54efae6b344d4bc15",
+      "output_size": 143
+    },
+    {
+      "input": "4df2b8f5452a49f913cdbeb8b124ae654aee657f1ce199494315bad8424226171e4e4f333532d6872b1c74650c54aee213b8deec406f70ffe13424d522bcf055a4f9abca58e30695a5144fd689f618e0",
+      "output_size": 80
+    }
+  ]
+}

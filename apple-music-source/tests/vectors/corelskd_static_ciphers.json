@@ -1,0 +1,30 @@
+{
+  "scope": "Public invented-message known-answer vectors from pristine source-runtime execution; no account/session/content input, no key or original table bytes",
+  "artifact_sha256": "1c8e1b64f7e966c2f78ba2582a1ec30a0aff8ad7ef8221117853f34d9b7faa3b",
+  "cases": [
+    {
+      "variant": 0,
+      "iv": "0c69302965d25cef0a7d9dd64f3af93a",
+      "plaintext": "8a7b324eb554a27211e85fce78cea8aa",
+      "ciphertext": "20feb61ca5cd9118d14af524266b1ef9"
+    },
+    {
+      "variant": 0,
+      "iv": "32664a06a1070b5be4ee29ebe3c7b327",
+      "plaintext": "4378170fc6201e6043d4b787722682ed552c80abc6b61e5dff65abf8b000eec4",
+      "ciphertext": "60305d8f500454b100ac24a5d645fdbfc0cf2c997e5b8cd5dbb368776ea6b1c8"
+    },
+    {
+      "variant": 1,
+      "iv": "2f15c51a25b9e95d434ddba74801c7d7",
+      "plaintext": "5e4102979746e3ba7dc17bcf902bebaf",
+      "ciphertext": "46ca3bf0431f0db221ab08a334675587"
+    },
+    {
+      "variant": 1,
+      "iv": "df3708f0bc1c5da508075a69cfe8373d",
+      "plaintext": "bb8732d941b1b449f8fadf12922f29c5bb75b5128a63814dede177f25c720126",
+      "ciphertext": "10dd3fb5ade756b8a4c5ed1864e07f304378c6149605116d70799de0280cca3c"
+    }
+  ]
+}

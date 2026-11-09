@@ -1,0 +1,3270 @@
+{
+  "scope": "source provenance and historical address coverage; generated vendor-derived auth data is included as C source; no private account/session bytes",
+  "copied_sources": [
+    {
+      "source": "crypto/keygen_experimental/spc_v2.c",
+      "package": "src/apple_music_source/_native/spc_v2.c",
+      "bytes": 1997,
+      "sha256": "f7d3e5649271671cb65a8bca6cce974d45aa7237df3a95a997d6e92c7baac548"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_v2.h",
+      "package": "src/apple_music_source/_native/spc_v2.h",
+      "bytes": 1104,
+      "sha256": "24f56674570adf16dd2b6b95829d00068d446a2f4e95c5956591949ed3b7512a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_packet.c",
+      "package": "src/apple_music_source/_native/ckc_packet.c",
+      "bytes": 2228,
+      "sha256": "1ae60c4b1d07ce5fc83a5ca0af5cdef3ccc0658acf3c059b4c055401b477485a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_packet.h",
+      "package": "src/apple_music_source/_native/ckc_packet.h",
+      "bytes": 1360,
+      "sha256": "f07870d70deb48716f16ae8a6a0a6bcbb2c3a582d4b96ec7c05f5a1ef59797b8"
+    },
+    {
+      "source": "crypto/keygen_experimental/mt19937.c",
+      "package": "src/apple_music_source/_native/mt19937.c",
+      "bytes": 1320,
+      "sha256": "7ef8ba5a2a867c0c6c69ceaba0cb143699e8930d64909543f51d7438e5f4fd30"
+    },
+    {
+      "source": "crypto/keygen_experimental/mt19937.h",
+      "package": "src/apple_music_source/_native/mt19937.h",
+      "bytes": 381,
+      "sha256": "de5d01efb74d993516f4d8f0e0285a4d2aefa519a17409ece08e8c15df62a90b"
+    },
+    {
+      "source": "crypto/keygen_experimental/compare_select.c",
+      "package": "src/apple_music_source/_native/compare_select.c",
+      "bytes": 2900,
+      "sha256": "b314d914a0eb08e482c8642746e2a3cf0315e7b66422be1816ef6d12b376d03a"
+    },
+    {
+      "source": "crypto/keygen_experimental/compare_select.h",
+      "package": "src/apple_music_source/_native/compare_select.h",
+      "bytes": 1364,
+      "sha256": "5deee86c24f1ecd89a1c45ceb608581b1ea3c548cfeab52fda68367e22c5e08e"
+    },
+    {
+      "source": "crypto/keygen_experimental/field_copy.c",
+      "package": "src/apple_music_source/_native/field_copy.c",
+      "bytes": 2148,
+      "sha256": "a8e7fe9109f05a0af1f4447e640a05257e8d13b9f614b0288f51b36430cbd751"
+    },
+    {
+      "source": "crypto/keygen_experimental/field_copy.h",
+      "package": "src/apple_music_source/_native/field_copy.h",
+      "bytes": 753,
+      "sha256": "289d2af3376bddb78f1526a3cb0f2a4d8ffd65f0eef755032a41e5e9da7cc384"
+    },
+    {
+      "source": "crypto/keygen_experimental/append_bytes.c",
+      "package": "src/apple_music_source/_native/append_bytes.c",
+      "bytes": 1299,
+      "sha256": "0aa6156a17da1281f8992e7b34512dd7b70f61d2e95ac6cc431bfb4ca0e80fe3"
+    },
+    {
+      "source": "crypto/keygen_experimental/append_bytes.h",
+      "package": "src/apple_music_source/_native/append_bytes.h",
+      "bytes": 828,
+      "sha256": "f31fe71578af1ed1817ade7bcff564ba773e8f7b182eff3be1048872468d795d"
+    },
+    {
+      "source": "crypto/corelskd_r1.c",
+      "package": "src/apple_music_source/_native/corelskd_r1.c",
+      "bytes": 10670,
+      "sha256": "defd497eae83f8d8a566751605636739bf6f1734fb153de6a01981c8286535c8"
+    },
+    {
+      "source": "crypto/corelskd_r1.h",
+      "package": "src/apple_music_source/_native/corelskd_r1.h",
+      "bytes": 3828,
+      "sha256": "afaef6bff1f0595d7a4a2b7f7de5122a426b9ef38238ffe52a4779c3340e0eb4"
+    },
+    {
+      "source": "crypto/corelskd_r1_generated.inc",
+      "package": "src/apple_music_source/_native/corelskd_r1_generated.inc",
+      "bytes": 600137,
+      "sha256": "3d9ae51fbfa1b3534b1478f2a1b3164ae7b9e3425bb79f66d59a438c0d0297fe"
+    },
+    {
+      "source": "crypto/auth/coreadi/CMakeLists.txt",
+      "package": "src/apple_music_source/_native/auth/coreadi/CMakeLists.txt",
+      "bytes": 502,
+      "sha256": "d9659b18864798cbcb3ba86469b91f117173424ee1265dce868389767edf3301"
+    },
+    {
+      "source": "crypto/auth/coreadi/coreadi.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/coreadi.c",
+      "bytes": 10326,
+      "sha256": "835653a5e2993718b9abdf12d3f908014ea6bbba599a64f1d0daf1f0f5ddc81b"
+    },
+    {
+      "source": "crypto/auth/coreadi/coreadi.h",
+      "package": "src/apple_music_source/_native/auth/coreadi/coreadi.h",
+      "bytes": 975,
+      "sha256": "a44ceb92ca808a5850fbcbb23414baf9ad680a5df16a2072db45aeb934ec8e04"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_10.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_10.c",
+      "bytes": 2351328,
+      "sha256": "c008baea56010a9c2de303107906835c45af8faa52ed09fcf6f3653f5ece7266"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_11.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_11.c",
+      "bytes": 1563232,
+      "sha256": "54bc8474795f085d488ec2e5b50ad6b1804f2c4836d84967d405131572a477bc"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_13.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_13.c",
+      "bytes": 139547,
+      "sha256": "2da59d2d37fdf0eed755d0012a7f739479e116a0bea2a98a2c80a16c56f050c9"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_14.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_14.c",
+      "bytes": 1397285,
+      "sha256": "a25193bc4333e024577b0431c03e4b63023702309b48777282bb9f7399d29134"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_15.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_15.c",
+      "bytes": 2848308,
+      "sha256": "2d0ef8fcc98f4b1519c3e0630f0fc29ac7cf644dc0ac62bec8c527cfa0c98fea"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_16.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_16.c",
+      "bytes": 3261315,
+      "sha256": "b67cd6b5fd8610d271dea347726148769e88808f9c5fe47f39973a1eb0b83e3e"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_17.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_17.c",
+      "bytes": 142263,
+      "sha256": "672a2cfd722d1cac90777f0c9537f6ce36b0243fe14c669d2b457105b77dd685"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_18.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_18.c",
+      "bytes": 14312,
+      "sha256": "7bf6041f49761aeb39195a3bdb81dc5a5ef0c09b44db9b2a06f8773295053c5d"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_4.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_4.c",
+      "bytes": 207835,
+      "sha256": "7ff358fb0535ec9157ded86dd9a53bc5bf5bc9c38584073a28c7a4630c9e7ac5"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_5.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_5.c",
+      "bytes": 3122846,
+      "sha256": "2b45b24434acc3c8c274b36cecd2f56dcab9bd9474eea5a1853e5de7ee5e358c"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_6.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_6.c",
+      "bytes": 2953271,
+      "sha256": "73229a8b91cf95f100e7bc5833d2d6d4a5fd0acd996b6fd309dc96c943dde6d2"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_7.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_7.c",
+      "bytes": 2981670,
+      "sha256": "b4530e583b8b5d91bbe7962e70e2796f50357a9e11ad179f953057a9f8142d5f"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_8.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_8.c",
+      "bytes": 2033718,
+      "sha256": "983405f7e19bffc5085afcd1e27a61b13a61ef333a3ee3e8af51fd0fefa509ac"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_9.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_9.c",
+      "bytes": 2273884,
+      "sha256": "342279d17f5f326b04353495d68c35c2dc245301d1f0618756c340fdc618a3ac"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_a.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_a.c",
+      "bytes": 418604,
+      "sha256": "03ff5e72bca725b91fea0b02e5b1095e41422d8e5e44dce06f7b156f8029b18e"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_c.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_c.c",
+      "bytes": 29797,
+      "sha256": "56745c5396c9c8be8825af8bbc439fce9e46a9e508445844e693eaebf584f71e"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_d.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_d.c",
+      "bytes": 19044,
+      "sha256": "e644aa45cdeeeee57f84e3ff25262df40970ee02f7e4af3c4674fd8f09819b80"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/adi_page_f.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/adi_page_f.c",
+      "bytes": 126502,
+      "sha256": "01acab2d2e333aa99ef7c00829c9e1f53bc21e7069e20a564795e30838d1423e"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/bounds.inc",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/bounds.inc",
+      "bytes": 107774,
+      "sha256": "8a2512a16216e2c1621a3ba042df241509cc70c24a35f7a2035ea9a6efa391f4"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/image_adi_0.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/image_adi_0.c",
+      "bytes": 1107463,
+      "sha256": "e01678c5301e4d3a4a31ffa3ac9b254a22dcc4e8982cc5d6fb14b4ee563c792e"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/image_adi_183000.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/image_adi_183000.c",
+      "bytes": 33384,
+      "sha256": "bffa3705c4d182cd83dbde4c634058f6d9303a5819a9303db023c9e14558eafa"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/image_ssc_0.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/image_ssc_0.c",
+      "bytes": 2595921,
+      "sha256": "16c230acc8b5443a6af76402faa90f6832384a1e61ab0d8b4fd7b76675f5d494"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/image_ssc_244000.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/image_ssc_244000.c",
+      "bytes": 179353,
+      "sha256": "92793ab52dfee468e355571d0ec0aec0febaabd434fff5d1a8b4260952aff85d"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/images.inc",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/images.inc",
+      "bytes": 24521,
+      "sha256": "e02cb6cad1954cd35a83971f68daa4ba24c8dc851c9d4113278e2799efa2e930"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/ssc_page_1d.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/ssc_page_1d.c",
+      "bytes": 2336870,
+      "sha256": "94e519f6544cb160303a120fdd446374b2b5440f6a84b003c0020e497eff98b4"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/ssc_page_23.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/ssc_page_23.c",
+      "bytes": 1267,
+      "sha256": "aff84f0baa26897d41bf6f05849b72be37422644a68dc8c937f0a5e29710dc99"
+    },
+    {
+      "source": "crypto/auth/coreadi/generated/ssc_page_24.c",
+      "package": "src/apple_music_source/_native/auth/coreadi/generated/ssc_page_24.c",
+      "bytes": 2271,
+      "sha256": "a8b6cf15cd4ef28b9d1464db8bc75c884d31bdfa56067a34d93ff46f860ec3f4"
+    },
+    {
+      "source": "crypto/auth/coreadi/internal.h",
+      "package": "src/apple_music_source/_native/auth/coreadi/internal.h",
+      "bytes": 1681,
+      "sha256": "6de80d3ff2707c5fc4f83d059e4f9b8fa298cec8dd9cb72097de0bf67cd2b7e9"
+    },
+    {
+      "source": "crypto/auth/coreadi/simd.h",
+      "package": "src/apple_music_source/_native/auth/coreadi/simd.h",
+      "bytes": 1204,
+      "sha256": "c2e8880fb6b9c96ce0d4aa83f6393e7e08c7ede52a65c75c36f33465bc716c99"
+    },
+    {
+      "source": "crypto/auth/mescal/CMakeLists.txt",
+      "package": "src/apple_music_source/_native/auth/mescal/CMakeLists.txt",
+      "bytes": 499,
+      "sha256": "505192a7d96d3e1d8fcb1f97612cb3d2960c19026e970373bd52064a8e2b90d6"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/bounds.inc",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/bounds.inc",
+      "bytes": 524693,
+      "sha256": "3c37f7562cb036559b16fbc34850f9f33319383c4f55878502a0acb7c85fdc4b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/corefp_inventory.json",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/corefp_inventory.json",
+      "bytes": 316903,
+      "sha256": "8b9b875581c4758b80e0f698da50e58a0196a48a364d60f67319de9989924643"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/images.inc",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/images.inc",
+      "bytes": 16380582,
+      "sha256": "26d7b49531a48e723ce4ce5c680319cff6f7e4734fecb6eddac80e40401fb601"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2a.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2a.c",
+      "bytes": 275786,
+      "sha256": "356eea8c8e7a3db10c670761e9fd61967b8c70e91f5625416dbe874f808618f1"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2b.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2b.c",
+      "bytes": 225121,
+      "sha256": "d11b96bacdbee78d1149e3056896901fd7d1676bd99b86a437ff29727261ee00"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2c.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2c.c",
+      "bytes": 118898,
+      "sha256": "834a77f081995d7c520b77268db9c50f61bf42d35bc618999a5743cc76adb2e9"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2d.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2d.c",
+      "bytes": 243704,
+      "sha256": "748b320e949da26219e0e788d92d15fa224c7d2ffd861abf04b5be7186fb405e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2e.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2e.c",
+      "bytes": 866541,
+      "sha256": "73c5fab4689982d116394aa789d1af1762288ce3e7c3360d84263a837045a2cf"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_2f.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_2f.c",
+      "bytes": 1441418,
+      "sha256": "3486b98092f678b907a96a9a269f8b457ec712337badd8d5e018a43291939972"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_31.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_31.c",
+      "bytes": 5285,
+      "sha256": "a8b4841e51dca2406c095cf7b500a61954ea0970f6dd34cc72b9b0fc7e00cf4d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_33.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_33.c",
+      "bytes": 109535,
+      "sha256": "682a51ee77d47449d429948162e6ab5d5034e70b9a97188e43b98ef6d12a3ada"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_34.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_34.c",
+      "bytes": 328420,
+      "sha256": "bd56f0346ceee7de50113f3c477975217bc0d99c88e5498ffe45bb560a277b06"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_35.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_35.c",
+      "bytes": 1820043,
+      "sha256": "c2476605291d72f3d8af9235b4d2a0d13e9a1e234e3a14f0f7a6527ef39a90f3"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_36.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_36.c",
+      "bytes": 1449074,
+      "sha256": "47b13aff1eef05ce0ab5920348dfccb19a7b63b971e7bd17e4ea402d4f6ac740"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_37.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_37.c",
+      "bytes": 1046673,
+      "sha256": "84219ad2843be2f9ef814ec8c199b93a6b3cea756b599b9ad49c545cb6603785"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_38.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_38.c",
+      "bytes": 10342,
+      "sha256": "950bbf43e69565340174a86e3e99931e938cc7b023e7e5f477bb74b188eda322"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_39.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_39.c",
+      "bytes": 10340,
+      "sha256": "d4cc68293726f9b2e350948fdc9dcfc94fa9aec52836c9f91c07e79bf4e43bef"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_3a.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_3a.c",
+      "bytes": 401947,
+      "sha256": "0e63073d706dac05a2876b3be25075de10a4f628971c7c9e6c9a476c37537c4b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_3b.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_3b.c",
+      "bytes": 1615741,
+      "sha256": "e38455ee10c81a7791b66551bdaaa1d6c80426f4ec092bc303dbec9335defb43"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_3c.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_3c.c",
+      "bytes": 1917532,
+      "sha256": "12593edf1d2f5a3de5f6251640b473d2940156a112edf513c3391ab2e90e779b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_3d.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_3d.c",
+      "bytes": 174608,
+      "sha256": "4a7348ddc92a381e1a00487c0dc232600fd8235e86c6d2417688ae54809649df"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_3e.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_3e.c",
+      "bytes": 22428,
+      "sha256": "cb110a48a4babd876556c50c14e90e817c69d597dec5754d62eab45e3c47bf0e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_43.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_43.c",
+      "bytes": 52066,
+      "sha256": "f4e9a687ad7be9bd66d0a69cd60f671fb5df5e35755de646bd714dca5b8a3da3"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_44.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_44.c",
+      "bytes": 2470006,
+      "sha256": "6172b7ebf7df4bf342246b5706079a2bcf6f6a301b88da1ac744f7b4663c8359"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_45.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_45.c",
+      "bytes": 1321360,
+      "sha256": "1e55bc21dd31390a9b402d13388d3752ccb6b7819b896ede68dad355655d0421"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_47.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_47.c",
+      "bytes": 103935,
+      "sha256": "4d2d2e53fcd77dbf0edebb7b62983b21f2945f91b4b992f93d0476592038bd71"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_48.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_48.c",
+      "bytes": 664960,
+      "sha256": "34458f3532ff4808b889f3adf474f46b68757ec0c6f2af94552586d3fd2d1a21"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_49.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_49.c",
+      "bytes": 16914,
+      "sha256": "f141a7ac30411351de0b15c0572bd7a386d7f2c3c470d2127e80ebda834ac1cc"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_4a.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_4a.c",
+      "bytes": 1082575,
+      "sha256": "6ebbb20336293a472e0d08bbcd051363525bd800b245d0a2152aac202a43eafe"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_57.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_57.c",
+      "bytes": 5313,
+      "sha256": "3ae37ae3c21d82b5721c4c27b249f8fdfd9b7eacbc7d52cbc62c709d7abe0af2"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_58.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_58.c",
+      "bytes": 82227,
+      "sha256": "169bfbf6f6457bac1be5933e05e739eecf4c11bd2f315a374ad0e2b482403e74"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_59.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_59.c",
+      "bytes": 179621,
+      "sha256": "615eb59593509cfefe13264fab15a3715b2519bc053f1d30245815baa4c873f8"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_5a.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_5a.c",
+      "bytes": 16967,
+      "sha256": "d9f6b3993fc7888a006f118fbc9e5939ac9a1a6ffedcba215df40de3bde088dd"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_5b.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_5b.c",
+      "bytes": 15886,
+      "sha256": "76f7b8227568f848752c5494b7aa55d9fba34de03790b458b27391d044c79c1a"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_5d.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_5d.c",
+      "bytes": 834088,
+      "sha256": "9bd66dd19f4e63c1724283c79ce77afb663fcf2214aa282eb9c0bfd9f718bd8b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_5e.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_5e.c",
+      "bytes": 2570614,
+      "sha256": "0cb50036aa9c7bb6b400510f913d6b25167c9ee2609166b5d7b19dc7977f9891"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_5f.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_5f.c",
+      "bytes": 3689961,
+      "sha256": "fbd6fb711eadab9663bd05c1b101cf716d1b88c739820d428bc0099d7c4788f2"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_60.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_60.c",
+      "bytes": 1731517,
+      "sha256": "8989360495653f0e244a46693b9eff0b74edd6ec8ae8e66e04b5a025e32b5773"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_61.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_61.c",
+      "bytes": 2647830,
+      "sha256": "0cd9a87db52f7b729bb12ef0e6dcd6b03917b58be81247685906a653cad29bf3"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_62.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_62.c",
+      "bytes": 393100,
+      "sha256": "171f7664712a96f7d1788774b3d26a5fb5899b17725cc361901f2e3527c06edf"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_63.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_63.c",
+      "bytes": 546208,
+      "sha256": "90945dc03b7bbd7a1f5bb5d951a46e5eb61f317e272bd3a81d191b4453c7c57a"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_64.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_64.c",
+      "bytes": 589161,
+      "sha256": "ce0084718effdc19687d7a57bf4bc8576644d4fddb048bf7d2c620c98cf190dc"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_65.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_65.c",
+      "bytes": 2076871,
+      "sha256": "614e84132c9ee893bf96e25108a07343319e4c407b7dff5ebc05db5537745b52"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_66.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_66.c",
+      "bytes": 831067,
+      "sha256": "807653c8d561b65ad2aa57d054f64500567f38e4505f44e95197951e8711af2f"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_67.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_67.c",
+      "bytes": 1027487,
+      "sha256": "e9c0c3cdd8e2522fa534358c2082428842e329404cd7577bf379e689e8f0b408"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_68.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_68.c",
+      "bytes": 845839,
+      "sha256": "4cb670f154206d99368942e94cf194b6a364bc9c33efad07009385f7e68478bb"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_69.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_69.c",
+      "bytes": 254469,
+      "sha256": "a9f2032a26343324aa00568a09fec5e1f63bc7253951b049d4f45f8cde1d431f"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_6a.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_6a.c",
+      "bytes": 305296,
+      "sha256": "210923032a692c7fa73557dfe5668e41d6ca9979e22bc99442020c96c95c2e84"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_6c.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_6c.c",
+      "bytes": 9799,
+      "sha256": "c519b70e4bd7f3bd65a6d7cdd6960fb784241bd3ecc185e0ec6fe382bec10f91"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_6e.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_6e.c",
+      "bytes": 100825,
+      "sha256": "157fb7ff9f530ea12dc3017cfe9a34e6faab59647eb785ed83c18337ddab9345"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_corefp_page_6f.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_corefp_page_6f.c",
+      "bytes": 228497,
+      "sha256": "0aebf1a3735753b8a8dfae7b9e5af9d3dd2fbef951fd32672a230ce72d150b6a"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_0.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_0.c",
+      "bytes": 659668,
+      "sha256": "99819189b58addce2441a34d7081950f790bd71edbff01d1e0c2d9b2f70be331"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_1.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_1.c",
+      "bytes": 659668,
+      "sha256": "61ee74a61fa899fbd03fe398007c0ee3a6368da8b6dfa16e81ac86f3271831f7"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_10.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_10.c",
+      "bytes": 659669,
+      "sha256": "9d71cedd9e0e7083947be67949b3ba65a366beeb97abe5964afdcbbfeaeed417"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_11.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_11.c",
+      "bytes": 659669,
+      "sha256": "5cf1a7b7011691f0c197c7d52ee6c7c2c9cc9921b061fbd9431b5592086178e7"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_12.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_12.c",
+      "bytes": 659669,
+      "sha256": "172d63df34a08f65ca43a594115e3d2b821b997d11380042658c61f6b3efdaac"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_13.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_13.c",
+      "bytes": 659669,
+      "sha256": "81dbb261e4f68c8f13b5ab87c9230a52816f4c8e3d8f50f1868569cbd0b6f043"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_14.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_14.c",
+      "bytes": 659669,
+      "sha256": "7313a1c9ca0aa80cfa91eda96b94e684b7cb9b1958b99567e5c46656d61eb0ea"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_15.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_15.c",
+      "bytes": 659669,
+      "sha256": "4811f306183103288824347a2d59396d65d5ff8af007c587a63e406fbbf11ade"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_16.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_16.c",
+      "bytes": 659669,
+      "sha256": "218dc87e3c1abe1d26fc31b209a5a35d5eb1dc442a4a610f49803e3913f8ecc2"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_17.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_17.c",
+      "bytes": 659669,
+      "sha256": "9daa58d87489ad84e95b7762c57a26da6131f57e612aa060a8bde6f382f1a427"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_18.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_18.c",
+      "bytes": 659669,
+      "sha256": "222f0814d140500cf14e76fc3d30987ca4ba9a097eb2aa468a34ee26f787ed32"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_19.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_19.c",
+      "bytes": 659669,
+      "sha256": "4321508660775039f39fde4cb3dfefe5f17896be16b8ac31797478776d14b5b4"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_2.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_2.c",
+      "bytes": 659668,
+      "sha256": "b8aa88f9d2c4c579918c5335fe52f5abe16343d94394842ecb4a0801ef165732"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_20.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_20.c",
+      "bytes": 659669,
+      "sha256": "e877c0f0430cd95b6d5dd21940a1ccffb49915b80d0fa86938f9ebef5739be66"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_21.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_21.c",
+      "bytes": 659669,
+      "sha256": "968cafcf1b4ca8891a645dc4554a36fa37fa5b4ce06dcbb2723e791b3c0fa183"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_22.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_22.c",
+      "bytes": 659669,
+      "sha256": "85fc0e4b512455e8a8fcc0a87d71199c8193a9d64fd590f35c48f44959e7a9b0"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_23.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_23.c",
+      "bytes": 659669,
+      "sha256": "b434adb4ca685697038b8e8d2a1706852edbd442b104d1bc3a9010d460644330"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_24.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_24.c",
+      "bytes": 659669,
+      "sha256": "5d0d8616811a088a94c33ce6db0ab4860afb052234e443b63d02bb10c6338000"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_25.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_25.c",
+      "bytes": 659669,
+      "sha256": "f6ec383fd428b4d4ed137245531056bc349102afccb3a5e4f1b4fee3e0f28517"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_26.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_26.c",
+      "bytes": 659669,
+      "sha256": "52780c130eea87bd5e483cd5202f2cfbe4526c70f89445a4a9e0fefd040559ac"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_27.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_27.c",
+      "bytes": 659669,
+      "sha256": "0990106ed1afc2110eaaaa35f2e5a48ec537c3f26a9051310b15b027ddffc66e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_28.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_28.c",
+      "bytes": 659669,
+      "sha256": "9c3abc4e9db3f798a07de58e0dd332cd5299366a466abfbc1f6ae61c6770b5a0"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_29.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_29.c",
+      "bytes": 659669,
+      "sha256": "8d1d8000f163a3633be86ec2c3a56e8ea84d7f84895c17f6c1e7e8b9b03578c6"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_3.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_3.c",
+      "bytes": 659668,
+      "sha256": "0980f2804a2eaa38773926743837d834e5ddf2a4cbf8a4ea66674fa920c5574e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_30.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_30.c",
+      "bytes": 659669,
+      "sha256": "a8d75816d3587d95f80a5ffc622aa90d2394175cfec9ea806925930ed0fbdd97"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_31.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_31.c",
+      "bytes": 659669,
+      "sha256": "352df3084138e86010a3318787f4d7cc2514ce41b347f114f4d12f7f1c20d25b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_32.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_32.c",
+      "bytes": 659669,
+      "sha256": "67896608941b65c4eee4d26da52253583d961f54cf42231d0876a201709d45e8"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_33.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_33.c",
+      "bytes": 659669,
+      "sha256": "4f811274f69c85b2c9a39ca84c2d6ec8f90ef2bbe832aad27a6186cf5aa3d9ca"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_34.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_34.c",
+      "bytes": 659669,
+      "sha256": "c12f35c40d69775c34764641ada9441bd3e14a4087c88aa29b4121e6ca034d1d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_35.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_35.c",
+      "bytes": 659669,
+      "sha256": "1cb2b336cf5089cec9ea007b816e9034c2aaead570ca61489a05728d28d02a99"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_36.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_36.c",
+      "bytes": 659669,
+      "sha256": "2684d91fc503fdd2a43328d6e513e87b821d574d1c33369f94ca54c54070ea5e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_37.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_37.c",
+      "bytes": 659669,
+      "sha256": "429edbf530f79a855a76dd0fe5dfb4ba24848f8c4ba199033a77cd7e016c0dbf"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_38.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_38.c",
+      "bytes": 659669,
+      "sha256": "cf308ebda84e5af201875ff7f0ec17beaa256f7a39328a863f86b6e2e24b74c9"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_39.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_39.c",
+      "bytes": 659669,
+      "sha256": "218aad5a6d4c53f09d47b2e9a8a6c9cf3452e6fe5938a68d25aef25d4c3bcc2d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_4.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_4.c",
+      "bytes": 659668,
+      "sha256": "042e2ec537ed0cebc6dedeb62b2832cc5c94feaddd2f892ef07bc12a205f818a"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_40.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_40.c",
+      "bytes": 659669,
+      "sha256": "a85ee76a46a4557fda476696c68a68a47b76f578fb515019246a36f4afe3246e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_41.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_41.c",
+      "bytes": 659669,
+      "sha256": "95f8c1780f6bb8bc119a62fe13c90db6eaac30ae0adc9476186b24c3619e0a85"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_42.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_42.c",
+      "bytes": 659669,
+      "sha256": "6a679ca9409857a877e708f9946c9f494cf66a67d715261618cf416336745088"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_43.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_43.c",
+      "bytes": 659669,
+      "sha256": "25d7480a0028036e794d8352fc30a7191a943566b9631666708d08faf786b4c4"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_44.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_44.c",
+      "bytes": 659669,
+      "sha256": "a42fc9bb20fe21340bbb51e7596ab297e3a7ebdb59a38faa04d4e1a83cb051d3"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_45.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_45.c",
+      "bytes": 659669,
+      "sha256": "eb21914c47353cfc678afefcdc8bcde31ee1fbd7390cf973249e8924cc41fe43"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_46.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_46.c",
+      "bytes": 659669,
+      "sha256": "68e4390fdb7ef2988ccc5fbd130f703a41b3fb4cb18066801c40cfa3b6af04e2"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_47.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_47.c",
+      "bytes": 659669,
+      "sha256": "8daff603f4db61a7399491c18658743b17811646480e65acd91710c3a525bfd2"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_48.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_48.c",
+      "bytes": 659669,
+      "sha256": "c42ef65c8cba2b80f001aeeaf57c128300b9ec626936bd299112e39a238c6097"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_49.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_49.c",
+      "bytes": 659669,
+      "sha256": "c7ceb9710607ae31b595cbcc880709e7515527bdb3eecff002d4fd6051393c35"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_5.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_5.c",
+      "bytes": 659668,
+      "sha256": "d49bcab575beee7128029ae330e5dfd28fac48dcb15f352a0a424e00f9c3f2f1"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_50.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_50.c",
+      "bytes": 659669,
+      "sha256": "d957029e93c861e7ec40123f4dab5a7752583d2530c4f7cd33c756fa113319df"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_51.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_51.c",
+      "bytes": 659669,
+      "sha256": "d67f3ed8fd7c82ec30fccedcba625b84e88ebb6f301022123c33db691dd1c513"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_52.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_52.c",
+      "bytes": 659669,
+      "sha256": "0bb3026d9bff68816d91136fd78400ec626c150b1acb6455c986c8de78033d3c"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_53.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_53.c",
+      "bytes": 659669,
+      "sha256": "aecb38f5422373bb4157da602dc8b9b9bb78ad33f352eaf88949b66f18678d61"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_54.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_54.c",
+      "bytes": 659669,
+      "sha256": "a3a1cc4d104d290e26d8a862bb1dc21302431b6c4ae7640badf98d602e69f60b"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_55.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_55.c",
+      "bytes": 659669,
+      "sha256": "be4c20f175cfec83057baa9c6c37fddc8dc970761e02b6107afe49816196c5e8"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_56.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_56.c",
+      "bytes": 659669,
+      "sha256": "f2850ef3a9f73377893f33780a8f36d21b2c3695621c3175346c7da13907b4d3"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_57.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_57.c",
+      "bytes": 659669,
+      "sha256": "663af4aa308e0d8c4b5e3167b605691784a691fc4b336c7f29ee505202a46689"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_58.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_58.c",
+      "bytes": 659669,
+      "sha256": "544519028b336e7787f66e347b0fcbab0a7064c1d2fb928bce0e415922a11c53"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_59.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_59.c",
+      "bytes": 659669,
+      "sha256": "14c94e3ce18d5fd5322798c8c8d1c3712efe61e0c39da6b74e1d51924ab31c2d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_6.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_6.c",
+      "bytes": 659668,
+      "sha256": "2f911bb244f891863d86c56ac4fc1454284fd462b05fe59b82fd113203361a3e"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_60.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_60.c",
+      "bytes": 659669,
+      "sha256": "488e4fff417b2e9e907f026067915fd418feda89dc5be5929ac2cb8dbb1810df"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_61.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_61.c",
+      "bytes": 659669,
+      "sha256": "ebbbc73d18c4907402c1298261c02c47f6250957beafae6c58aa9aa8c5ccdf02"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_62.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_62.c",
+      "bytes": 659669,
+      "sha256": "e35a85832d706e5c8fb14b00de36468b0b6a9029d23bd769250fa8ef2607a830"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_63.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_63.c",
+      "bytes": 659669,
+      "sha256": "f79ad5d10551c5518d22179b8a77b4013c7bdbdc1c218c215487efde1e068870"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_64.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_64.c",
+      "bytes": 659669,
+      "sha256": "03bcd333e47db8b690709da06e114d5b6d55e854140dc60b33112deb56667f16"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_65.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_65.c",
+      "bytes": 659669,
+      "sha256": "b2b8461fb5241e265256a65684a2fdc9efa44ad65c10d93cc4066a8eafb787de"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_66.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_66.c",
+      "bytes": 659669,
+      "sha256": "0ee0e03a1288f3733cecdd755537fdfc16d97fc868a54bf6d022add3574af47d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_67.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_67.c",
+      "bytes": 659669,
+      "sha256": "eff89664b9ae15c083342e6a7018233aa3e5c3c01bf6f004a9c95d545571b138"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_68.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_68.c",
+      "bytes": 659669,
+      "sha256": "102c7f00cb25feea98263ddf605e5c6bd1b0fa19c5572ecfe8a85940e9e24204"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_69.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_69.c",
+      "bytes": 577399,
+      "sha256": "613198ac1407b3d46fd781ff7f096c04fa4d289157c6a5734a3ae97df0a72dcb"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_7.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_7.c",
+      "bytes": 659668,
+      "sha256": "c9623cd272032bb460119f5ecfd2849770f0527018ba5f4d08b01460652c39bb"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_8.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_8.c",
+      "bytes": 659668,
+      "sha256": "da614cfd1005b5a124b551e6bc0168cf07a1caea366ec6f80928af1fc0a2da32"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_integrity_table_9.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_integrity_table_9.c",
+      "bytes": 659668,
+      "sha256": "c05fff12b516e64b2b562fc54335676d2324a45c22c91ab0a660115b22d0bc11"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_1d.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_1d.c",
+      "bytes": 140643,
+      "sha256": "65f22d38b889f9e571819791c763d90ca0124ebed95d49c6029dc0f4d389ed66"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_1e.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_1e.c",
+      "bytes": 1181630,
+      "sha256": "5f1213476e906541f87aa1a60631fc96e9f60e7d98845f7579db2d1e1a6c5bb5"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_1f.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_1f.c",
+      "bytes": 2662256,
+      "sha256": "5a4b48a379be4d0d80a81668bb6cc30e2e1eeaa112b37b65cd9d6ef5a1aff037"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_20.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_20.c",
+      "bytes": 945164,
+      "sha256": "8e228bfe2459f92ca6f9d4475097c57b09ece4f03373dcf53b644586f95e216d"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_21.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_21.c",
+      "bytes": 972590,
+      "sha256": "b65720d9bb23cdb24e4879da168368fead11ebcbdeababac871fa5247a54e520"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_22.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_22.c",
+      "bytes": 1524567,
+      "sha256": "d886d586ba234473a1eb0c2ed2496d6011d756e981ba9a79394e3bcc6b3f8aa0"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_23.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_23.c",
+      "bytes": 1681616,
+      "sha256": "18e2437dca4961b6aa03507934d393139c4bef7e9c44cd77d33be47ee7f3c6ce"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/mescal_ssc_page_24.c",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/mescal_ssc_page_24.c",
+      "bytes": 4345,
+      "sha256": "b5a983b6aa2b25e2e35f3efd70915daf942103e8026b3326a82013348a0a7b4a"
+    },
+    {
+      "source": "crypto/auth/mescal/generated/ssc_inventory.json",
+      "package": "src/apple_music_source/_native/auth/mescal/generated/ssc_inventory.json",
+      "bytes": 80415,
+      "sha256": "8570a24f6a20b0c8c57a14065da4378f8940d0fc9019fcc5b8a3ff058c3f79b6"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal.c",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal.c",
+      "bytes": 13606,
+      "sha256": "ae78e170c816667ae6dc050889b91f3027daf0051c17ef6b5e28051afb9d9e2c"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal.h",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal.h",
+      "bytes": 1783,
+      "sha256": "edf4a9f3b8f15f01be978dea599e3511c0bbf4c75c0e14d1da44dda4b84a7b70"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal_integrity.c",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal_integrity.c",
+      "bytes": 477,
+      "sha256": "b1f424a2065aa127df4267a098b61ed288ba5db0e176be92e91976600f1d4374"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal_integrity.h",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal_integrity.h",
+      "bytes": 304,
+      "sha256": "7c632f7a050248fff882d6f1bd8f18b4a963b33b17c0524fa67dbea087ab45d8"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal_integrity_generated.inc",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal_integrity_generated.inc",
+      "bytes": 5813,
+      "sha256": "457876e2446810e795949e51e070d952b08ca27321ad65f849e31b16394d47f4"
+    },
+    {
+      "source": "crypto/auth/mescal/mescal_internal.h",
+      "package": "src/apple_music_source/_native/auth/mescal/mescal_internal.h",
+      "bytes": 252,
+      "sha256": "aae0e9d72c4af197ffd8d3e44cee187acf615be1a1ad13120182b956b833964e"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_machine.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_machine.h",
+      "bytes": 8120,
+      "sha256": "16b2961566c0713a63698b2f894654e97697370f24315086dc83950f2fb5d7c2"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native.h",
+      "bytes": 1182,
+      "sha256": "3ddc837dcb2dc35952c183da6bcf060c0df32b73c53383077fac097197a4524f"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native_internal.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native_internal.h",
+      "bytes": 10880,
+      "sha256": "610e47ae79eaa789ede5a92c2a292b7bb7d206ece13960d8eb93bd4af69ebf65"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload.h",
+      "bytes": 2504,
+      "sha256": "5fa44f4fef6ed5554e49954f0cac9a65b1f27daa87961b3cb7858e1a9b901774"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_simd.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_simd.h",
+      "bytes": 4403,
+      "sha256": "16b94fd4336b141b267039d85b19d8c0dda666b8163f30882493316b7a456250"
+    },
+    {
+      "source": "crypto/keygen_experimental/app_generated/block_0.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/app_generated/block_0.c",
+      "bytes": 765021,
+      "sha256": "ae04c163c9fa82709e9a06cb19e619d86f0428cdc8b9814405b4c77ad32df201"
+    },
+    {
+      "source": "crypto/keygen_experimental/app_generated/bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/app_generated/bounds.inc",
+      "bytes": 9571,
+      "sha256": "c19f5b70c2bec7472d3b3f0826701894c577b916203fe0c0e95a7f334cb051bc"
+    },
+    {
+      "source": "crypto/keygen_experimental/append_bytes.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/append_bytes.c",
+      "bytes": 1299,
+      "sha256": "0aa6156a17da1281f8992e7b34512dd7b70f61d2e95ac6cc431bfb4ca0e80fe3"
+    },
+    {
+      "source": "crypto/keygen_experimental/append_bytes.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/append_bytes.h",
+      "bytes": 828,
+      "sha256": "f31fe71578af1ed1817ade7bcff564ba773e8f7b182eff3be1048872468d795d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity.c",
+      "bytes": 902,
+      "sha256": "f6b7927f28f67b217b903511723d1bdeff3dcdd113c92d417e9a429dfe7f3e48"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity.h",
+      "bytes": 330,
+      "sha256": "4069d2d1cd171883c518e7db0617bd5b6246676568495334ed80e23875b83859"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_0.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_0.c",
+      "bytes": 659665,
+      "sha256": "e1a8c5973f76d683c89d57f8f0e5c136fa762df7971b7373facdab2d8da1f55b"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_1.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_1.c",
+      "bytes": 659665,
+      "sha256": "66c1ebea02d11ec2ed942a4e8c352407d00704b612e86467bf12be809d51fde2"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_10.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_10.c",
+      "bytes": 659666,
+      "sha256": "d8436fb4d58fb25a4d44d6a593ec791488939b95c57838c5a20c276ca8aca07d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_11.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_11.c",
+      "bytes": 659666,
+      "sha256": "9c6994bb0a1bd4e752308177d21384bba3005bd97345d00acf7e9fa93be2daba"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_12.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_12.c",
+      "bytes": 659666,
+      "sha256": "1a868b9ae69eba3bba26cf9276fbb3e1a1b17c420feb1db988a9d0fa5807d9b7"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_13.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_13.c",
+      "bytes": 659666,
+      "sha256": "0be6b5ed32299fe28372d9e0074b34e8c101663b9151828837fc896952b16eca"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_14.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_14.c",
+      "bytes": 659666,
+      "sha256": "74413b2a601f3547b3c7c5946df11d7362955a3985a43f5f26455596e6c7b23b"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_15.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_15.c",
+      "bytes": 659666,
+      "sha256": "f4a0fd6e60e1eade077b616f82604f37d5c23c9ee95ead7c45e280d6cf0ff0f7"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_16.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_16.c",
+      "bytes": 659666,
+      "sha256": "207bb1361ec7908dad441d78b6e73707c931f48cc3c96cf7c22e6649c0c0fc80"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_17.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_17.c",
+      "bytes": 659666,
+      "sha256": "ac7983482b0207390c95bcd47408938939bec0b05dc56114864d988fbb9746df"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_18.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_18.c",
+      "bytes": 659666,
+      "sha256": "81270cbc2a34e5e0a0d556bebbb7c6c3db8b15a708f122afb73eec2c843d40cf"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_19.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_19.c",
+      "bytes": 659666,
+      "sha256": "df9c297e33f1a2fb41a213708831322893a54c1928d8b514d06fea7296ae8c1d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_2.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_2.c",
+      "bytes": 659665,
+      "sha256": "b2675975ba9b95c4fa9f1034c6c8c0e429ebbb74a572f4f90ca4498e9c3eca6d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_20.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_20.c",
+      "bytes": 659666,
+      "sha256": "8656bc7f500fd52da031513795de7b0ee8f2e4550c08c6f7a5a4246ead4f8b94"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_21.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_21.c",
+      "bytes": 659666,
+      "sha256": "7f2bf6f9a32bc9e0c9091e2b8efee255977b58d223988b4ddc995da8da55fb08"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_22.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_22.c",
+      "bytes": 659666,
+      "sha256": "9736c3e7e259484d01748568d93a87e928d411f8611a6ff22ed5b541311d4eae"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_23.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_23.c",
+      "bytes": 659666,
+      "sha256": "56daed8e0e3502e55211e7a823bdb158623202489dfa1b5ebf0766002c94d5ac"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_24.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_24.c",
+      "bytes": 659666,
+      "sha256": "9c67756bf8ca3fbec708d8e37056260443eb7eb86e87ad3e3c81ee9f90bed858"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_25.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_25.c",
+      "bytes": 659666,
+      "sha256": "add62c52808c1f552d2766abacdb19e5bf43f495c5a3489ec7e8b4f9ca1bf6b2"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_26.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_26.c",
+      "bytes": 659666,
+      "sha256": "dad9510e8b90e65415684c55a5b2f4096dc878bafc2927ac00f9961dc18418a5"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_27.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_27.c",
+      "bytes": 659666,
+      "sha256": "6d02546c80943b3ccabf60024462cdc38602334d23f408e0e2931fddf2b28bca"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_28.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_28.c",
+      "bytes": 659666,
+      "sha256": "744960c8a5a92c6e565d41869654fcdce665b2b09ca8ef448e22ca95502d9d88"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_29.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_29.c",
+      "bytes": 659666,
+      "sha256": "35b11e243a458e0e588cc7c9428da8ebdc759189d023e9c7f830deb9146bb6f4"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_3.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_3.c",
+      "bytes": 659665,
+      "sha256": "e3a78036eb6bcdc4104cc46bde8f68e093754c7b3ff2cc4d9f8d027bd9c53f68"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_30.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_30.c",
+      "bytes": 659666,
+      "sha256": "36f0d1cc7b9337b758e38df0db8dec41630fec53750ff564987210dd538afadb"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_31.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_31.c",
+      "bytes": 659666,
+      "sha256": "9b81f5b7ee7ca712049367de3bf66215a5b2c8cb1b77c0370b67d879e411c5bb"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_32.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_32.c",
+      "bytes": 659666,
+      "sha256": "8b8116650b0a580448b6cee724062d34626f35ae93c500776319ccadbe1640bd"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_33.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_33.c",
+      "bytes": 659666,
+      "sha256": "993865452be0b55e232b0af7e4802d2150e9d0bcedd7267125f2656a9ed749c8"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_34.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_34.c",
+      "bytes": 659666,
+      "sha256": "4de738f6c052caacf30a59f0c12f380ea033515174d55db98658bb5c6da92168"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_35.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_35.c",
+      "bytes": 659666,
+      "sha256": "4db2a6a500c02c0c511a889deec5cb70a3f35f215a1e5ce57c8b9d451966f11d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_36.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_36.c",
+      "bytes": 659666,
+      "sha256": "4f6a4805766536f8da578f5f72c218d04a36c6185ee3122470d63092fd769cad"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_37.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_37.c",
+      "bytes": 659666,
+      "sha256": "0bedec4a30aedbb9a58295d84694a06cd7cad4605917bcbf56d9e282e2ae0765"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_38.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_38.c",
+      "bytes": 659666,
+      "sha256": "340709cbe875694e062e7983e8f228afdfd74d268ce9abd2a0daa87e0f3b18fd"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_39.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_39.c",
+      "bytes": 659666,
+      "sha256": "917d5a731330abe684a66e6d1a8585596f046e8a073925462c3d9e6ee1f91e63"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_4.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_4.c",
+      "bytes": 659665,
+      "sha256": "dc6785a980cba80cf327abc418b9fa16d0f1f772d993e16f0580198a9de2d2d8"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_40.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_40.c",
+      "bytes": 659666,
+      "sha256": "92a22138fb00e57027d4cac9ef7d69e0da6bb4559bc163b0b737cf7fea824165"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_41.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_41.c",
+      "bytes": 659666,
+      "sha256": "a8aa507bb9839be0208a601354170cc583f469e5e76c672241b4fd6f1171f221"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_42.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_42.c",
+      "bytes": 659666,
+      "sha256": "8ea6ffaaa0981124d5310eaae30b32f0d5aff2f635d006e3f5ac22f22e59b614"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_43.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_43.c",
+      "bytes": 659666,
+      "sha256": "da289aa3c3de1a0786fa75d6a545b8c401e43db57a994a08e33fe195dde1fb2d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_44.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_44.c",
+      "bytes": 659666,
+      "sha256": "c51530d18ef0c3fc45913e0edc3793c9ad623bf870939f5993149fd1553ce3a2"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_45.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_45.c",
+      "bytes": 659666,
+      "sha256": "bbc4202b35ceadd399b9d7f3b2d15172d9f4b7978391808006f46dc32d2c74a8"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_46.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_46.c",
+      "bytes": 659666,
+      "sha256": "9063ba6e7ffff02eb84c3ec61944023d18af2be8d10f527a7fd4d6aa6ec7323a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_47.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_47.c",
+      "bytes": 659666,
+      "sha256": "dc9c74b7cd691e88439a85863eb3f20b95be7770d2b216e54102ded4d5edaf9d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_48.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_48.c",
+      "bytes": 659666,
+      "sha256": "725eca66675bb70a7b85f4fa12bb0b2aae1be125d816de81d17d82119677c631"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_49.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_49.c",
+      "bytes": 659666,
+      "sha256": "c19ae3b0ff5d78f0375e1d037661646137e5927c77de73c5b952003267f28106"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_5.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_5.c",
+      "bytes": 659665,
+      "sha256": "07882627ffe2f32fbd37735d570bb8bba64dec4d821883f7835d6d40dfbd039b"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_50.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_50.c",
+      "bytes": 659666,
+      "sha256": "637ccc28ae2426cc5ccdb79f22de4b7336bbf9bfdde6e16468d1ab95c146ee18"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_51.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_51.c",
+      "bytes": 659666,
+      "sha256": "07404d1392b84c4e5396e6c921bf9733dbd5af42b2c805bb7b3bba1672ae5759"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_52.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_52.c",
+      "bytes": 659666,
+      "sha256": "c7b0163e1a5949d4ede87a02fa0c18164b0382379120b9c60ad69a7d23cddf2d"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_53.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_53.c",
+      "bytes": 659666,
+      "sha256": "e695647a2293d67ca8b55085dc2ce5a1a39b418d3d6b44600d1f05ab086840ad"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_54.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_54.c",
+      "bytes": 659666,
+      "sha256": "fb54863bb63000647cd7f44a173840d454c92856ab21056f48dd4798750b43f3"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_55.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_55.c",
+      "bytes": 659666,
+      "sha256": "eed879e9656a89ebaafc5bf21444280267c36bf72fe1fc92f33eb9f0401dabf9"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_56.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_56.c",
+      "bytes": 659666,
+      "sha256": "0839841b249358f2a04ef1dd16ad0b68d02d9a13e38a6549fd25da58f19496e8"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_57.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_57.c",
+      "bytes": 659666,
+      "sha256": "5e7310d88b9f56a4a6a97b2ad0251c53361b99681c8ad51870abdb44f018262f"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_58.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_58.c",
+      "bytes": 659666,
+      "sha256": "a00c9216dfcfb69b4abde96dd96299c9b484de49903961ebf82fc558c61005a6"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_59.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_59.c",
+      "bytes": 659666,
+      "sha256": "6380cc01a15a537ca65da05d8385c0d4875e0504331797c8c498fafb56b4cc61"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_6.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_6.c",
+      "bytes": 659665,
+      "sha256": "67a5f5062ed573dccc9b29d8b269959b847b0855db591d66d44f2403302b2666"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_60.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_60.c",
+      "bytes": 659666,
+      "sha256": "611255e85e05c3a43430bfa451088b0a1b100ac629bf38fb1493e1b3a25af1af"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_61.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_61.c",
+      "bytes": 659666,
+      "sha256": "8fff95036deaa3a6f77b49f496e3c4c84ddfbef399ecbce7f3c46f986f763f4a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_62.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_62.c",
+      "bytes": 659666,
+      "sha256": "d62d7d64462c79174f7da865b5b9ecb3393723dc7deb5e55a0ddc5461b5a4f00"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_63.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_63.c",
+      "bytes": 659666,
+      "sha256": "bf81b2a9e485cc3ddf3878a60d8fa8bac92dc4b953adfbdde8ef0ffbe8f6bb3c"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_64.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_64.c",
+      "bytes": 659666,
+      "sha256": "0a38a5ac91ac27683510d8610c806ff878a78b947de44a1dc50d271a019d928b"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_65.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_65.c",
+      "bytes": 659666,
+      "sha256": "2250603b377a3a4d786e3ff516a8cb251558d72681fde3b0ba2de9d3f85998f4"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_66.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_66.c",
+      "bytes": 659666,
+      "sha256": "7fa680b62f68af704e4e5b6c6c01e50e267a43fcd8e96909a8f7ed9a21d10471"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_67.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_67.c",
+      "bytes": 659666,
+      "sha256": "0ae6b29193b67f81f03f732dc6a8c7de4ea48ae29c8af34ea8dd579003a99a79"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_68.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_68.c",
+      "bytes": 659666,
+      "sha256": "3eb6c8cdcc2256c613e02d9d9479bd4a4f445aee548f2462970d9eb8341cf7b1"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_69.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_69.c",
+      "bytes": 659666,
+      "sha256": "81f3f620ca83f960e5c1eb5ff156926fef6161e8315cfa81eb82e380d33ee886"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_7.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_7.c",
+      "bytes": 659665,
+      "sha256": "70ce6ea3ac9297815310f51ec248cbf09f4c5142814572540a830df542ad6338"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_70.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_70.c",
+      "bytes": 659666,
+      "sha256": "2424fd42074e316fdd6f9bc767480d3644f682d9709e6aefc65bcdd8fe27ffca"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_71.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_71.c",
+      "bytes": 659666,
+      "sha256": "8897eab29f38b526b247face74764b0bac05b6598dcf1588ac2e5aeaa6b5b1c8"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_72.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_72.c",
+      "bytes": 659666,
+      "sha256": "c9e23d704a26e0c9ea2e7fab45d009253f799aec80def782d5f162acf32dc89f"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_73.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_73.c",
+      "bytes": 659666,
+      "sha256": "94aacf5fd7cf13837ab393e228be4e9f888ddde4e091fb7b0fb42dbd23419f4a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_74.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_74.c",
+      "bytes": 659666,
+      "sha256": "815c36a6beccc670bc7a25a967f7fc099c88e818d67b9bcb25df13784e2039c1"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_75.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_75.c",
+      "bytes": 659666,
+      "sha256": "216ab2607c2169ed500c1d929fcc1f8d9bbcb895b6b431cbbefec5d44466e92f"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_76.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_76.c",
+      "bytes": 659666,
+      "sha256": "2d5b80b4f19421fef7147debe79fa7bc8caffdd229c3a34485f84da261eb551b"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_77.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_77.c",
+      "bytes": 659666,
+      "sha256": "f7c2e7fe1d41012e26c664123034dd2e18310fe08fe0317bc027c10754f69275"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_78.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_78.c",
+      "bytes": 659666,
+      "sha256": "4713aaee0888abfd2066c7632fbce189035968f28e799030458d92aa1fcb0992"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_79.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_79.c",
+      "bytes": 659666,
+      "sha256": "fa5ec1e1ea2a7e3de1a3b124df967538e3294f2672963ad8e46193e45b338974"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_8.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_8.c",
+      "bytes": 659665,
+      "sha256": "2fa75363190b003c1e4ef509cc3fb38cc98a959a45202a6956738563800bc52e"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_80.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_80.c",
+      "bytes": 659666,
+      "sha256": "1be8538410ec01ecc5ef4c82cea30559e8ecabbf12047003b49c1816e77d389f"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_81.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_81.c",
+      "bytes": 659666,
+      "sha256": "fcf044d2d4abe78435bd990d2fa2765a46a034d38a9bed7281769aa04d4e1c69"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_82.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_82.c",
+      "bytes": 659666,
+      "sha256": "f46286d8f47a3757da913e500f3eda6676e656bafb9298fe9fa1be7033be264f"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_83.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_83.c",
+      "bytes": 659666,
+      "sha256": "6853da63042dfaf684f239c46072e787b1ca38d5ae5fc04bc47fee123faeb281"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_84.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_84.c",
+      "bytes": 659666,
+      "sha256": "9a3e95bba8bc0a41590628260b9ec757ced78e1bb0ab0fc730bf5ea32ab239a5"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_85.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_85.c",
+      "bytes": 659666,
+      "sha256": "d5020370efafed3bd8f0a5fdb0549e034dac36c354257a09730e2b90fbcb9442"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_86.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_86.c",
+      "bytes": 659666,
+      "sha256": "c8b9edd082bd876d0b8e366cdfd4bf565c2b823f782164138feb681be560e3d9"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_87.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_87.c",
+      "bytes": 659666,
+      "sha256": "8e12eeaa561cf14fdd82d66ab9a415653130e769bcfa6e49e375f5a7372599de"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_88.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_88.c",
+      "bytes": 659666,
+      "sha256": "d2a7eacafaa9f7e6fbc2dba82e5e76b345072325b633ca57bd500c9db8bdc184"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_89.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_89.c",
+      "bytes": 288,
+      "sha256": "e526b52e752e58f90fbf44a3bfd7be9ffd83d1073ed49aba3540236614dab364"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_9.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated/ckc_integrity_table_9.c",
+      "bytes": 659665,
+      "sha256": "e5f6fb0f9ac91030a92449c03fbcb7cb6d2e04fc7328de90c5e5d7b24043c594"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_integrity_generated.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_integrity_generated.inc",
+      "bytes": 6892,
+      "sha256": "518c5ec0d19d4d2090fe3aed393c92e517f13aa5d0d9ca56dee6275847a39a9c"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_packet.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_packet.c",
+      "bytes": 2228,
+      "sha256": "1ae60c4b1d07ce5fc83a5ca0af5cdef3ccc0658acf3c059b4c055401b477485a"
+    },
+    {
+      "source": "crypto/keygen_experimental/ckc_packet.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/ckc_packet.h",
+      "bytes": 1360,
+      "sha256": "f07870d70deb48716f16ae8a6a0a6bcbb2c3a582d4b96ec7c05f5a1ef59797b8"
+    },
+    {
+      "source": "crypto/keygen_experimental/compare_select.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/compare_select.c",
+      "bytes": 2900,
+      "sha256": "b314d914a0eb08e482c8642746e2a3cf0315e7b66422be1816ef6d12b376d03a"
+    },
+    {
+      "source": "crypto/keygen_experimental/compare_select.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/compare_select.h",
+      "bytes": 1364,
+      "sha256": "5deee86c24f1ecd89a1c45ceb608581b1ea3c548cfeab52fda68367e22c5e08e"
+    },
+    {
+      "source": "crypto/keygen_experimental/field_copy.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/field_copy.c",
+      "bytes": 2148,
+      "sha256": "a8e7fe9109f05a0af1f4447e640a05257e8d13b9f614b0288f51b36430cbd751"
+    },
+    {
+      "source": "crypto/keygen_experimental/field_copy.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/field_copy.h",
+      "bytes": 753,
+      "sha256": "289d2af3376bddb78f1526a3cb0f2a4d8ffd65f0eef755032a41e5e9da7cc384"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/bounds.inc",
+      "bytes": 8063,
+      "sha256": "86dae620b50f7100bebb6a7137265f5a8abaa1405a5516525332ae1eb5a228b4"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_0.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_0.c",
+      "bytes": 6133460,
+      "sha256": "667c801b80b044743d119059feb008259bd552afdb95c969a579249c4d1cacbf"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_1.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_1.c",
+      "bytes": 6124195,
+      "sha256": "69e803a7f21c2c407734b0bca95c34f9f80e3f5a7f9b16093487df0cb85f3006"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_10.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_10.c",
+      "bytes": 6160037,
+      "sha256": "9c8606f97b846be8da72c25f8ffe49b79b26f3277b736ab6a5d38d49b8719ad0"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_11.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_11.c",
+      "bytes": 6131866,
+      "sha256": "4853ffa976e2d9394bf9867d8d0359111fb5600125f4e0e73ed758f6d99958d2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_12.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_12.c",
+      "bytes": 6033928,
+      "sha256": "9e272a24d0e018f3eba1a923d3dd7d587b3bd5fb4e6cf1ace70599f3fa61bbd4"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_13.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_13.c",
+      "bytes": 6157202,
+      "sha256": "7a0b9ef8ca69283403548b68530114c0e5c66b59098eb033f0df88fac9492d40"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_14.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_14.c",
+      "bytes": 6192195,
+      "sha256": "f8a39506f482c5ac6b97cf9480f2594eeae54fb33e31f0389783aa0f78a8e407"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_15.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_15.c",
+      "bytes": 6176109,
+      "sha256": "fb5d82b78395f03d21464389bc8a147d60d720ffbe660d97037989f9d6aa3a21"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_16.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_16.c",
+      "bytes": 6209529,
+      "sha256": "a79565314f8ae8df6acd4aab174112d32c03b199f8a1a403c275f07c0b858cc2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_17.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_17.c",
+      "bytes": 6210357,
+      "sha256": "185f478e4a14fb1eb11b1121b3c78501a7ffe99721de6acb1554b924d56703bc"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_18.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_18.c",
+      "bytes": 6215083,
+      "sha256": "25f6370e210fd2e44ec047edeb08bf901c485fb15018fa53913ed3d67512f50f"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_19.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_19.c",
+      "bytes": 6192590,
+      "sha256": "5612a8636127f5e424d0a84d87e96e801427cad4a0bb386db1fe1644192ca404"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_2.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_2.c",
+      "bytes": 6152795,
+      "sha256": "7ebf0dd9db43994360456f595982e310af3c8f2b2e10b2d8f07a333934547565"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_20.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_20.c",
+      "bytes": 6174735,
+      "sha256": "80e82e7599ceaac7985160509800c755bb0b36a242d2d063a43cb3e3bb335179"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_21.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_21.c",
+      "bytes": 6190928,
+      "sha256": "1d5baaba013f3249ab2b0a2cae26981fc09808bf7c1bbafc24229e56084773f8"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_22.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_22.c",
+      "bytes": 6176874,
+      "sha256": "f53d2cf7b418593b42ff4a5c730bc625d5c3e602c0ee713edf2c45d9eb660bae"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_23.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_23.c",
+      "bytes": 6212985,
+      "sha256": "02b6bb5a34b8aff49b2b9fc8917f90ff5aab1f6bd92abf46b49e1117376de33a"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_24.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_24.c",
+      "bytes": 6203404,
+      "sha256": "e757bbad5a0285228d44544880e02c87d15e8649be05950f64a6c8799f2d3828"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_25.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_25.c",
+      "bytes": 6172396,
+      "sha256": "b2c81c4a2082332559dcef31ebac93da3c951ec02eeb6c5ab82677d5e9dffb74"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_26.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_26.c",
+      "bytes": 6174828,
+      "sha256": "90ac749741f7d75740069cffae2dfe5f73f1bb7f55f7c84320a0c20ff0403575"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_27.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_27.c",
+      "bytes": 6175102,
+      "sha256": "b90fd088a60bbe92de8c5666817c0156e9b8bd04df8b891a6fa3ddacac7c9ba7"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_28.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_28.c",
+      "bytes": 6162287,
+      "sha256": "8f65bfca6b1028d27bf20a5e05710d0f80f1015bde44a13d4ef459abd64e488a"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_29.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_29.c",
+      "bytes": 6164844,
+      "sha256": "e5fe6b74bbcb3490a848fff03f9dca3e40c8a91304d122f81ed57e469b01e686"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_3.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_3.c",
+      "bytes": 6157305,
+      "sha256": "80a46ddd08da57a96ff13e9b89246112c475fec78eb50842ef91a9fbf00d0fc7"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_30.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_30.c",
+      "bytes": 6173412,
+      "sha256": "307d6279e4b6818dce8ba9ac5ee975da00f3ec7869b2f41e0b6cd3722f3964fd"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_31.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_31.c",
+      "bytes": 6183231,
+      "sha256": "ae3aecba9ef770f0026f031b8be1f859cbdad4353086509f8d2801f9c0f4e9c0"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_32.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_32.c",
+      "bytes": 6185992,
+      "sha256": "c906b9cb9b5724e5858ac72b673bc408be3642b378a5afa046fc3774d19be869"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_33.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_33.c",
+      "bytes": 6184921,
+      "sha256": "408111a0b696a356aa81d2f64ad10327f97aea2bcb726b203917707ee7ecc83d"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_34.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_34.c",
+      "bytes": 6155408,
+      "sha256": "92b616fd8fdd52125a1d9ff3e4fdb17d363e8ed7c48b7567ed6dc700ae2e096c"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_35.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_35.c",
+      "bytes": 6141238,
+      "sha256": "3a745edf5c43e8375523f49219dec74fbc360f5d92758b145b54fe4b02e6669c"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_36.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_36.c",
+      "bytes": 6206808,
+      "sha256": "d66eb0a2587ef6490dda598f81c16cd26c4dbaa2cf9b667d3dad9335607fdca1"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_37.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_37.c",
+      "bytes": 6256293,
+      "sha256": "0a805c426307d50b90fe8c90f16fc676a505526619350b699cc727ee831ec9c9"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_38.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_38.c",
+      "bytes": 6235475,
+      "sha256": "cdf63a061ae630df4e8195424551fc2413773a65fc230b224acfdedf69706350"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_39.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_39.c",
+      "bytes": 6237007,
+      "sha256": "14be7528d10dde07443084a73cb1e30044a0859618b093becba4616e21dea4d9"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_4.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_4.c",
+      "bytes": 6161269,
+      "sha256": "e014728cc16b195926cde13d9e44dfce4d11d43825d59f5924d1ebee10fca914"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_40.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_40.c",
+      "bytes": 6257356,
+      "sha256": "7be55c49b0361193d4cf594ce6d13f0eec0eb21a0d09d4b4b396d13a2b338fbc"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_41.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_41.c",
+      "bytes": 6224992,
+      "sha256": "c4db2bf815df7b9c85fe9826a1b471949f74e079859832c72aa04cce7b7ac260"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_42.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_42.c",
+      "bytes": 6247685,
+      "sha256": "be011deebe79a4079d9299d012492f8e8ec271b6a71b6c27333f33828b90219e"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_43.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_43.c",
+      "bytes": 6225162,
+      "sha256": "14ebc0bc4b91bcdbc43f5bd4c3dafdd6e68e93656a27dd8c3ce97d5074290e7b"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_44.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_44.c",
+      "bytes": 6253586,
+      "sha256": "657fac0c9ede3c83f96219401812dca58e1052fa37635dbbdb00850481f2bc30"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_45.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_45.c",
+      "bytes": 6241424,
+      "sha256": "ce351cffe775a562b116071c7ebd4f6dcab843e792f69a0ec665c4e50b7b101f"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_46.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_46.c",
+      "bytes": 6243419,
+      "sha256": "8597b3ef0ef1f919fff105d32815a8db4f5d21810651bf65e634b2eaf5c75692"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_47.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_47.c",
+      "bytes": 6257147,
+      "sha256": "64a8968efe631861b1eebd3687b7abe1daf2da0fdc04518e7cd71ccc9746ebea"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_48.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_48.c",
+      "bytes": 6208971,
+      "sha256": "ecdcffe5d3bb0ebcfda9b60d6a9e898e6c3f0fa3deee1f53be711104bf1e3fa0"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_49.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_49.c",
+      "bytes": 6195623,
+      "sha256": "51afa6731d2cd71c992790caf1fccd0a107036399bc6bc42d7da33549b9d8106"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_5.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_5.c",
+      "bytes": 6160697,
+      "sha256": "bcf05cc6f6702ad1bbafc7ab704180e0f75282a64994678169d00b8978ad3431"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_50.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_50.c",
+      "bytes": 6245695,
+      "sha256": "2a59a267677b6034a34ae2343fd6125ca0d1115be33f76b656e9b21fcb62d0d2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_51.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_51.c",
+      "bytes": 6241356,
+      "sha256": "81dd573806bff5336068d3fc110b06e818304a089c072f296ed1a675f95318d3"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_52.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_52.c",
+      "bytes": 6213643,
+      "sha256": "e6a8c147d616b45e627dae0e9f2647d39a0bf79abdc454bc551450318370b87c"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_53.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_53.c",
+      "bytes": 6218060,
+      "sha256": "589a19e301e4cceaf541b00d96142b80d660af2dafcfe3ff1d8a56ed8cc65340"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_54.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_54.c",
+      "bytes": 6223185,
+      "sha256": "f3d19b451a52a6e8c617e7f353638090254ecfa8423902152ad65e12f24330e8"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_55.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_55.c",
+      "bytes": 6225447,
+      "sha256": "3ad38f957d41f577e3ddfa9f2825bf8ca5c9639e825d113ad1886e5d8c5fbda2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_56.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_56.c",
+      "bytes": 6239925,
+      "sha256": "5f25addfda55cad4abfda5ccca85c24abb82a52937f0bd96b3d4206b38e71ec2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_57.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_57.c",
+      "bytes": 6247683,
+      "sha256": "c0428001e1440d118d488d204380ab4d99ef22ba8423b2632c36c1fb2142cf7f"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_58.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_58.c",
+      "bytes": 6212246,
+      "sha256": "2f0bd139bb5cada7329caf85710258b8b01f250a9f3898ae061697715413427b"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_59.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_59.c",
+      "bytes": 6229615,
+      "sha256": "472e11845860ade6e762d06f37385dac39dd723ec30faaa091b48c5e862c48d2"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_6.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_6.c",
+      "bytes": 6130898,
+      "sha256": "dd8e8c897051f9691bf5ddf947442a15b1b273214ab2a598fe1a431dea8d19fd"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_60.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_60.c",
+      "bytes": 6248177,
+      "sha256": "91ec69dc350231b8c4391b190658d427322dea4ee55f8ad8c7f8fc49193911b6"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_61.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_61.c",
+      "bytes": 6214901,
+      "sha256": "c601ee8158497d2d421bd00cf5551d0dc924a2dae5488f8a53f5aa88643f19ef"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_62.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_62.c",
+      "bytes": 6203098,
+      "sha256": "888bd9b2766a4c667b7be76b20383b7a8672299c006ffbe93975914b28546fab"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_63.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_63.c",
+      "bytes": 6191695,
+      "sha256": "f54b1f35475d6a476563bcb40e52be1456bf71dd9480b862f5b21e0d75161610"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_64.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_64.c",
+      "bytes": 6217201,
+      "sha256": "31bf10411c1d0c3fbaee129ee7de4162e03e9e20a305f2694bd78513f7369ff6"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_65.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_65.c",
+      "bytes": 6260319,
+      "sha256": "d9d34590ede88e012ffa04b8f1d1c37857d2e9fdfccc2c4d37c28ae0dead853a"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_66.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_66.c",
+      "bytes": 6221872,
+      "sha256": "75cc55f4c2c9413bb0afb5b3e1d58ddab8e2dc5c5a823cf0bacab30e21414c84"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_67.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_67.c",
+      "bytes": 6185607,
+      "sha256": "9d878a0326241e164ffbbdb891615200050158e0b2cfa19f2b062333900186f8"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_68.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_68.c",
+      "bytes": 6220731,
+      "sha256": "5df7f48e97ae747e63a2e8c19003fd5f4a6be146a46d0fb641214ebc4d61ad55"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_69.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_69.c",
+      "bytes": 6211577,
+      "sha256": "ce514bcacdbb1c1858aa3710667db2d96068672fe0fe80cec37a33437c84fa58"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_7.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_7.c",
+      "bytes": 6143529,
+      "sha256": "d5b8b40e321d005909ed173e1a7b4d28baaaaf5c8124472c9aadce13781b3e41"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_70.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_70.c",
+      "bytes": 6228740,
+      "sha256": "ead322a1f695624a1b4866bb7e5cae65d456c171078deb60572439a9465833a9"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_71.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_71.c",
+      "bytes": 6245033,
+      "sha256": "1779e9411fd0b0923f840722272e77a38cc53face56dbfc74dfb5b3b87cc5c73"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_72.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_72.c",
+      "bytes": 6248181,
+      "sha256": "7ea27d88b94ca3f58c6aeab82961411c9f798e3fad985219ea2e1565af6cb1f5"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_73.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_73.c",
+      "bytes": 6210585,
+      "sha256": "b4cc38fc0857d1e6da14990f86ec14e2710fb08f4d7a9db56b7d9ccaa85dba75"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_74.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_74.c",
+      "bytes": 6219330,
+      "sha256": "63e45b9307bc99671e92b44fa772fb717a423d9930c0aa8b059f3ecc8ccc189d"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_75.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_75.c",
+      "bytes": 6185264,
+      "sha256": "61522cf4a839d18b63a10e7996cd119686af976322186f8a9c6ec7ced88df631"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_76.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_76.c",
+      "bytes": 6162250,
+      "sha256": "9a0b19c8b1490a4643b9361ebbcb5ea2b59d79560dc37bec2193a2c43af18671"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_77.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_77.c",
+      "bytes": 6175491,
+      "sha256": "6cb11951bc2fd70d299e3ba1d538d781bac04cbeefb0deed2a3ac9c175395433"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_78.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_78.c",
+      "bytes": 6196176,
+      "sha256": "d6ed5a03741296ee5ccb01766170994d9a6647343f138fd3fc5ecabeb42c9087"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_79.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_79.c",
+      "bytes": 6196393,
+      "sha256": "e514ab65e9a45e7d1e6f6872da460e70fbfa984c23e59e98138d620f41786977"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_8.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_8.c",
+      "bytes": 6131612,
+      "sha256": "88121d282fe078b56ab178d5f8a3e26a16e3141d9950b976e0020082b1659c74"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_80.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_80.c",
+      "bytes": 6191081,
+      "sha256": "96ae686e4f77d127e8b693dcb5d4e7d95ded78f113b817267a1aab3fc3b1527b"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_81.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_81.c",
+      "bytes": 6199506,
+      "sha256": "248bbe7c2addc7f03aaaaeb182215634df0cc7ea50b64b6abf1050b4aee35b91"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_82.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_82.c",
+      "bytes": 6192327,
+      "sha256": "8eb0e56282784beca8b5388da780177efb8d387b275b7cfb4f633b6251b1b8e9"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_83.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_83.c",
+      "bytes": 6186319,
+      "sha256": "19253278830117a76ed5762aef91acd92c505e59b5c0998676e70da11d06e81a"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_84.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_84.c",
+      "bytes": 6216917,
+      "sha256": "8790a836bb20fca1a9d851cfd7846c45a0183b71becb09dc72605fef90201be6"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_85.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_85.c",
+      "bytes": 6171610,
+      "sha256": "95010f16c5add70c7bba2c1b383610eec0630624f44bafcdd78845ad8faa3000"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_86.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_86.c",
+      "bytes": 6150157,
+      "sha256": "530d43fc997bc499fb238d92549cb28953bc5a66788076d32b6c240b65bafb2f"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_87.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_87.c",
+      "bytes": 6195631,
+      "sha256": "48a4939e04cb20d0ee623e724d1992226cc90932c57c19a2c3fe40cdd6e694af"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_88.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_88.c",
+      "bytes": 3486079,
+      "sha256": "365e530cb8b6bed60c48420cb3bb1c133139226e81535e1a9abdc726000d3b21"
+    },
+    {
+      "source": "crypto/keygen_experimental/integrity_generated/table_9.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/integrity_generated/table_9.c",
+      "bytes": 6157936,
+      "sha256": "04f9488c3efe6f6da9ddf9beda898f7156ea17aab6de23cf18e14d94b5a7c94d"
+    },
+    {
+      "source": "crypto/keygen_experimental/mt19937.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/mt19937.c",
+      "bytes": 1320,
+      "sha256": "7ef8ba5a2a867c0c6c69ceaba0cb143699e8930d64909543f51d7438e5f4fd30"
+    },
+    {
+      "source": "crypto/keygen_experimental/mt19937.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/mt19937.h",
+      "bytes": 381,
+      "sha256": "de5d01efb74d993516f4d8f0e0285a4d2aefa519a17409ece08e8c15df62a90b"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_10.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_10.c",
+      "bytes": 3263902,
+      "sha256": "efe5b0596071e42b186cf24cd1cc8e3d7a9b5eb0bc5685d4c4ad5a190cac49de"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_11.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_11.c",
+      "bytes": 6151781,
+      "sha256": "00f6bbc6a590132d4c40a266dac50efe975b02289c4d2f18e5f9ae551d87464e"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_12.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_12.c",
+      "bytes": 3949571,
+      "sha256": "f1a68ad43c9151e8bb3949281a6ff2daf2a95588064e119b58304e5bbe67d4e7"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_13.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_13.c",
+      "bytes": 3248730,
+      "sha256": "8561c90396fa925ea8979c830dea98f486deccce8196d3ac1e349e6e3b506829"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_14.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_14.c",
+      "bytes": 1419078,
+      "sha256": "6155273b6296a1269f5f52245b811358e75985d0ceac1ff55c7d1c2a32641bf4"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_15.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_15.c",
+      "bytes": 96120,
+      "sha256": "bd0b78a6d9a15276e5f680c034e2afd0a494cf5200af99df52d7d240095792cb"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1a.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1a.c",
+      "bytes": 1806543,
+      "sha256": "23ec3cf5740d935ecfccff0b8c2d9594de5501233947efac1b0ef2472eeba95e"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1b.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1b.c",
+      "bytes": 1600367,
+      "sha256": "2e02ada662c3ef5bf725a5747a80bf7ac0b7a14b02c95b15ca1071ce05ce12e3"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1c.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1c.c",
+      "bytes": 489966,
+      "sha256": "a3cd9ccadc981a0ab273d6ea4896f047259230717a3aeff2a6ac22c6e33e1c28"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1d.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1d.c",
+      "bytes": 2246678,
+      "sha256": "4d05cd9d494038768806159c1d70f95b144a62db0fe5fc6b8950b7b33f1a88c5"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1e.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1e.c",
+      "bytes": 43503,
+      "sha256": "1e9867764656b408eca53ed87ec1989403262385c29265bc412d897bc363627c"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_1f.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_1f.c",
+      "bytes": 1757402,
+      "sha256": "4c0baa8a8e61a3c4dd0cf2b6fdbc38e6b86be85abc5599d9600574c9e1621556"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_20.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_20.c",
+      "bytes": 1992507,
+      "sha256": "e4eeaaa3198b5140257a7c826aa9a1b087574ca0f9cca2d2de84b23b41ee9770"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_21.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_21.c",
+      "bytes": 1020016,
+      "sha256": "d884cfe984780dffac18a8d848ecff2d750216268633136dd5ab4c9a27ca9f3b"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_22.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_22.c",
+      "bytes": 374324,
+      "sha256": "114acc545f65f26ad133094b550a1936b55da91596e09c4179d942578a717c6f"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_23.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_23.c",
+      "bytes": 736478,
+      "sha256": "61d330bd73ed06f242189984db8562e6c4019cec297e78200baafeb63b822e1a"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_24.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_24.c",
+      "bytes": 745797,
+      "sha256": "c6b0f363986918ca034a892262f544b51a5c4d0721c031a4d3cec21ab1834768"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_25.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_25.c",
+      "bytes": 1376558,
+      "sha256": "f6a4f9db625bfe090a0e42a943db72c3fd258f5219f1b4bdab461384fed0b9d9"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_26.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_26.c",
+      "bytes": 1293768,
+      "sha256": "b5a26db09c35dfe1896487dd8fe9259103fb88be6ec07412ea1d202ed20123e0"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_2b.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_2b.c",
+      "bytes": 1252637,
+      "sha256": "77c4950148f2ccf4ec9556f54977dc0df66469909cfd897ebf7effe2087275d8"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_2c.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_2c.c",
+      "bytes": 3387011,
+      "sha256": "d41bbbd5540fd9372fef9fabf65abd0752c7e734a2ad6f72af852d89f99b878f"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_2d.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_2d.c",
+      "bytes": 3285297,
+      "sha256": "7a82ee39f4aa5ffd51fba91ea6325bb9c7c0d7a7a4a534acceb6562b85d58ba3"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_2e.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_2e.c",
+      "bytes": 3297410,
+      "sha256": "6c7f801a834d4ba4aff5b0d6cb131204d20726b3b321ba1f4eac05ce1f0f32e3"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_2f.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_2f.c",
+      "bytes": 3283545,
+      "sha256": "c4d72e0cd6b9d87c69d56b7fbcec55306a8d866895b80552ab98cd2a9b24fa0d"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_30.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_30.c",
+      "bytes": 3397507,
+      "sha256": "8ebb00ac39d6c8653256d332af05cdd9cf7db52eebc692a094d959ef8780c262"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_31.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_31.c",
+      "bytes": 3293223,
+      "sha256": "78b391c1f8576841652e4508ad6a784d5b1a0ffb3658c227412c22871ede4d29"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_32.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_32.c",
+      "bytes": 2151079,
+      "sha256": "84dbcf7cdd8a10e5ff1e24c45e827065252274254e5388113eabf5da9c513834"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_34.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_34.c",
+      "bytes": 396471,
+      "sha256": "01614e8a46a271aa83b18d0c7025c1e8288a34292ed0051494406c9e3c196149"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_35.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_35.c",
+      "bytes": 318735,
+      "sha256": "77e48ea16f06ad3d39fc87d9bf9377dc73a737bf7405ff837da32d13d9a8a2b6"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_37.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_37.c",
+      "bytes": 262603,
+      "sha256": "f61d74e2c4b81b6d5c31b39f8e2ceef3686a8b79a310a0ecea5eda5ee1b1c818"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_39.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_39.c",
+      "bytes": 347474,
+      "sha256": "a7d0e312d82da1ddad326f95ac9a600621c065e8573fd057089f42aff2f07f38"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_3c.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_3c.c",
+      "bytes": 2776236,
+      "sha256": "cb7a9499f14be095a1aa06bdb934687584efa3cb2dbaf4070e5020d25cc4562f"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_3d.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_3d.c",
+      "bytes": 3313885,
+      "sha256": "a32acd187c1c7d06127563605b295de88780daabf987c7762f0e19640bd378f4"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_3e.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_3e.c",
+      "bytes": 2726224,
+      "sha256": "3493f485e7660eb0153cee87b2d46c37ab156d8930ef0dacae3fa2b06b1d1807"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_3f.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_3f.c",
+      "bytes": 1759081,
+      "sha256": "3676bc48860edc85e92ddeb4a7c6aa847f2accea86c1b60d71154dcadeaf9241"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_40.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_40.c",
+      "bytes": 3075070,
+      "sha256": "141c8609b5d9874de317f23728d33247072ec5286fc77d56791de2d73bec098f"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_41.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_41.c",
+      "bytes": 3083745,
+      "sha256": "cfb13cfe9695f2f9e2bab4888127cc72aabde58f0e1dfce2234dac09b9bee7b9"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_42.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_42.c",
+      "bytes": 3361338,
+      "sha256": "b5bede376229e44e519e8e8b94c02db8bbb580aa2b04e7ad397e5bcd6080f362"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_43.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_43.c",
+      "bytes": 3166703,
+      "sha256": "348d1a23288f086a620f068233ea32c6e17e03dd7f06c1263383f95c7ff9cdfd"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_44.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_44.c",
+      "bytes": 3479483,
+      "sha256": "63aebe3126eff2d1327b1dcb515390e9a9c17489e65507b4db64a104dc42c27a"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_45.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_45.c",
+      "bytes": 2493232,
+      "sha256": "52a730b96ff4bd6a4e73bda1f2d8281810c45419039086e6226dbd6d6bd6caa2"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_46.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_46.c",
+      "bytes": 2945967,
+      "sha256": "51572c3d436109f7c67692fd74788f827e6f6b401fb3f17d41bd438532235cf8"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_47.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_47.c",
+      "bytes": 3312729,
+      "sha256": "db86786135e617427e94d5be9ba3491e00d474fcf4490bf0ea0edd476bc27a69"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_48.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_48.c",
+      "bytes": 749158,
+      "sha256": "e4812b3669743dee6b7680377fe2a4c0a220a0553f6aa488d5c1594e23761dfc"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_4b.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_4b.c",
+      "bytes": 1540242,
+      "sha256": "22868c5e6df65576708f05d74678d5da02a596fd0dfb1b40e7460113e4343cab"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_4c.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_4c.c",
+      "bytes": 715039,
+      "sha256": "6d64ee76175a9329dee168a45fa9263b41cffbabdef23eafe8a29a67b832ef82"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_50.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_50.c",
+      "bytes": 639669,
+      "sha256": "7baa397009bc0fd5974c17f27ee7b4d03208528bb329179901d7dac838d6c7fb"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_51.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_51.c",
+      "bytes": 2204259,
+      "sha256": "35a065337e5ff5f2801ea55487b57d8d1e905d45b18adcae85bf83d9309088e2"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_52.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_52.c",
+      "bytes": 2029379,
+      "sha256": "1db161d25c9698a85ff9c4925f0f959e765fecdd23c3da89cfc2143045bbbd93"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_53.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_53.c",
+      "bytes": 2264741,
+      "sha256": "d5007582a740f4d05da2b4ba6439efd60d884304c96bbc28cd63de110d44e9cb"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_54.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_54.c",
+      "bytes": 827024,
+      "sha256": "7683d47061a9928f20a12dcb1eb1a799bcf046a9f879b47657669b07f0d8054f"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_55.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_55.c",
+      "bytes": 248156,
+      "sha256": "b9367803d9265711269bdf4f733273e50e4dfb4871d42cd29fdbfd6e46486146"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_58.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_58.c",
+      "bytes": 411895,
+      "sha256": "8f755a1bf30fe61b717cf675cb6360d3913ae1f5dd88c7b0832bf5f35d5e3a39"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_5b.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_5b.c",
+      "bytes": 1851312,
+      "sha256": "d907d971de490090cf16b1dc88cb49900d020966e45b3e554b3efa4f6c5ae1f6"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_5c.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_5c.c",
+      "bytes": 3494705,
+      "sha256": "909eb90d991b99244051ef5e340de8d99820fbd1427c9a89385bb5aa4949a85e"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_5d.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_5d.c",
+      "bytes": 3489477,
+      "sha256": "a06ceef742a72d7c1a3fe6abdf21fee3196450bcd04eca6021ac8c165f02cdf3"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_5e.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_5e.c",
+      "bytes": 3474802,
+      "sha256": "3f06085527273558a2ad87251a9c3256888a843e55b23c083ef62c1e3dccc066"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_5f.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_5f.c",
+      "bytes": 3497445,
+      "sha256": "08a4de9132aa84973c7120949872a35e63996b7abcf96622902efa1f7a09ac49"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_60.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_60.c",
+      "bytes": 3508718,
+      "sha256": "d129b3106f8a6caa116e672a4e139805d1755eca03f28f24625780aae6130fc9"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_61.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_61.c",
+      "bytes": 2424662,
+      "sha256": "6aff76d57b3bfdf0877ad40d7b993ec70435875914a20f7eb25a87be815409a5"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_d.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_d.c",
+      "bytes": 1007977,
+      "sha256": "397b542f8a2b8c38b4013ea1e331dab6000eae72539242916771565a163cc2df"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_e.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_e.c",
+      "bytes": 8093882,
+      "sha256": "2f93500be8612bc6a9a72c276d21801baaf262c805861101f41655e51fccd9fb"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/block_page_f.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/block_page_f.c",
+      "bytes": 3646961,
+      "sha256": "d6e55afb141897700e2f0de07de7d72d9a5175cfb0f06f30a0597e093763a830"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/bounds.inc",
+      "bytes": 403275,
+      "sha256": "0a91ff72c1b5936da6af79afcfb60f2667559aff0f6ff0b4ee4e2215865aad65"
+    },
+    {
+      "source": "crypto/keygen_experimental/native_generated/images.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/native_generated/images.inc",
+      "bytes": 10085519,
+      "sha256": "09155c5c4515c02c9c2656a655d63c1d0b7335b972ddcd15717bf1e8969f0dca"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context.c",
+      "bytes": 2132,
+      "sha256": "8d85594281165dfbcf6ea4f8a2e14a47b89debdbd340550a3fa195b38f728b8b"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context.h",
+      "bytes": 1001,
+      "sha256": "846856061228b4f37cd1da6d9ef5c65d7e0749fc8f22b71052262a2f9e465c77"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context_a.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context_a.inc",
+      "bytes": 1139195,
+      "sha256": "02fbebbee05d19617bb632147de084914bc4abcdbee87262d46336959934f60f"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context_b.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context_b.inc",
+      "bytes": 1167962,
+      "sha256": "c51c78b22bbdb4571f7e8e6ed3b0ad7e44f86207f3c720a4541463713ffc8df7"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context_c.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context_c.inc",
+      "bytes": 1194589,
+      "sha256": "4ac3984ffe1aaee9cedca2c122645fbd42d0b19be6e2164961c0ac12421e0f53"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context_d.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context_d.inc",
+      "bytes": 1319637,
+      "sha256": "fb28c33771258c085052b0cba72ab037f87b6e2fbe7eb549e12b4d966bb6e44b"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_context_e.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_context_e.inc",
+      "bytes": 1071168,
+      "sha256": "2b0a57eaad521f07d297c691eeebc054171fee1fd1060f9ed57fc004ca5c5c9a"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_continuation.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_continuation.c",
+      "bytes": 3193,
+      "sha256": "a3d8793da647e7659b41fda3efa1615da859bc8b3a32be5abc8f2557764d3cac"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_continuation.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_continuation.h",
+      "bytes": 1447,
+      "sha256": "a06f73f0d5d46a8a6ab910541a04682d5d124fd7455f8993e6ce3e367690817b"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_continuation_bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_continuation_bounds.inc",
+      "bytes": 13139,
+      "sha256": "c88e67afd2fcfb96798136984abaa2672ab32a1c7c9a92009217516e71013fb8"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_continuation_cases.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_continuation_cases.inc",
+      "bytes": 4912726,
+      "sha256": "a62a79adf326f4f2f07ba40779df23f21a33d406dc1fbf55e7a238e4e18f6e06"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_generate.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_generate.c",
+      "bytes": 19900,
+      "sha256": "394690e6a5c1ecdf9333f9437fa6a0c02771d36d168fe9012984208739701b5c"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_generate.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_generate.h",
+      "bytes": 3937,
+      "sha256": "5fbf8340ec76038322cdb63fc834b0e45d276c3f55a3e665154ba63108888235"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_graph.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_graph.c",
+      "bytes": 2130,
+      "sha256": "a3410ea4539b290a3ac38b183ff88a4e199f6f735928afebcd70078008fd38ee"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_graph.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_graph.h",
+      "bytes": 846,
+      "sha256": "49b17215e706365644697f2ebc680f9ed64c32dcf346eba10492cf031ad3393e"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_graph_bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_graph_bounds.inc",
+      "bytes": 12218,
+      "sha256": "be61d97183ad57fa4ebabffe890ff8cb93204036ce5a6a90fe7bbf769379d24a"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial.c",
+      "bytes": 1900,
+      "sha256": "78288581332e99b99b3f4955203aa6c49a5fe0eff72bcd368c1b636409530e74"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial.h",
+      "bytes": 599,
+      "sha256": "b71136f2015c82d186605b662d2c729574e53bc433f73ea197e3b49da7c6eaf9"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial_a.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial_a.inc",
+      "bytes": 830430,
+      "sha256": "bb197c060801f8866e8896aafdac450611c5c70df517e216d8faba1b0adcd093"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial_b.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial_b.inc",
+      "bytes": 682890,
+      "sha256": "e9ee60e7b09ea7a2d90980d11c3e606a2993f0c5d247e2849be91cb64682f9fa"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial_c.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial_c.inc",
+      "bytes": 755412,
+      "sha256": "626574ca2ca1161659f271f6f8d0f05623582bc1eb5033ee6eebb190fdf31ce2"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial_d.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial_d.inc",
+      "bytes": 798667,
+      "sha256": "740d6b8e1947eecb2a4d155b351545927264d2d5f0b701b24528c04cd5117765"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_initial_e.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_initial_e.inc",
+      "bytes": 611916,
+      "sha256": "010ffdf7bc54ca1b65bcdb15f0f1d546c68cad8a08d3b6660cbd17916750f49a"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_integrity.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_integrity.c",
+      "bytes": 376,
+      "sha256": "1746807c752e6bcabb6ea6e519f7f5209d6663316c85d4a4a0f8b9cbfa5443eb"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_intervening.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_intervening.c",
+      "bytes": 2151,
+      "sha256": "2f580b37fa6162f2f5282cf90aa4c9754be390a360c261a98f91869b87705153"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_intervening.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_intervening.h",
+      "bytes": 957,
+      "sha256": "45cbf7e22b9321d15ea5ce001d78336c7136394572be45d63cd0b42d2b598dca"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_intervening_bounds.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_intervening_bounds.inc",
+      "bytes": 4711,
+      "sha256": "4c7aa8c6120d78ac49c85c075625b926e48da130d504993e4495e7cd4af0211e"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_intervening_cases.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_intervening_cases.inc",
+      "bytes": 3924666,
+      "sha256": "6c01401c1b2e3aa1523f6ff417f989d7a1e18acc75aa089c7899b90de8a10bb9"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_machine.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_machine.h",
+      "bytes": 8120,
+      "sha256": "16b2961566c0713a63698b2f894654e97697370f24315086dc83950f2fb5d7c2"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native.c",
+      "bytes": 2698,
+      "sha256": "3bbcd3ff5ced1b5cb8f357e6b4a7cfecaad8a3c26ea9965ba45ba8834c8da7d8"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native.h",
+      "bytes": 1182,
+      "sha256": "3ddc837dcb2dc35952c183da6bcf060c0df32b73c53383077fac097197a4524f"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native_internal.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native_internal.h",
+      "bytes": 10880,
+      "sha256": "610e47ae79eaa789ede5a92c2a292b7bb7d206ece13960d8eb93bd4af69ebf65"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_native_lookup.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_native_lookup.c",
+      "bytes": 227,
+      "sha256": "8e321991240684e7881b9ba6aff04a98cb54a8c2da8ebd3a533fe8a3198abd22"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload.c",
+      "bytes": 2735,
+      "sha256": "c9c128851790528382b4174d1f494a654c71c518343d66596d901f1857eadfe7"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload.h",
+      "bytes": 2504,
+      "sha256": "5fa44f4fef6ed5554e49954f0cac9a65b1f27daa87961b3cb7858e1a9b901774"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_0.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_0.inc",
+      "bytes": 1366184,
+      "sha256": "1b13e3cc47f9bfe975fa51219a68224ace0bee12b3df22546dfd4f2309ba7e0c"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_1.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_1.inc",
+      "bytes": 1399800,
+      "sha256": "ebe0ec0077232c5188be711a4f595f4bbcebaeb11c7ee430544bcf1e29fe51ef"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_2.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_2.inc",
+      "bytes": 1337856,
+      "sha256": "05251a64fb0bc4302b1056c0b062657d793cb4071334b6701e8c443a3e7e6984"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_3.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_3.inc",
+      "bytes": 1436465,
+      "sha256": "50612e402c1046077dec1317cd48b0b3310b044fc715ceae77ffe6b4886326ec"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_4.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_4.inc",
+      "bytes": 1494202,
+      "sha256": "087236d465854f5cfd4f937c28d40b013a9aac7348485606cb36fbec4a092d88"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_payload_constants.inc",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_payload_constants.inc",
+      "bytes": 407702,
+      "sha256": "5579b931380b94fad75b366f0fe01540e611aec3512d9027c8516e2d6d2d5de3"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_simd.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_simd.h",
+      "bytes": 4403,
+      "sha256": "16b94fd4336b141b267039d85b19d8c0dda666b8163f30882493316b7a456250"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_v2.c",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_v2.c",
+      "bytes": 1997,
+      "sha256": "f7d3e5649271671cb65a8bca6cce974d45aa7237df3a95a997d6e92c7baac548"
+    },
+    {
+      "source": "crypto/keygen_experimental/spc_v2.h",
+      "package": "src/apple_music_source/_native/keygen_experimental/spc_v2.h",
+      "bytes": 1104,
+      "sha256": "24f56674570adf16dd2b6b95829d00068d446a2f4e95c5956591949ed3b7512a"
+    }
+  ],
+  "audited_source_sha256": {
+    "crypto/keygen_experimental/CMakeLists.txt": "8f4ab5858b8a47cc25a4dfe59e797097eaaa26cc173b9f7b0f479e20b13d881e",
+    "crypto/keygen_experimental/spc_generate.c": "394690e6a5c1ecdf9333f9437fa6a0c02771d36d168fe9012984208739701b5c",
+    "crypto/keygen_experimental/spc_native.c": "3bbcd3ff5ced1b5cb8f357e6b4a7cfecaad8a3c26ea9965ba45ba8834c8da7d8",
+    "crypto/keygen_experimental/spc_native_lookup.c": "8e321991240684e7881b9ba6aff04a98cb54a8c2da8ebd3a533fe8a3198abd22",
+    "tools/crypto/keygen_experimental/generate_source_images.py": "ce3c64334bd1189a45590105f4039f60805f0110132fc2d0e2f8218d47c09874",
+    "tools/crypto/keygen_experimental/generate_payload_constants.py": "fbbbb6ab3f01583b2d49d89991c64b6a946536f17646a719aa34387c042190f3",
+    "tools/crypto/keygen_experimental/generate_integrity.py": "24a27440457c702fec169305f9118cb67ef6138fe079d08cf8b9ac3b18dd8683",
+    "tools/crypto/keygen_experimental/identity_builder.c": "2b62713edf48f430ee6f1b6f6ef7c0ed465f1fda57987042b99f2eeb922ecf93",
+    "tools/crypto/keygen_experimental/generate_ckc_pairs.py": "d840f321bda226ca27a130e6736c2f01b60c494fe45988b25e61d08720e55ae1",
+    "tools/auth/coreadi_generate.py": "cc21d28e65fe710deef1e0353351515883bd24fece0e169af03c763906bc3ad6",
+    "tools/auth/mescal_generate.py": "218890f5e77ad407d08681ead09b4ef336c6fba7eada2701a6013be1f95496e3",
+    "tools/auth/mescal_integrity_generate.py": "4f585d97d4819cff99e682a9be6750600058ad9abc64d01f3f474e9ad5d8790e",
+    "tools/auth/coreadi_source.py": "106de431860607b5308eafb86c487d4faedbf927824296f2b351fd45415d83d5",
+    "crypto/auth/coreadi/coreadi.c": "835653a5e2993718b9abdf12d3f908014ea6bbba599a64f1d0daf1f0f5ddc81b",
+    "crypto/auth/mescal/mescal.c": "ae78e170c816667ae6dc050889b91f3027daf0051c17ef6b5e28051afb9d9e2c",
+    "crypto/auth/coreadi/CMakeLists.txt": "d9659b18864798cbcb3ba86469b91f117173424ee1265dce868389767edf3301",
+    "crypto/auth/mescal/CMakeLists.txt": "505192a7d96d3e1d8fcb1f97612cb3d2960c19026e970373bd52064a8e2b90d6",
+    "crypto/auth/coreadi/coreadi.h": "a44ceb92ca808a5850fbcbb23414baf9ad680a5df16a2072db45aeb934ec8e04",
+    "crypto/auth/mescal/mescal.h": "edf4a9f3b8f15f01be978dea599e3511c0bbf4c75c0e14d1da44dda4b84a7b70",
+    "tools/auth/fresh_login.py": "7b360a5179acac40df240bfa11d57c539c4bcc66a067ea11ae9bf1564a488826",
+    "tools/crypto/keygen_experimental/r1_replay_parity.py": "2b81c78088ec45a29b7995af85b09c487a415be3c846bc6ef68a51125e8c9508"
+  },
+  "package_source_sha256": {
+    "build_backend.py": "c692c42204308e4782d15c2cee43a055d67d3dddd1c67c6e43a68ea8c4585596",
+    "README.md": "17652ec1ca070a15ff476e66d80e702fc40334abb439fe5e78500ed99496f361",
+    "pyproject.toml": "9a27cfb9aef6759b686eb5db6b25e37c2bbbca6d6faebc6ffa9b7b63ab8508e1",
+    "src/apple_music_source/__init__.py": "821c60a516ed05eb70b55439ad1a2d7d237593a57d9a49627a5add4ad94a5299",
+    "src/apple_music_source/AUDIT.md": "ddd6cd49796163eee85ac0473ed03550f6523009df46fa202f1d841454b56835",
+    "src/apple_music_source/auth/__init__.py": "b7ddc69276433f79a7364c3c32e8bc8fddb359f29535daf17f57a69658514609",
+    "src/apple_music_source/auth/coreadi_source.py": "31fd00f0f712ae6cb3d4f6c7cc431e80ec629d3375efa4e3df0c6f6361618200",
+    "src/apple_music_source/auth/device_identity.py": "cbfd17bd3ccf665fb87edbed57918cb36faf7bc798477ed1a8099697bb7fc915",
+    "src/apple_music_source/auth/fast_login.py": "b745b609f90e593d86d23f2bdcd95c00546dd5309c4733ea82c4295e7757d495",
+    "src/apple_music_source/auth/login_protocol.py": "7c7c55f11bc2912459f1b786fdbc138b0b93640bf0a4e48841b594084e6ed0dc",
+    "src/apple_music_source/auth/mescal_source.py": "11c8fe6becca6c8d0100e6415d3fa4cc906dad87f9b0839cf6aab65a3bb68d64",
+    "src/apple_music_source/auth/source_login.py": "9ede5f8285570b49284dbd6a972a7b7207caa251d241e34e2aa908586226dbf6",
+    "src/apple_music_source/crypto/fps.py": "9134788f0af048444b2899ce92c0ea2f76a8061adfc3330906cbf882d974705e"
+  },
+  "vendor_derived_auth_data": {
+    "coreadi": {
+      "files": 32,
+      "source_bytes": 32288273,
+      "runtime": "anonymous MID/OTP from existing adi.pb and Android ID"
+    },
+    "mescal": {
+      "files": 137,
+      "source_bytes": 109310583,
+      "runtime": "SAP signing and native GUID field derivation"
+    },
+    "fresh_provisioning": "not included"
+  },
+  "source_fps_pipeline": {
+    "files": 321,
+    "source_bytes": 784691936,
+    "runtime": "source SPC/FPS session and CKC experimentation; online content-key derivation is not verified"
+  },
+  "reference_coverage_report": "build/re/keygen-notes/key-target-context-09-20261030-attempt1.json",
+  "hooks": {
+    "wrapper_kg_integrity_fold": {
+      "distinct_sites": 9,
+      "in_reference_coverage": 9,
+      "sites": [
+        {
+          "pc": "0x1b65fb",
+          "source": "crypto/keygen_experimental/native_generated/block_page_1b.c",
+          "line": 20364,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x207b91",
+          "source": "crypto/keygen_experimental/native_generated/block_page_20.c",
+          "line": 14930,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x23915b",
+          "source": "crypto/keygen_experimental/native_generated/block_page_23.c",
+          "line": 14425,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x3ede57",
+          "source": "crypto/keygen_experimental/native_generated/block_page_3e.c",
+          "line": 53925,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x3ee66f",
+          "source": "crypto/keygen_experimental/native_generated/block_page_3e.c",
+          "line": 56547,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x4b7898",
+          "source": "crypto/keygen_experimental/native_generated/block_page_4b.c",
+          "line": 5269,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x4bc9da",
+          "source": "crypto/keygen_experimental/native_generated/block_page_4b.c",
+          "line": 28725,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x50cb28",
+          "source": "crypto/keygen_experimental/native_generated/block_page_50.c",
+          "line": 1301,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x50d8b3",
+          "source": "crypto/keygen_experimental/native_generated/block_page_50.c",
+          "line": 4280,
+          "in_reference_coverage": true
+        }
+      ],
+      "scope": "static call sites inside historical reference basic-block coverage; not source branch telemetry"
+    },
+    "wrapper_kg_ckc_integrity_word": {
+      "distinct_sites": 3693,
+      "in_reference_coverage": 3671,
+      "sample_sites": [
+        {
+          "pc": "0x10053e",
+          "source": "crypto/keygen_experimental/native_generated/block_page_10.c",
+          "line": 1267,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x10066b",
+          "source": "crypto/keygen_experimental/native_generated/block_page_10.c",
+          "line": 1508,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x100940",
+          "source": "crypto/keygen_experimental/native_generated/block_page_10.c",
+          "line": 2208,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0x100a66",
+          "source": "crypto/keygen_experimental/native_generated/block_page_10.c",
+          "line": 2467,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0xffad0",
+          "source": "crypto/keygen_experimental/native_generated/block_page_f.c",
+          "line": 74769,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0xffadf",
+          "source": "crypto/keygen_experimental/native_generated/block_page_f.c",
+          "line": 74799,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0xffaee",
+          "source": "crypto/keygen_experimental/native_generated/block_page_f.c",
+          "line": 74829,
+          "in_reference_coverage": true
+        },
+        {
+          "pc": "0xffb0f",
+          "source": "crypto/keygen_experimental/native_generated/block_page_f.c",
+          "line": 74870,
+          "in_reference_coverage": true
+        }
+      ],
+      "scope": "static call sites inside historical reference basic-block coverage; not source branch telemetry"
+    }
+  },
+  "data_manifests": {
+    "tools/crypto/keygen_experimental/source_image_manifest.json": {
+      "app_sha256": "0a575431868e40ddb29e9e0bac7a4993d6e05971b45403cabe358c081b54a36e",
+      "core_sha256": "1c8e1b64f7e966c2f78ba2582a1ec30a0aff8ad7ef8221117853f34d9b7faa3b",
+      "images": [
+        {
+          "address": 0,
+          "size": 512,
+          "permissions": 1
+        },
+        {
+          "address": 5021216,
+          "size": 545361,
+          "permissions": 1
+        },
+        {
+          "address": 6023104,
+          "size": 313332,
+          "permissions": 3
+        },
+        {
+          "address": 268435456,
+          "size": 850424,
+          "permissions": 1
+        },
+        {
+          "address": 275173376,
+          "size": 170020,
+          "permissions": 3
+        }
+      ]
+    },
+    "tools/crypto/keygen_experimental/payload_constants_manifest.json": {
+      "core_sha256": "1c8e1b64f7e966c2f78ba2582a1ec30a0aff8ad7ef8221117853f34d9b7faa3b",
+      "unique_read_bytes": 5797,
+      "covered_bytes": 72432,
+      "ranges": 168
+    },
+    "tools/auth/coreadi_manifest.json": {
+      "non_executable_data_bytes": 1289076
+    },
+    "tools/auth/mescal_manifest.json": {
+      "image_bytes": 3080356
+    }
+  },
+  "recovered_data_models": {
+    "fill_dispatch": {
+      "scope": "pristine byte-fill branch destinations only; not a crypto integrity replacement",
+      "source_routine": "0x42ced0..0x42cffb",
+      "guest_range": [
+        "0x525a00",
+        "0x525a5c"
+      ],
+      "reconstructed_bytes": 92,
+      "finite_destinations": 23,
+      "derivation": "prefix/bulk/suffix store counts and source control-label spacing",
+      "sources": {
+        "src/apple_music_source/_native/fill_dispatch.c": "fcf5974bd84d26ef10772833032631d1b2bbc50b4f23055470c23e2027797e67",
+        "src/apple_music_source/_native/fill_dispatch.h": "dfa05159e5eec05dd2d785bcdb6a3b8269808e1c1a0703b9adedb28799a8e72c",
+        "scripts/verify_fill_dispatch.py": "957b2c63dbe390fdd68de61ab9d7f0fdab0def171b4f59292a104a277f445d68",
+        "scripts/probe_fill_reconstruction.py": "963028efde58f84b7a278b2f3104c357af61e14cc6c5a2b8b82716a287c7bc5e"
+      }
+    },
+    "integrity_codec_simd": {
+      "scope": "pristine arithmetic SIMD data; parameterized codec recovered, fold/pair banks unresolved",
+      "source_consumers": [
+        "0x3edebc..0x3ee383",
+        "0x3ee6a1..0x3eed16"
+      ],
+      "core_relative_bases": [
+        "0x580",
+        "0xe20",
+        "0xe30",
+        "0x1170",
+        "0x25b0",
+        "0x25c0",
+        "0x35d0",
+        "0x4690",
+        "0x4c40",
+        "0x4f40"
+      ],
+      "bytes_per_range": 16,
+      "reconstructed_bytes": 160,
+      "derivation": "SIMD lane indices, byte masks, FNV multiplier and modular inverse",
+      "sources": {
+        "src/apple_music_source/_native/integrity_codec_data.c": "1820428de48c1699d9c1e52e8de70fc29aad5281eb27aaa87cb036eef62feaa1",
+        "src/apple_music_source/_native/integrity_codec_data.h": "b154acba00edde3fc33430cc2b92b4f6886ba184dce3721449e23c61f720d4e1",
+        "scripts/verify_integrity_codec.py": "968b0685037a31902f26d702519914d2d6fbde8296e3914e07d85e965e73874f",
+        "scripts/probe_codec_reconstruction.py": "edfb17c61f6b60bbecd93ca77ecf1fbe1604424ddf0975e3d846f924ea214a57",
+        "scripts/probe_fold_boundaries.py": "ba14231848aed229fb7f8863f27c07dbcdf7229813ac98d91c483de20e51eaee"
+      }
+    }
+  },
+  "recovered_runtime_models": {
+    "registry_generations": {
+      "scope": "canonical generation allocation and pre-codec tag check only; no complete encoded-record registry/session replacement",
+      "source_intervals": [
+        "0x1f7300..0x2079d4",
+        "0x3ee473..0x3ee4e5"
+      ],
+      "representation_relation": "original tag = canonical generation + 0x69cad980 modulo 2^32",
+      "unresolved": [
+        "encoded pointer/record lifetime",
+        "aliases and native faults",
+        "instruction budgets",
+        "worker wake/expiry",
+        "valid CKC/context/decrypt"
+      ],
+      "sources": {
+        "src/apple_music_source/_native/registry.c": "e09eb4e6f5da6ede18e468873a4577ae1a1a3d9b661d97478241a3425dd92e28",
+        "src/apple_music_source/_native/registry.h": "78355b736509bb7525364dd2821d6d96665ac457466e03e8cc9648c73143930e",
+        "scripts/verify_registry_allocator.py": "f708bbda78fedc06a9ffee06188caa6b346bf9246052cb46084b32c0727fbd8d",
+        "scripts/inventory_registry_folds.py": "6aa94e8bee1d340d97d09a004c8723cbdf0cfb6ecc498b460f73d3f3b0a8c67e",
+        "scripts/probe_registry_lifetime.py": "cb0c19b92b529690b96b5d234dbcf244378fa8e0698843523af21f5e55f8679c"
+      }
+    },
+    "copy_codecs": {
+      "scope": "two output-byte arithmetic stages and their bounded forward-copy transforms/inverses; no surrounding cipher or packet validation",
+      "source_intervals": [
+        "0x527a59..0x527aad",
+        "0x53172e..0x531759"
+      ],
+      "derivation": "explicit unsigned arithmetic from original instructions; no image words, lookup tables or fitted cryptographic encoding parameters",
+      "stage0_state": "low BL starts at 0xd0, is saved/restored at frame -0x78, and advances by two while index advances by one; only bits 2 and 3 affect output",
+      "stage1_state": "low R13 byte starts at zero and advances by two while the index advances by one",
+      "sources": {
+        "src/apple_music_source/_native/copy_codecs.c": "47123d1e693d02175de8a45ffb88eaedba43d10b864e55507216dc17096ae4dd",
+        "src/apple_music_source/_native/copy_codecs.h": "9ab1f1891c559d3f4cdbceda346104a7b720470e6758cdbf7305e894b5e89b50",
+        "scripts/verify_copy_codecs.py": "5e7d18092d7481d84e23ec8b416753293e31622ce10c75efc41f59310dc922c5"
+      }
+    }
+  }
+}

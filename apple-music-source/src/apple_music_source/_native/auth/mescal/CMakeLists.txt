@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(wrapper_mescal_source C)
+set(CMAKE_C_STANDARD 99)
+file(GLOB GENERATED CONFIGURE_DEPENDS generated/mescal_*.c)
+add_library(wrapper_mescal_source SHARED mescal.c mescal_integrity.c ${GENERATED})
+set(WRAPPER_MESCAL_OPTIMIZATION "-O1" CACHE STRING "Optimization for reconstructed semantic C")
+target_compile_options(wrapper_mescal_source PRIVATE ${WRAPPER_MESCAL_OPTIMIZATION} -fvisibility=hidden -Wall -Wextra -Wno-unused-label -Wno-misleading-indentation)

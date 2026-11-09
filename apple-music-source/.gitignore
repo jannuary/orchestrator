@@ -1,0 +1,6 @@
+dist/
+research/
+__pycache__/
+*.pyc
+*.so
+*.o

@@ -1,0 +1,21 @@
+{
+  "provenance": "Invented MAC inputs; expected fields independently matched the fresh native source oracle in guid-MAC-field-independent-validation.json. No real device identifiers.",
+  "cases": [
+    {
+      "MAC": "000000000000",
+      "field": "4b5d1ee957a499"
+    },
+    {
+      "MAC": "ffffffffffff",
+      "field": "5ac1664072ceea"
+    },
+    {
+      "MAC": "000102030405",
+      "field": "0a16e744ddf972"
+    },
+    {
+      "MAC": "fafbfcfdfeff",
+      "field": "3916d077713270"
+    }
+  ]
+}
