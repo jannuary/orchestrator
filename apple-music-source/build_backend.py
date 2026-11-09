@@ -62,6 +62,10 @@ def _run(command: list[str]) -> None:
         raise BuildError(f"native build failed with exit status {error.returncode}") from error
 
 
+def native_compiler() -> str:
+    return os.environ.get("CC") or shutil.which("clang") or "cc"
+
+
 def _compile_workers() -> int:
     configured_workers = os.environ.get("APPLE_MUSIC_BUILD_JOBS", str(DEFAULT_COMPILE_WORKERS))
     try:
@@ -74,7 +78,7 @@ def _compile_workers() -> int:
 
 
 def _build_signature(sources: list[Path], options: list[str]) -> str:
-    compiler = os.environ.get("CC", "cc")
+    compiler = native_compiler()
     compiler_version = subprocess.check_output([compiler, "--version"])
     digest = hashlib.sha256(compiler_version)
     digest.update(Path(__file__).read_bytes())
@@ -159,7 +163,7 @@ def _build_shared_library(
     options: list[str],
     optimization_overrides: dict[Path, str] | None = None,
 ) -> Path:
-    compiler = os.environ.get("CC", "cc")
+    compiler = native_compiler()
     output.parent.mkdir(parents=True, exist_ok=True)
     optimization_overrides = optimization_overrides or {}
     override_signature = json.dumps({

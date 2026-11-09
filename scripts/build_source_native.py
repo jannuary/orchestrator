@@ -10,7 +10,6 @@ to decrypt samples and never writes runtime state.
 from __future__ import annotations
 
 import hashlib
-import os
 import subprocess
 import sys
 import tempfile
@@ -127,7 +126,7 @@ def build_r1_probe() -> Path:
         raise SystemExit(f"key entry label not found once in {R1_PAGE}")
     page = page.replace('#include "../spc_native_internal.h"', "", 1)
     page = page.replace(R1_LABEL, R1_LABEL + " probe_capture(fs,regions,count);", 1)
-    compiler = os.environ.get("CC", "cc")
+    compiler = build_backend.native_compiler()
     with tempfile.TemporaryDirectory(prefix="r1-probe-", dir=NATIVE_DIRECTORY) as temporary:
         source = Path(temporary) / "probe.c"
         temporary_output = Path(temporary) / output.name

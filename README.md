@@ -8,7 +8,7 @@ checkout or lite-server is involved.
 
 ## Requirements
 
-- Linux x86_64 with a C compiler (`cc`) for the source package's native build
+- Linux x86_64 with a C compiler (Clang recommended, GCC supported) for the source package's native build
 - Python 3.10+
 - `m3u8` (see `pyproject.toml`)
 
@@ -19,6 +19,10 @@ Build the native source libraries and the key-capture probe:
 ```sh
 python3 scripts/build_source_native.py
 ```
+
+Clang is selected when available; `CC=gcc` selects GCC explicitly. The native FPS
+execution path uses `-O1`; the legacy graph fallback retains `-O0` to avoid
+expensive optimization of its large traces.
 
 Unchanged libraries and the probe are reused. Source, header, compiler or build
 option changes trigger a rebuild. Generated pages are split into small compile units to limit compiler memory
