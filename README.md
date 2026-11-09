@@ -14,12 +14,20 @@ checkout or lite-server is involved.
 
 ## Setup
 
-Build the native source libraries and the key-capture probe once per checkout
-(the generated C is large, so this takes a few minutes):
+Build the native source libraries and the key-capture probe:
 
 ```sh
 python3 scripts/build_source_native.py
 ```
+
+Unchanged libraries and the probe are reused. Source, header, compiler or build
+option changes trigger a rebuild. The first build uses up to two compiler
+processes to limit memory usage; set `APPLE_MUSIC_BUILD_JOBS=4` to compile more
+files at once on larger machines. Delete `apple-music-source/src/apple_music_source/_native/.build-state`
+to force a rebuild.
+
+Built wheels contain Python runtime files and stripped native libraries. The C
+sources and audit data remain available in the checkout and source distribution.
 
 Log an account into a session directory. The device state directory must
 contain matching device identity files (`adi.pb`, `ANDROID_ID`); a previously

@@ -9,6 +9,7 @@ to decrypt samples and never writes runtime state.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import subprocess
 import sys
@@ -107,15 +108,29 @@ def build_native_libraries() -> None:
 
 
 def build_r1_probe() -> Path:
+    sys.path.insert(0, str(PACKAGE_ROOT))
+    import build_backend
+
+    output = NATIVE_DIRECTORY / "r1_probe.so"
+    signature = build_backend._build_signature(
+        [R1_PAGE], [R1_PROBE_SOURCE, "-O2", "-Wl,-s",
+                    hashlib.sha256((NATIVE_DIRECTORY / build_backend.FPS_LIBRARY).read_bytes()).hexdigest()],
+    )
+    state_file = NATIVE_DIRECTORY / build_backend.BUILD_STATE_DIRECTORY / output.name
+    if output.is_file() and state_file.is_file():
+        output_signature = hashlib.sha256(output.read_bytes()).hexdigest()
+        if state_file.read_text() == signature + output_signature:
+            print("reusing r1_probe.so", flush=True)
+            return output
     page = R1_PAGE.read_text()
     if page.count(R1_LABEL) != 1:
         raise SystemExit(f"key entry label not found once in {R1_PAGE}")
     page = page.replace('#include "../spc_native_internal.h"', "", 1)
     page = page.replace(R1_LABEL, R1_LABEL + " probe_capture(fs,regions,count);", 1)
     compiler = os.environ.get("CC", "cc")
-    output = NATIVE_DIRECTORY / "r1_probe.so"
-    with tempfile.TemporaryDirectory(prefix="r1-probe-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="r1-probe-", dir=NATIVE_DIRECTORY) as temporary:
         source = Path(temporary) / "probe.c"
+        temporary_output = Path(temporary) / output.name
         source.write_text(R1_PROBE_SOURCE + page)
         subprocess.run(
             [
@@ -123,6 +138,7 @@ def build_r1_probe() -> Path:
                 "-shared",
                 "-fPIC",
                 "-O2",
+                "-Wl,-s",
                 f"-I{KEYGEN_DIRECTORY}",
                 f"-I{NATIVE_DIRECTORY}",
                 str(source),
@@ -130,10 +146,13 @@ def build_r1_probe() -> Path:
                 "-l:libapple_music_fps_source.so",
                 "-Wl,-rpath,$ORIGIN",
                 "-o",
-                str(output),
+                str(temporary_output),
             ],
             check=True,
         )
+        temporary_output.replace(output)
+    state_file.parent.mkdir(exist_ok=True)
+    state_file.write_text(signature + hashlib.sha256(output.read_bytes()).hexdigest())
     return output
 
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
+import json
 import os
 import platform
 import shutil
@@ -31,7 +32,8 @@ LIBRARY = "libcorelskd_r1.so"
 COREADI_LIBRARY = "libcoreadi_source.so"
 MESCAL_LIBRARY = "libmescal_source.so"
 FPS_LIBRARY = "libapple_music_fps_source.so"
-AUTH_COMPILE_WORKERS = 2
+DEFAULT_COMPILE_WORKERS = 2
+BUILD_STATE_DIRECTORY = ".build-state"
 AUTH_OPTIMIZATION_LEVEL = "-O1"
 
 
@@ -57,35 +59,81 @@ def _run(command: list[str]) -> None:
         raise BuildError(f"native build failed with exit status {error.returncode}") from error
 
 
-def build_native(destination: Path) -> Path:
-    """Compile the package-owned C source into ``destination``."""
-    destination.mkdir(parents=True, exist_ok=True)
+def _compile_workers() -> int:
+    configured_workers = os.environ.get("APPLE_MUSIC_BUILD_JOBS", str(DEFAULT_COMPILE_WORKERS))
+    try:
+        workers = int(configured_workers)
+    except ValueError as error:
+        raise BuildError("APPLE_MUSIC_BUILD_JOBS must be a positive integer") from error
+    if workers < 1:
+        raise BuildError("APPLE_MUSIC_BUILD_JOBS must be a positive integer")
+    return min(workers, os.cpu_count() or 1)
+
+
+def _build_signature(sources: list[Path], options: list[str]) -> str:
     compiler = os.environ.get("CC", "cc")
-    output = destination / LIBRARY
-    _run([
-        compiler,
-        "-std=c99",
-        "-O2",
-        "-fPIC",
-        "-shared",
-        "-Wall",
-        "-Wextra",
-        f"-I{NATIVE}",
-        f"-Wl,-soname,{LIBRARY}",
-        *[str(NATIVE / (name + ".c")) for name in (
-            "corelskd_r1", "spc_v2", "ckc_packet", "mt19937",
-            "compare_select", "field_copy", "append_bytes", "fill_dispatch", "integrity_codec_data", "registry", "control_refs", "abi_layout", "copy_codecs", "auth_word_codecs",
-        )],
-        "-o",
-        str(output),
-    ])
+    compiler_version = subprocess.check_output([compiler, "--version"])
+    digest = hashlib.sha256(compiler_version)
+    digest.update(json.dumps([shutil.which(compiler), options]).encode())
+    dependencies = set(sources)
+    dependencies.update(NATIVE.rglob("*.h"))
+    dependencies.update(NATIVE.rglob("*.inc"))
+    for source in sorted(dependencies):
+        digest.update(str(source.relative_to(NATIVE)).encode())
+        digest.update(hashlib.sha256(source.read_bytes()).digest())
+    return digest.hexdigest()
+
+
+def _build_shared_library(sources: list[Path], output: Path, options: list[str]) -> Path:
+    compiler = os.environ.get("CC", "cc")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    signature = _build_signature(sources, options)
+    state_directory = output.parent / BUILD_STATE_DIRECTORY
+    state_file = state_directory / output.name
+    if output.is_file() and state_file.is_file():
+        try:
+            state = json.loads(state_file.read_text())
+        except (OSError, ValueError):
+            state = {}
+        if state.get("signature") == signature and state.get("output") == hashlib.sha256(output.read_bytes()).hexdigest():
+            print(f"reusing {output.name}", flush=True)
+            return output
+    with tempfile.TemporaryDirectory(prefix=f"{output.stem}-", dir=output.parent) as temporary:
+        temporary_path = Path(temporary)
+        object_paths = [temporary_path / f"{index}.o" for index in range(len(sources))]
+
+        def compile_source(source_and_object: tuple[Path, Path]) -> None:
+            source, object_path = source_and_object
+            _run([compiler, "-std=c99", "-fPIC", *options,
+                  "-c", str(source), "-o", str(object_path)])
+
+        with ThreadPoolExecutor(max_workers=_compile_workers()) as executor:
+            list(executor.map(compile_source, zip(sources, object_paths)))
+        temporary_output = temporary_path / output.name
+        _run([compiler, "-shared", "-Wl,-s", f"-Wl,-soname,{output.name}",
+              *map(str, object_paths), "-o", str(temporary_output)])
+        temporary_output.replace(output)
+    state_directory.mkdir(exist_ok=True)
+    state_file.write_text(json.dumps({
+        "signature": signature,
+        "output": hashlib.sha256(output.read_bytes()).hexdigest(),
+    }))
     return output
+
+
+def build_native(destination: Path) -> Path:
+    sources = [NATIVE / (name + ".c") for name in (
+        "corelskd_r1", "spc_v2", "ckc_packet", "mt19937",
+        "compare_select", "field_copy", "append_bytes", "fill_dispatch", "integrity_codec_data",
+        "registry", "control_refs", "abi_layout", "copy_codecs", "auth_word_codecs",
+    )]
+    return _build_shared_library(sources, destination / LIBRARY,
+                                 ["-O2", "-Wall", "-Wextra", f"-I{NATIVE}"])
 
 
 def build_auth_native(destination: Path) -> tuple[Path, Path]:
     """Compile source-reconstructed CoreADI and Mescal backends."""
     destination.mkdir(parents=True, exist_ok=True)
-    compiler = os.environ.get("CC", "cc")
     coreadi = NATIVE / "auth" / "coreadi"
     mescal = NATIVE / "auth" / "mescal"
     coreadi_output = destination / COREADI_LIBRARY
@@ -96,17 +144,13 @@ def build_auth_native(destination: Path) -> tuple[Path, Path]:
     mescal_sources = [mescal / "mescal.c", mescal / "mescal_integrity.c"]
     mescal_sources.extend(sorted((mescal / "generated").glob("mescal_*.c")))
     _build_auth_library(
-        compiler,
         coreadi_sources,
         coreadi_output,
-        "coreadi",
         ["-Wall", "-Wextra"],
     )
     _build_auth_library(
-        compiler,
         mescal_sources,
         mescal_output,
-        "mescal",
         ["-fvisibility=hidden", "-Wall", "-Wextra", "-Wno-unused-label", "-Wno-misleading-indentation"],
     )
     return coreadi_output, mescal_output
@@ -114,7 +158,6 @@ def build_auth_native(destination: Path) -> tuple[Path, Path]:
 
 def build_fps_native(destination: Path) -> Path:
     destination.mkdir(parents=True, exist_ok=True)
-    compiler = os.environ.get("CC", "cc")
     source_root = NATIVE / "keygen_experimental"
     generated_sources = []
     for directory, pattern in (
@@ -132,57 +175,16 @@ def build_fps_native(destination: Path) -> Path:
     )]
     sources.extend(generated_sources)
     output = destination / FPS_LIBRARY
-    with tempfile.TemporaryDirectory(prefix="apple-music-source-fps-") as temporary:
-        temporary_path = Path(temporary)
-        object_paths = [temporary_path / f"{index}.o" for index in range(len(sources))]
-
-        def compile_source(source_and_object: tuple[Path, Path]) -> None:
-            source, object_path = source_and_object
-            _run([
-                compiler, "-std=c99", "-O0", "-fPIC", "-Wall", "-Wextra",
-                f"-I{source_root}", "-c", str(source), "-o", str(object_path),
-            ])
-
-        with ThreadPoolExecutor(max_workers=min(AUTH_COMPILE_WORKERS, os.cpu_count() or 1)) as executor:
-            list(executor.map(compile_source, zip(sources, object_paths)))
-        _run([compiler, "-shared", *[str(object_path) for object_path in object_paths], "-o", str(output)])
-    return output
+    return _build_shared_library(sources, output,
+                                 ["-O0", "-Wall", "-Wextra", f"-I{source_root}"])
 
 
 def _build_auth_library(
-    compiler: str,
     sources: list[Path],
     output: Path,
-    name: str,
     options: list[str],
 ) -> None:
-    with tempfile.TemporaryDirectory(prefix=f"apple-music-source-{name}-") as temporary:
-        temporary_path = Path(temporary)
-        object_paths = [temporary_path / f"{index}.o" for index in range(len(sources))]
-
-        def compile_source(source_and_object: tuple[Path, Path]) -> None:
-            source, object_path = source_and_object
-            _run([
-                compiler,
-                "-std=c99",
-                AUTH_OPTIMIZATION_LEVEL,
-                "-fPIC",
-                *options,
-                "-c",
-                str(source),
-                "-o",
-                str(object_path),
-            ])
-
-        with ThreadPoolExecutor(max_workers=min(AUTH_COMPILE_WORKERS, os.cpu_count() or 1)) as executor:
-            list(executor.map(compile_source, zip(sources, object_paths)))
-        _run([
-            compiler,
-            "-shared",
-            *[str(object_path) for object_path in object_paths],
-            "-o",
-            str(output),
-        ])
+    _build_shared_library(sources, output, [AUTH_OPTIMIZATION_LEVEL, *options])
 
 
 def _package_files():
@@ -190,7 +192,7 @@ def _package_files():
         if not path.is_file():
             continue
         relative = path.relative_to(PACKAGE)
-        if "__pycache__" in relative.parts or path.suffix in (".pyc", ".so", ".o"):
+        if BUILD_STATE_DIRECTORY in relative.parts or "__pycache__" in relative.parts or path.suffix in (".pyc", ".so", ".o"):
             continue
         yield path, relative
 
@@ -250,10 +252,12 @@ def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     with tempfile.TemporaryDirectory(prefix="apple-music-source-wheel-") as temporary:
         stage = Path(temporary)
         package = stage / PACKAGE.name
-        shutil.copytree(PACKAGE, package, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.so", "*.o"))
-        build_native(package / "_native")
-        build_auth_native(package / "_native")
-        build_fps_native(package / "_native")
+        shutil.copytree(PACKAGE, package, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "_native"))
+        libraries = [build_native(NATIVE), *build_auth_native(NATIVE), build_fps_native(NATIVE)]
+        native_destination = package / "_native"
+        native_destination.mkdir()
+        for library in libraries:
+            shutil.copy2(library, native_destination / library.name)
         info = stage / DIST_INFO
         info.mkdir()
         metadata = _metadata()
@@ -297,7 +301,7 @@ def build_sdist(sdist_directory, config_settings=None):
                 if not path.is_file():
                     continue
                 relative = path.relative_to(ROOT)
-                if "__pycache__" in relative.parts or path.suffix in (".pyc", ".so", ".o"):
+                if BUILD_STATE_DIRECTORY in relative.parts or "__pycache__" in relative.parts or path.suffix in (".pyc", ".so", ".o"):
                     continue
                 archive.add(path, arcname=f"{root}/{relative.as_posix()}", recursive=False)
     return filename
