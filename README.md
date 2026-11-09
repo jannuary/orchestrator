@@ -21,9 +21,9 @@ python3 scripts/build_source_native.py
 ```
 
 Unchanged libraries and the probe are reused. Source, header, compiler or build
-option changes trigger a rebuild. The first build uses up to two compiler
-processes to limit memory usage; set `APPLE_MUSIC_BUILD_JOBS=4` to compile more
-files at once on larger machines. Delete `apple-music-source/src/apple_music_source/_native/.build-state`
+option changes trigger a rebuild. Generated pages are split into small compile units to limit compiler memory
+usage. The first build uses up to two compiler processes; set
+`APPLE_MUSIC_BUILD_JOBS=4` to use more processes on larger machines. Delete `apple-music-source/src/apple_music_source/_native/.build-state`
 to force a rebuild.
 
 Built wheels contain Python runtime files and stripped native libraries. The C

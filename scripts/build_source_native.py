@@ -131,7 +131,7 @@ def build_r1_probe() -> Path:
     with tempfile.TemporaryDirectory(prefix="r1-probe-", dir=NATIVE_DIRECTORY) as temporary:
         source = Path(temporary) / "probe.c"
         temporary_output = Path(temporary) / output.name
-        source.write_text(R1_PROBE_SOURCE + page)
+        source.write_text(build_backend.split_native_page(R1_PROBE_SOURCE + page))
         subprocess.run(
             [
                 compiler,

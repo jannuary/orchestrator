@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -33,6 +34,7 @@ COREADI_LIBRARY = "libcoreadi_source.so"
 MESCAL_LIBRARY = "libmescal_source.so"
 FPS_LIBRARY = "libapple_music_fps_source.so"
 DEFAULT_COMPILE_WORKERS = 2
+NATIVE_BLOCKS_PER_COMPILE_UNIT = 32
 BUILD_STATE_DIRECTORY = ".build-state"
 AUTH_OPTIMIZATION_LEVEL = "-O1"
 
@@ -74,6 +76,7 @@ def _build_signature(sources: list[Path], options: list[str]) -> str:
     compiler = os.environ.get("CC", "cc")
     compiler_version = subprocess.check_output([compiler, "--version"])
     digest = hashlib.sha256(compiler_version)
+    digest.update(Path(__file__).read_bytes())
     digest.update(json.dumps([shutil.which(compiler), options]).encode())
     dependencies = set(sources)
     dependencies.update(NATIVE.rglob("*.h"))
@@ -82,6 +85,71 @@ def _build_signature(sources: list[Path], options: list[str]) -> str:
         digest.update(str(source.relative_to(NATIVE)).encode())
         digest.update(hashlib.sha256(source.read_bytes()).digest())
     return digest.hexdigest()
+
+
+def _native_page_parts(source: str) -> tuple[str, list[str], str]:
+    page = re.fullmatch(
+        r"(.*?)(int\s+(\w+)\(unsigned block,([^)]*)\)\s*\{\s*"
+        r"NATIVE_LOCALS;\s*switch\s*\(block\)\s*\{)(.*)"
+        r"default:return WRAPPER_KG_PAYLOAD_INVALID;\s*\}\s*NATIVE_DONE;\s*\}\s*",
+        source,
+        re.DOTALL,
+    )
+    if page is None:
+        raise BuildError("unsupported generated native page layout")
+    preamble, _, function_name, arguments, body = page.groups()
+    blocks = re.split(r"^\s*case (\d+):\s*\n", body, flags=re.MULTILINE)
+    if blocks[0].strip():
+        raise BuildError(f"unexpected statements before blocks in {function_name}")
+    functions: list[str] = []
+    declarations: list[str] = []
+    dispatch_cases: list[str] = []
+    for block_index in range(1, len(blocks), 2):
+        block_number = blocks[block_index]
+        statements = blocks[block_index + 1].rstrip()
+        if not statements.endswith("break;"):
+            raise BuildError(f"missing terminal break in {function_name} block {block_number}")
+        statements = statements.removesuffix("break;")
+        labels = set(re.findall(r"^\s*(\w+):", statements, flags=re.MULTILINE))
+        destinations = set(re.findall(r"\bgoto\s+(\w+)", statements))
+        if destinations - labels:
+            raise BuildError(f"cross-block jump in {function_name} block {block_number}")
+        block_function = f"{function_name}_block_{block_number}"
+        declaration = f'__attribute__((noinline,visibility("hidden"))) int {block_function}({arguments})'
+        declarations.append(declaration + ";\n")
+        functions.append(
+            declaration + "{\n"
+            f"NATIVE_LOCALS;\n(void)regions;(void)count;\n{statements}\nNATIVE_DONE;\n}}\n"
+        )
+        dispatch_cases.append(
+            f"case {block_number}:return {block_function}(bias,fs,regions,count,max_steps);\n"
+        )
+    dispatch = (
+        "".join(declarations) + f"int {function_name}(unsigned block,{arguments}){{\nswitch(block){{\n"
+        + "".join(dispatch_cases)
+        + "default:fs->cpu.steps=0;return WRAPPER_KG_PAYLOAD_INVALID;}\n}\n"
+    )
+    return preamble, functions, dispatch
+
+
+def split_native_page(source: str) -> str:
+    preamble, functions, dispatch = _native_page_parts(source)
+    return preamble + "".join(functions) + dispatch
+
+
+def _native_compile_units(source: Path, temporary: Path, source_index: int) -> list[Path]:
+    if "_page_" not in source.stem or source.parent.name not in ("generated", "native_generated", "app_generated"):
+        return [source]
+    preamble, functions, dispatch = _native_page_parts(source.read_text())
+    contents = [preamble + dispatch]
+    for start in range(0, len(functions), NATIVE_BLOCKS_PER_COMPILE_UNIT):
+        contents.append(preamble + "".join(functions[start:start + NATIVE_BLOCKS_PER_COMPILE_UNIT]))
+    paths = []
+    for unit_index, content in enumerate(contents):
+        path = temporary / f"{source_index}_{unit_index}.c"
+        path.write_text(content)
+        paths.append(path)
+    return paths
 
 
 def _build_shared_library(sources: list[Path], output: Path, options: list[str]) -> Path:
@@ -100,15 +168,20 @@ def _build_shared_library(sources: list[Path], output: Path, options: list[str])
             return output
     with tempfile.TemporaryDirectory(prefix=f"{output.stem}-", dir=output.parent) as temporary:
         temporary_path = Path(temporary)
-        object_paths = [temporary_path / f"{index}.o" for index in range(len(sources))]
+        compile_jobs: list[tuple[Path, Path, Path]] = []
+        for source_index, source in enumerate(sources):
+            for compiled_source in _native_compile_units(source, temporary_path, source_index):
+                object_path = temporary_path / f"{len(compile_jobs)}.o"
+                compile_jobs.append((source, compiled_source, object_path))
 
-        def compile_source(source_and_object: tuple[Path, Path]) -> None:
-            source, object_path = source_and_object
+        def compile_source(job: tuple[Path, Path, Path]) -> None:
+            source, compiled_source, object_path = job
             _run([compiler, "-std=c99", "-fPIC", *options,
-                  "-c", str(source), "-o", str(object_path)])
+                  f"-I{source.parent}", "-c", str(compiled_source), "-o", str(object_path)])
 
         with ThreadPoolExecutor(max_workers=_compile_workers()) as executor:
-            list(executor.map(compile_source, zip(sources, object_paths)))
+            list(executor.map(compile_source, compile_jobs))
+        object_paths = [job[2] for job in compile_jobs]
         temporary_output = temporary_path / output.name
         _run([compiler, "-shared", "-Wl,-s", f"-Wl,-soname,{output.name}",
               *map(str, object_paths), "-o", str(temporary_output)])

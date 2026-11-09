@@ -5,3 +5,8 @@ __pycache__/
 *.so
 *.o
 .build-state/
+libcorelskd_r1-*/
+libcoreadi_source-*/
+libmescal_source-*/
+libapple_music_fps_source-*/
+r1-probe-*/
