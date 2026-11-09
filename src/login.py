@@ -1,0 +1,199 @@
+"""Two-phase account login for the HTTP service.
+
+The first request runs one login attempt.  When Apple answers with a
+two-factor challenge the attempt is parked (client, credentials and Apple's
+response headers kept in memory) and the caller is told to repost with a code.
+The repost submits the code on the parked attempt, so the session that Apple
+created for the first attempt is the one that is completed.
+"""
+
+from __future__ import annotations
+
+import plistlib
+import shutil
+import threading
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable, Optional
+
+from .source_package import ensure_importable
+
+ensure_importable()
+
+from apple_music_source.auth import (
+    HttpsTransport,
+    SourceLoginClient,
+    SourceLoginOutcome,
+    load_bag,
+)
+
+BAG_URL = "https://init.itunes.apple.com/bag.xml?ix=6"
+SOURCE_USER_AGENT = "Music/5.0.2 Android/10 model/Pixel 8 build/7663314 (dt:66)"
+DEFAULT_STOREFRONT = "143480-2,31"
+REQUEST_TIMEOUT_SECONDS = 45.0
+PARK_TIMEOUT_SECONDS = 300.0
+
+
+class LoginError(RuntimeError):
+    pass
+
+
+@dataclass(frozen=True)
+class LoginResult:
+    session_saved: bool
+    verification_required: bool
+    storefront: str
+
+
+def load_source_bag(transport: HttpsTransport, bag_file: Optional[Path]):
+    if bag_file is not None and bag_file.is_file():
+        return load_bag(bag_file)
+    response = transport.get(
+        BAG_URL,
+        {
+            "User-Agent": SOURCE_USER_AGENT,
+            "Content-Type": "application/x-apple-plist",
+        },
+        timeout=REQUEST_TIMEOUT_SECONDS,
+    )
+    if response.status != 200:
+        raise LoginError(f"URL bag request failed with HTTP {response.status}")
+    if bag_file is not None:
+        bag_file.write_bytes(response.body)
+    return plistlib.loads(response.body)
+
+
+class LoginManager:
+    def __init__(
+        self,
+        *,
+        session_directory: Path,
+        device_state: Path,
+        storefront: str = DEFAULT_STOREFRONT,
+        bag_file: Optional[Path] = None,
+        on_session_saved: Optional[Callable[[Path], str]] = None,
+    ):
+        self._session_directory = Path(session_directory)
+        self._device_state = Path(device_state)
+        self._storefront = storefront
+        self._bag_file = None if bag_file is None else Path(bag_file)
+        self._on_session_saved = on_session_saved
+        self._lock = threading.Lock()
+        self._parked_client: Optional[SourceLoginClient] = None
+        self._parked_at = 0.0
+
+    def authenticate(
+        self, username: str, password: str, code: Optional[str] = None
+    ) -> LoginResult:
+        with self._lock:
+            self._expire_parked()
+            if not code and self._parked_client is not None:
+                return LoginResult(False, True, "")
+            if code and self._parked_client is not None:
+                return self._continue_login(username, password, code)
+            self._close_parked()
+            return self._begin_login(username, password, code)
+
+    def close(self) -> None:
+        with self._lock:
+            self._close_parked()
+
+    def _begin_login(
+        self, username: str, password: str, code: Optional[str]
+    ) -> LoginResult:
+        transport = HttpsTransport()
+        bag = load_source_bag(transport, self._bag_file)
+        client = SourceLoginClient(
+            device_state=self._device_state,
+            destination=self._staging_directory(),
+            bag=bag,
+            transport=transport,
+            storefront=self._storefront,
+        )
+        return self._run(client, username, password, code)
+
+    def _continue_login(
+        self, username: str, password: str, code: str
+    ) -> LoginResult:
+        client = self._take_parked()
+        return self._run(client, username, password, code)
+
+    def _run(
+        self,
+        client: SourceLoginClient,
+        username: str,
+        password: str,
+        code: Optional[str],
+    ) -> LoginResult:
+        try:
+            outcome = client.authenticate(
+                username=username,
+                password=password,
+                verification_code=code,
+                acquire_web_tokens=True,
+            )
+        except BaseException:
+            client.close()
+            raise
+        return self._settle(client, outcome)
+
+    def _settle(
+        self, client: SourceLoginClient, outcome: SourceLoginOutcome
+    ) -> LoginResult:
+        if outcome.session_saved:
+            destination = Path(client.destination)
+            client.close()
+            return LoginResult(True, False, self._publish(destination))
+        if outcome.verification_required:
+            self._park(client)
+            return LoginResult(False, True, "")
+        client.close()
+        raise LoginError("Apple rejected the credentials")
+
+    def _staging_directory(self) -> Path:
+        parent = self._session_directory.parent
+        parent.mkdir(parents=True, exist_ok=True)
+        return parent / f".{self._session_directory.name}.login-{time.time_ns()}"
+
+    def _publish(self, staging: Path) -> str:
+        session_directory = self._session_directory
+        if session_directory.exists():
+            previous = session_directory.with_name(
+                f".{session_directory.name}.previous-{time.time_ns()}"
+            )
+            session_directory.rename(previous)
+        staging.rename(session_directory)
+        self._remove_previous_sessions()
+        if self._on_session_saved is None:
+            return ""
+        return self._on_session_saved(session_directory)
+
+    def _remove_previous_sessions(self) -> None:
+        pattern = f".{self._session_directory.name}.previous-*"
+        for previous in self._session_directory.parent.glob(pattern):
+            if previous.is_dir():
+                shutil.rmtree(previous)
+
+    def _park(self, client: SourceLoginClient) -> None:
+        self._close_parked()
+        self._parked_client = client
+        self._parked_at = time.monotonic()
+
+    def _take_parked(self) -> SourceLoginClient:
+        client = self._parked_client
+        self._parked_client = None
+        return client
+
+    def _expire_parked(self) -> None:
+        if self._parked_client is None:
+            return
+        if time.monotonic() - self._parked_at < PARK_TIMEOUT_SECONDS:
+            return
+        self._close_parked()
+
+    def _close_parked(self) -> None:
+        client = self._parked_client
+        self._parked_client = None
+        if client is not None:
+            client.close()

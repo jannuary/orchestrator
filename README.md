@@ -31,24 +31,49 @@ python3 scripts/source_login.py \
     --session /path/to/session
 ```
 
-Credentials are read from `~/.config/apple-music-source/credentials.json`
-(`{"username": ..., "password": ...}`) unless `--credentials` is given.
+Run the script in a terminal to be prompted for the Apple ID, password and
+two-factor code; it also reads
+`~/.config/apple-music-source/credentials.json` by default. The same login is
+available over HTTP once the server is running (see `POST /login` below).
 
 ## Run
 
 ```sh
-python3 server.py --session /path/to/session
+python3 server.py --session /path/to/session \
+    --device-state /path/to/device-state
 ```
+
+`--session` may point at a directory that does not exist yet; the server then
+starts unauthenticated and `POST /login` creates it. `--device-state` defaults
+to `--session` and must contain the `adi.pb` / `ANDROID_ID` pair used by a
+login.
 
 The FairPlay certificate defaults to [`certs/fps-certificate.bin`](certs)
 (Apple's public FPS1 certificate); override with `--certificate`.
 
 ### Endpoints
 
+- `POST /login` — two-phase account login. Send `X-Apple-User` and
+  `X-Apple-Password`; if Apple asks for a two-factor code the reply is `401`
+  `{"status": "2fa_required"}`, and reposting the same headers plus
+  `X-Apple-2FA-Code` finishes the login and writes the session directory.
+  Successful logins return `200` with the storefront.
 - `GET /decrypt/<adamId>?quality=alac` — stream a decrypted track. `quality`
   accepts `hires`, `alac`, `256`, `128`, `64`; the closest available tier is
-  used. `Range: bytes=...` is honoured.
+  used. `Range: bytes=...` is honoured. Returns `503` until a login exists.
 - `GET /healthz` — liveness probe.
+
+Example login:
+
+```sh
+curl -i -X POST http://127.0.0.1:8123/login \
+    -H 'X-Apple-User: you@example.com' \
+    -H 'X-Apple-Password: secret'
+curl -i -X POST http://127.0.0.1:8123/login \
+    -H 'X-Apple-User: you@example.com' \
+    -H 'X-Apple-Password: secret' \
+    -H 'X-Apple-2FA-Code: 123456'
+```
 
 The session directory may also be supplied with
 `APPLE_MUSIC_SOURCE_SESSION`. For an installed copy, point
@@ -57,6 +82,7 @@ The session directory may also be supplied with
 ## Layout
 
 - `src/source.py` — source client: catalog playlist, FairPlay key captures
+- `src/login.py` — two-phase `/login` (credentials, then two-factor code)
 - `src/keys.py` — per-key CoreLSKD decryption material
 - `src/decrypt.py` — fMP4 `cbcs` sample decryption and reassembly
 - `src/playlist.py` — master/media playlist selection

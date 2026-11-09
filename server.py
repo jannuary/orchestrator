@@ -5,11 +5,21 @@ Usage::
     python3 server.py --session /path/to/session [--host 127.0.0.1] [--port 8123]
 
 The session directory holds the account databases, device identity and web
-tokens produced by ``scripts/source_login.py``. The ``--certificate`` path may
-be overridden; it defaults to the vendored FairPlay certificate.
+tokens produced by ``scripts/source_login.py`` or by a successful
+``POST /login``. When it does not exist yet the server starts unauthenticated
+and ``/login`` creates it; ``--device-state`` names the directory holding the
+``adi.pb`` / ``ANDROID_ID`` pair the login needs. The ``--certificate`` path
+may be overridden; it defaults to the vendored FairPlay certificate.
 
 Endpoints
 ---------
+``POST /login``
+    Two-phase account login. Send ``X-Apple-User`` and ``X-Apple-Password``;
+    when Apple asks for a two-factor code the response is ``401`` with
+    ``{"status": "2fa_required"}``, and reposting the same headers plus
+    ``X-Apple-2FA-Code`` completes the login. On success the session is
+    written to ``--session`` and this server starts serving from it.
+
 ``GET /decrypt/<adamId>?quality=alac``
     Resolve the track's enhanced-HLS media playlist, fetch the (encrypted,
     ALAC/SAMPLE-AES) asset, capture the FairPlay key for its ``#EXT-X-KEY``
@@ -33,6 +43,7 @@ stay cached, so a seek does not download the asset again.
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import re
@@ -47,6 +58,7 @@ from pathlib import Path
 
 from src import (DecryptedTrack, SourceClient, load_media_playlist,
                  select_media_url, valid_qualities)
+from src.login import DEFAULT_STOREFRONT, LoginError, LoginManager
 
 DEFAULT_CERTIFICATE = Path(__file__).resolve().parent / "certs" / "fps-certificate.bin"
 SESSION_ENVIRONMENT_VARIABLE = "APPLE_MUSIC_SOURCE_SESSION"
@@ -64,7 +76,15 @@ TRACK_CACHE_SIZE = 3
 #: Bytes per write when sending a response body.
 WRITE_CHUNK = 256 * 1024
 
+LOGIN_HEADER_USER = "X-Apple-User"
+LOGIN_HEADER_PASSWORD = "X-Apple-Password"
+LOGIN_HEADER_CODE = "X-Apple-2FA-Code"
+
 log = logging.getLogger("orchestrator")
+
+
+class NotLoggedIn(RuntimeError):
+    pass
 
 
 def fetch_bytes(url: str, timeout: float = 120.0) -> bytes:
@@ -149,6 +169,37 @@ class TrackCache:
             return track
 
 
+class SourceStore:
+    """The session the service currently serves from.
+
+    ``adopt`` is called by the login manager once a login has been published
+    to the session directory; until then requests are answered with 503 and
+    only ``/login`` can make the service useful.
+    """
+
+    def __init__(self, session_directory, certificate_file):
+        self._session_directory = Path(session_directory)
+        self._certificate_file = Path(certificate_file)
+        self._lock = threading.Lock()
+        self._cache = None
+
+    def load_from_disk(self) -> None:
+        if (self._session_directory / "token_cache.json").is_file():
+            self.adopt(self._session_directory)
+
+    def adopt(self, session_directory) -> str:
+        source = SourceClient(Path(session_directory), self._certificate_file)
+        with self._lock:
+            self._cache = TrackCache(source)
+        return source.storefront
+
+    def cache(self) -> TrackCache:
+        with self._lock:
+            if self._cache is None:
+                raise NotLoggedIn("no session; POST /login first")
+            return self._cache
+
+
 class RangeNotSatisfiable(ValueError):
     pass
 
@@ -179,9 +230,7 @@ def parse_range(header, size: int):
     return start, min(end, size - 1)
 
 
-def make_handler(source: SourceClient):
-    cache = TrackCache(source)
-
+def make_handler(store: SourceStore, login_manager: LoginManager):
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
         server_version = "amdlitepy/0.1"
@@ -193,6 +242,62 @@ def make_handler(source: SourceClient):
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
+
+        def _send_json(self, code: int, payload: dict) -> None:
+            body = json.dumps(payload).encode("utf-8")
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_POST(self) -> None:
+            parsed = urllib.parse.urlsplit(self.path)
+            if parsed.path.rstrip("/") == "/login":
+                self._handle_login()
+                return
+            self._send_error_json(404, "not found")
+
+        def _handle_login(self) -> None:
+            username = self.headers.get(LOGIN_HEADER_USER, "")
+            password = self.headers.get(LOGIN_HEADER_PASSWORD, "")
+            code = self.headers.get(LOGIN_HEADER_CODE, "") or None
+            if not username or not password:
+                self._send_error_json(
+                    400, "missing X-Apple-User or X-Apple-Password header")
+                return
+            try:
+                result = login_manager.authenticate(username, password, code)
+            except LoginError as error:
+                log.warning("login failed: %s", error)
+                self._send_json(
+                    401,
+                    {"status": "credential_error", "error": str(error)},
+                )
+                return
+            except Exception as error:
+                log.exception("login failed")
+                self._send_json(
+                    502, {"status": "login_error", "error": str(error)})
+                return
+            if result.verification_required:
+                self._send_json(
+                    401,
+                    {
+                        "status": "2fa_required",
+                        "error": "2FA required, repost with "
+                                 "X-Apple-2FA-Code header",
+                    },
+                )
+                return
+            self._send_json(
+                200,
+                {
+                    "status": "logged_in",
+                    "storefront": result.storefront,
+                    "session_saved": result.session_saved,
+                },
+            )
 
         def do_GET(self) -> None:
             parsed = urllib.parse.urlsplit(self.path)
@@ -230,6 +335,11 @@ def make_handler(source: SourceClient):
                 self._send_error_json(
                     400, f"unknown quality {quality!r}; "
                          f"expected one of {list(valid_qualities())}")
+                return
+            try:
+                cache = store.cache()
+            except NotLoggedIn as e:
+                self._send_error_json(503, str(e))
                 return
             try:
                 track = cache.get(adam_id, quality)
@@ -294,28 +404,49 @@ def _json_quote(s: str) -> str:
 
 def make_server(session_directory, certificate_file=DEFAULT_CERTIFICATE,
                 host: str = "127.0.0.1", port: int = 8123,
-                verbose: bool = False) -> ThreadingHTTPServer:
+                verbose: bool = False, device_state=None,
+                storefront: str = DEFAULT_STOREFRONT,
+                bag_file=None) -> ThreadingHTTPServer:
     """Build a configured server instance for programmatic use.
 
     Start it with ``httpd.serve_forever()`` (optionally in a thread) and stop
-    it with ``httpd.shutdown()``.
+    it with ``httpd.shutdown()``.  The session directory is created by a
+    successful ``POST /login``; when it already holds tokens it is used
+    immediately.
     """
     logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO,
                         format="%(asctime)s %(levelname)s %(message)s")
-    source = SourceClient(Path(session_directory), Path(certificate_file))
-    return ThreadingHTTPServer((host, port), make_handler(source))
+    session = Path(session_directory)
+    store = SourceStore(session, Path(certificate_file))
+    store.load_from_disk()
+    login_manager = LoginManager(
+        session_directory=session,
+        device_state=Path(device_state) if device_state else session,
+        storefront=storefront,
+        bag_file=Path(bag_file) if bag_file else None,
+        on_session_saved=store.adopt,
+    )
+    httpd = ThreadingHTTPServer((host, port), make_handler(store, login_manager))
+    httpd.login_manager = login_manager
+    return httpd
 
 
 def serve(session_directory, certificate_file=DEFAULT_CERTIFICATE,
           host: str = "127.0.0.1", port: int = 8123,
-          verbose: bool = False) -> None:
+          verbose: bool = False, device_state=None,
+          storefront: str = DEFAULT_STOREFRONT,
+          bag_file=None) -> None:
     """Run the orchestrator server in the foreground (Ctrl-C to stop)."""
-    httpd = make_server(session_directory, certificate_file, host, port, verbose)
+    httpd = make_server(session_directory, certificate_file, host, port,
+                        verbose, device_state, storefront, bag_file)
     print(f"listening on http://{host}:{port}", file=sys.stderr, flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
+    finally:
+        httpd.login_manager.close()
+        httpd.server_close()
 
 
 def main(argv=None) -> int:
@@ -323,7 +454,15 @@ def main(argv=None) -> int:
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8123)
     ap.add_argument("--session", default=os.environ.get(SESSION_ENVIRONMENT_VARIABLE),
-                    help="source session directory (or APPLE_MUSIC_SOURCE_SESSION)")
+                    help="source session directory (or APPLE_MUSIC_SOURCE_SESSION); "
+                         "created by POST /login when it does not exist yet")
+    ap.add_argument("--device-state",
+                    help="device identity directory (adi.pb, ANDROID_ID) used "
+                         "by POST /login; defaults to --session")
+    ap.add_argument("--storefront", default=DEFAULT_STOREFRONT,
+                    help="storefront used for a new login")
+    ap.add_argument("--bag", dest="bag_file",
+                    help="URL bag file to read, or to cache a fetched bag into")
     ap.add_argument("--certificate", default=str(DEFAULT_CERTIFICATE),
                     help="FairPlay certificate used for SPC generation")
     ap.add_argument("--verbose", action="store_true",
@@ -333,7 +472,9 @@ def main(argv=None) -> int:
         ap.error("--session or APPLE_MUSIC_SOURCE_SESSION is required")
 
     serve(session_directory=args.session, certificate_file=args.certificate,
-          host=args.host, port=args.port, verbose=args.verbose)
+          host=args.host, port=args.port, verbose=args.verbose,
+          device_state=args.device_state, storefront=args.storefront,
+          bag_file=args.bag_file)
     return 0
 
 
