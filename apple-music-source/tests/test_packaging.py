@@ -185,7 +185,8 @@ worker = Worker(107, 0)
 assert native.ams_registry_worker_begin(ctypes.byref(worker), ctypes.byref(state)) == 1
 assert native.ams_registry_worker_wake(ctypes.byref(worker), ctypes.byref(state), 13) == 0
 assert state.references == 0 and state.counter == 107 and worker.wake_counter == 112 and worker.active == 0
-assert "not included" in pkg.CAPABILITIES["mescal_signing"]
+from apple_music_source.auth.mescal_source import SourceMescal
+assert len(SourceMescal.guid_descriptor(b"0123456789abcdef", bytes.fromhex("001122334455"))) == 56
 key = bytes.fromhex("000102030405060708090a0b0c0d0e0f")
 block = bytes.fromhex("00112233445566778899aabbccddeeff")
 assert AES(key).encrypt_block(block).hex() == "69c4e0d86a7b0430d8cdb78070b4c55a"

@@ -245,6 +245,11 @@ def _record_line(relative: str, data: bytes) -> str:
 
 
 def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
+    libraries = [build_native(NATIVE), *build_auth_native(NATIVE), build_fps_native(NATIVE)]
+    return _package_wheel(Path(wheel_directory), libraries)
+
+
+def _package_wheel(wheel_directory: Path, libraries: list[Path]) -> str:
     platform_tag = _platform_tag()
     filename = f"{NAME}-{VERSION}-py3-none-{platform_tag}.whl"
     output = Path(wheel_directory) / filename
@@ -253,7 +258,6 @@ def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
         stage = Path(temporary)
         package = stage / PACKAGE.name
         shutil.copytree(PACKAGE, package, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "_native"))
-        libraries = [build_native(NATIVE), *build_auth_native(NATIVE), build_fps_native(NATIVE)]
         native_destination = package / "_native"
         native_destination.mkdir()
         for library in libraries:
