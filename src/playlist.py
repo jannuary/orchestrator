@@ -1,9 +1,10 @@
 """Media (master-variant) playlist loading using the `m3u8` library.
 
-Reproduces the behaviour of the Go runv4 path: the URL returned by
-``lite-server /m3u8`` is a *media* playlist.  All its segments share one
-file URI, each separated by ``#EXT-X-BYTERANGE``; the first segment's key
-URI (``skd://...``) is what we pass to ``/key``.
+Reproduces the behaviour of the Go runv4 path: the enhanced-HLS entry is a
+*master* playlist whose selected variant is a *media* playlist.  All its
+segments share one file URI, each separated by ``#EXT-X-BYTERANGE``; the
+first segment's key URI (``skd://...``) is what the source client exchanges
+for a FairPlay key capture.
 """
 
 from __future__ import annotations
@@ -62,7 +63,7 @@ def _filter_key_lines(text: str) -> str:
 
     Apple Music playlists carry multiple keys (PlayReady / Widevine /
     FairPlay); only the one with ``streamingkeydelivery`` is the ``skd://``
-    key we pass to lite-server ``/key``.
+    key the source client exchanges for a FairPlay capture.
     """
     out = []
     for line in text.splitlines():

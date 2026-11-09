@@ -6,11 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "orchestrator"
 version = "0.1.0"
 description = "Apple Music ALAC/AAC SAMPLE-AES decryption HTTP service"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = [
     "m3u8>=3.0",
-    "temari",
 ]
 
 [project.scripts]

@@ -2,16 +2,20 @@
 
 Usage::
 
-    python3 server.py [--host 127.0.0.1] [--port 8123] [--lite http://127.0.0.1:8080]
+    python3 server.py --session /path/to/session [--host 127.0.0.1] [--port 8123]
+
+The session directory holds the account databases, device identity and web
+tokens produced by ``scripts/source_login.py``. The ``--certificate`` path may
+be overridden; it defaults to the vendored FairPlay certificate.
 
 Endpoints
 ---------
-``GET /decrypt/<adamId>``
-    Resolve the track's media playlist via the lite-server ``/m3u8`` endpoint,
-    fetch the (encrypted, ALAC/SAMPLE-AES) asset, decrypt it with the Temari
-    white-box (template from lite-server ``/key``), and stream it back as an
-    ``.m4a``.  Single ``Range: bytes=...`` requests are honoured with a
-    ``206 Partial Content`` response, so players can seek.
+``GET /decrypt/<adamId>?quality=alac``
+    Resolve the track's enhanced-HLS media playlist, fetch the (encrypted,
+    ALAC/SAMPLE-AES) asset, capture the FairPlay key for its ``#EXT-X-KEY``
+    URI, decrypt it, and stream it back as an ``.m4a``.  Single
+    ``Range: bytes=...`` requests are honoured with a ``206 Partial Content``
+    response, so players can seek.
 
 ``GET /healthz``
     Simple liveness probe.
@@ -30,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import re
 import sys
 import threading
@@ -38,11 +43,13 @@ import urllib.parse
 import urllib.request
 from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
-from src import (DecryptedTrack, LiteClient, LiteError, PlaylistError,
-                 load_media_playlist, select_media_url, valid_qualities)
+from src import (DecryptedTrack, SourceClient, load_media_playlist,
+                 select_media_url, valid_qualities)
 
-DEFAULT_LITE = "http://127.0.0.1:8080"
+DEFAULT_CERTIFICATE = Path(__file__).resolve().parent / "certs" / "fps-certificate.bin"
+SESSION_ENVIRONMENT_VARIABLE = "APPLE_MUSIC_SOURCE_SESSION"
 
 #: FairPlay key URI Apple uses for the shared context template; when a
 #: segment carries it the key request must use adamId "0" (preshare), not
@@ -66,15 +73,15 @@ def fetch_bytes(url: str, timeout: float = 120.0) -> bytes:
         return resp.read()
 
 
-def load_track(lite: LiteClient, adam_id: str, quality: str = "alac") -> DecryptedTrack:
-    """Fetch a track's encrypted asset and key templates.
+def load_track(source: SourceClient, adam_id: str, quality: str = "alac") -> DecryptedTrack:
+    """Fetch a track's encrypted asset and key captures.
 
     ``quality`` selects the encoding: ``"hires"``/``"alac"`` for lossless, or
     an AAC kbps tier (``"256"``/``"128"``/``"64"``).  If the exact tier is
     absent the next tier in the chain ``hires -> alac -> 256 -> 128 -> 64``
     is used.  Fragments are decrypted later, as they are read.
     """
-    m3u8_url = lite.m3u8_url(adam_id)
+    m3u8_url = source.master_playlist_url(adam_id)
     if not m3u8_url:
         raise ValueError(f"adamId {adam_id} has no hi-res asset")
 
@@ -90,21 +97,21 @@ def load_track(lite: LiteClient, adam_id: str, quality: str = "alac") -> Decrypt
         if not uri:
             raise ValueError("media playlist has no #EXT-X-KEY URI")
         key_uris.append(uri)
-    templates = {uri: lite.key_template(
-                     PRESHARE_ADAMID if uri == PREFETCH_KEY else adam_id, uri)
-                 for uri in dict.fromkeys(key_uris)}
+    key_materials = {uri: source.key_material(
+                         PRESHARE_ADAMID if uri == PREFETCH_KEY else adam_id, uri)
+                     for uri in dict.fromkeys(key_uris)}
 
     asset = fetch_bytes(pl.file_uri)
-    return DecryptedTrack(asset, [templates[u] for u in key_uris])
+    return DecryptedTrack(asset, [key_materials[u] for u in key_uris])
 
 
-def decrypt_adamid(lite: LiteClient, adam_id: str, quality: str = "alac"):
+def decrypt_adamid(source: SourceClient, adam_id: str, quality: str = "alac"):
     """Fetch and decrypt a track, yielding ``bytes`` chunks.
 
     The first chunk is the fMP4 init segment; subsequent chunks are
     ``moof``+``mdat`` pairs emitted as each fragment is decrypted.
     """
-    yield from load_track(lite, adam_id, quality).iter_range()
+    yield from load_track(source, adam_id, quality).iter_range()
 
 
 class TrackCache:
@@ -112,8 +119,8 @@ class TrackCache:
     track (one per seek) reuse it instead of downloading the asset again.
     Concurrent requests for the same track wait for a single load."""
 
-    def __init__(self, lite: LiteClient, size: int = TRACK_CACHE_SIZE):
-        self._lite = lite
+    def __init__(self, source: SourceClient, size: int = TRACK_CACHE_SIZE):
+        self._source = source
         self._size = size
         self._tracks: "OrderedDict[tuple, DecryptedTrack]" = OrderedDict()
         self._loading: dict = {}
@@ -131,7 +138,7 @@ class TrackCache:
                 if key in self._tracks:
                     return self._tracks[key]
             try:
-                track = load_track(self._lite, adam_id, quality)
+                track = load_track(self._source, adam_id, quality)
             finally:
                 with self._lock:
                     self._loading.pop(key, None)
@@ -172,8 +179,8 @@ def parse_range(header, size: int):
     return start, min(end, size - 1)
 
 
-def make_handler(lite: LiteClient):
-    cache = TrackCache(lite)
+def make_handler(source: SourceClient):
+    cache = TrackCache(source)
 
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
@@ -285,8 +292,9 @@ def _json_quote(s: str) -> str:
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def make_server(lite_url: str = DEFAULT_LITE, host: str = "127.0.0.1",
-                port: int = 8123, verbose: bool = False) -> ThreadingHTTPServer:
+def make_server(session_directory, certificate_file=DEFAULT_CERTIFICATE,
+                host: str = "127.0.0.1", port: int = 8123,
+                verbose: bool = False) -> ThreadingHTTPServer:
     """Build a configured server instance for programmatic use.
 
     Start it with ``httpd.serve_forever()`` (optionally in a thread) and stop
@@ -294,16 +302,16 @@ def make_server(lite_url: str = DEFAULT_LITE, host: str = "127.0.0.1",
     """
     logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO,
                         format="%(asctime)s %(levelname)s %(message)s")
-    lite = LiteClient(lite_url)
-    return ThreadingHTTPServer((host, port), make_handler(lite))
+    source = SourceClient(Path(session_directory), Path(certificate_file))
+    return ThreadingHTTPServer((host, port), make_handler(source))
 
 
-def serve(lite_url: str = DEFAULT_LITE, host: str = "127.0.0.1",
-          port: int = 8123, verbose: bool = False) -> None:
+def serve(session_directory, certificate_file=DEFAULT_CERTIFICATE,
+          host: str = "127.0.0.1", port: int = 8123,
+          verbose: bool = False) -> None:
     """Run the orchestrator server in the foreground (Ctrl-C to stop)."""
-    httpd = make_server(lite_url, host, port, verbose)
-    print(f"listening on http://{host}:{port} (lite={lite_url})",
-          file=sys.stderr, flush=True)
+    httpd = make_server(session_directory, certificate_file, host, port, verbose)
+    print(f"listening on http://{host}:{port}", file=sys.stderr, flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -314,13 +322,18 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Apple Music ALAC decryption service")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8123)
-    ap.add_argument("--lite", default=DEFAULT_LITE,
-                    help="wrapper-lite server base URL")
+    ap.add_argument("--session", default=os.environ.get(SESSION_ENVIRONMENT_VARIABLE),
+                    help="source session directory (or APPLE_MUSIC_SOURCE_SESSION)")
+    ap.add_argument("--certificate", default=str(DEFAULT_CERTIFICATE),
+                    help="FairPlay certificate used for SPC generation")
     ap.add_argument("--verbose", action="store_true",
                     help="log per-chunk streaming progress")
     args = ap.parse_args(argv)
+    if not args.session:
+        ap.error("--session or APPLE_MUSIC_SOURCE_SESSION is required")
 
-    serve(lite_url=args.lite, host=args.host, port=args.port, verbose=args.verbose)
+    serve(session_directory=args.session, certificate_file=args.certificate,
+          host=args.host, port=args.port, verbose=args.verbose)
     return 0
 
 

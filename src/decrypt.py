@@ -1,4 +1,4 @@
-"""fMP4 (SAMPLE-AES / "cbcs") decryption pipeline using the Temari library.
+"""fMP4 (SAMPLE-AES / "cbcs") decryption pipeline.
 
 This replicates the Go ``runv4`` path for Apple Music ALAC ("hi-res lossless"):
 
@@ -8,12 +8,13 @@ This replicates the Go ``runv4`` path for Apple Music ALAC ("hi-res lossless"):
    ``alac`` sample entries in ``stsd``.
 2. Parse each fragment (``moof`` + ``mdat``).  Locate every sample's data in
    the ``mdat`` payload (via tfhd/trun + moof start offset).
-3. Decrypt each sample's protected bytes with the Temari white-box (built from
-   the lite-server ``/key`` template), in place.
+3. Decrypt each sample's protected bytes with the source CoreLSKD transform
+   captured for that fragment's ``#EXT-X-KEY`` URI, in place.
 4. Rebuild each ``moof`` with encryption boxes (senc/saiz/saio/seig/sgpd/pssh)
    removed and ``trun.data_offset`` adjusted, then emit the init + fragments.
 
-The external ``temari`` package must be importable (``pip install temari``).
+Samples are decrypted with :class:`src.keys.KeyMaterial` captures taken from
+one FairPlay source session per ``#EXT-X-KEY`` URI.
 """
 
 from __future__ import annotations
@@ -26,7 +27,7 @@ from typing import Dict, Iterator, List, Optional
 from . import mp4box as b
 from .mp4box import ContainerBox, LeafBox
 
-from temari import Temari
+from .keys import KeyMaterial
 
 
 class DecryptError(Exception):
@@ -622,13 +623,13 @@ def _sample_offsets(tinfo: TrafInfo, moof_start: int, mdat_payload_start: int):
     return out
 
 
-def decrypt_fragment(frag: Fragment, init: InitInfo, temari: Temari) -> None:
+def decrypt_fragment(frag: Fragment, init: InitInfo, key: KeyMaterial) -> None:
     """Decrypt a fragment's samples in place (mutates the mdat payload).
 
     Box removal and ``trun.data_offset`` rewriting happen later, during
     reassembly, exactly as the Go ``DecryptFragment`` does for the cipher step.
-    ``temari`` must be freshly initialised from the template that matches this
-    fragment's key (see the key-rotation notes on :func:`decrypt_track`).
+    ``key`` must match this fragment's ``#EXT-X-KEY`` URI (see the key-rotation
+    notes on :func:`decrypt_track`).
     """
     for tinfo in frag.moof_info.trafs:
         track = init.tracks.get(tinfo.track_id)
@@ -647,12 +648,12 @@ def decrypt_fragment(frag: Fragment, init: InitInfo, temari: Temari) -> None:
         for idx, (off, size) in enumerate(offsets):
             region = frag.mdat[off:off + size]
             pats = subsamples[idx] if idx < len(subsamples) else []
-            _decrypt_sample_inplace(region, pats, tenc, temari)
+            _decrypt_sample_inplace(region, pats, tenc, key)
 
 
-def _decrypt_sample_inplace(region, pats, tenc, temari: Temari):
+def _decrypt_sample_inplace(region, pats, tenc, key: KeyMaterial):
     if not pats:
-        plain = temari.decrypt(bytes(region))
+        plain = key.decrypt_sample(bytes(region))
         region[:] = plain
         return
     pos = 0
@@ -660,7 +661,7 @@ def _decrypt_sample_inplace(region, pats, tenc, temari: Temari):
         pos += clear
         if prot > 0:
             sub = region[pos:pos + prot]
-            sub[:] = temari.decrypt(bytes(sub))
+            sub[:] = key.decrypt_sample(bytes(sub))
             pos += prot
 
 
@@ -1126,50 +1127,23 @@ def _box_size(node) -> int:
     return 0
 
 
-def decrypt_track(encrypted_bytes: bytes, key_jsons) -> bytes:
-    """Decrypt a full encrypted fMP4 track given the lite-server ``/key`` JSON.
+def decrypt_track(encrypted_bytes: bytes, key_materials) -> bytes:
+    """Decrypt a full encrypted fMP4 track given its per-key captures.
 
-    ``key_jsons`` may be:
+    ``key_materials`` may be:
 
-    * a ``str``/``bytes`` JSON document, or the raw dict from
-      ``LiteClient.key_template`` -- used for *every* fragment (the common
+    * a single :class:`KeyMaterial` -- used for *every* fragment (the common
       single-key case), or
-    * a sequence of such values, one per fragment, letting a track with key
-      rotation (multiple ``#EXT-X-KEY`` URIs) decrypt each fragment with its own
-      template.  The caller derives this from the media playlist's per-segment
-      keys; each fragment is a fresh Temari built from the matching template.
-
-    Each fragment is decrypted with a fresh Temari handle built from its own
-    template, because a template's internal state advances while decrypting and
-    fragments may carry different keys.
+    * a sequence of them, one per fragment, letting a track with key rotation
+      (multiple ``#EXT-X-KEY`` URIs) decrypt each fragment with its own key.
+      The caller derives this from the media playlist's per-segment keys.
     """
-    import json as _json
-
-    def _normalise(k):
-        if isinstance(k, dict):
-            return _json.dumps(k)
-        if isinstance(k, (bytes, bytearray)):
-            return bytes(k).decode("utf-8")
-        return k
-
-    if isinstance(key_jsons, (str, bytes, bytearray, dict)):
-        key_jsons = [_normalise(key_jsons)]
-    else:
-        key_jsons = [_normalise(k) for k in key_jsons]
-
     init_bytes, fragments = split_fragments(encrypted_bytes)
-    if not fragments:
-        raise DecryptError("no fragments (moof+mdat) found in stream")
-    if len(key_jsons) == 1:
-        key_jsons = key_jsons * len(fragments)
-    if len(key_jsons) != len(fragments):
-        raise DecryptError(
-            f"expected {len(fragments)} key templates, got {len(key_jsons)}")
+    keys = _fragment_keys(key_materials, len(fragments))
     init = InitInfo(init_bytes)
     sanitize_init(init)
-    for frag, kjson in zip(fragments, key_jsons):
-        with Temari.from_json(kjson) as temari:
-            decrypt_fragment(frag, init, temari)
+    for frag, key in zip(fragments, keys):
+        decrypt_fragment(frag, init, key)
     return reassemble(init, fragments, encrypted_bytes)
 
 
@@ -1202,7 +1176,7 @@ def _fragment_media_samples(fragments: List[Fragment]) -> int:
                for trun in tinfo.truns for d in trun.durations)
 
 
-def decrypt_track_streaming(encrypted_bytes, key_jsons):
+def decrypt_track_streaming(encrypted_bytes, key_materials):
     """Streaming variant of :func:`decrypt_track`.
 
     Yields ``bytes`` chunks that together form an fMP4 stream (init segment
@@ -1220,44 +1194,37 @@ def decrypt_track_streaming(encrypted_bytes, key_jsons):
     because the total ``Content-Length`` is not known up front.
     """
     init_bytes, fragments = split_fragments(encrypted_bytes)
-    key_jsons = _fragment_key_jsons(key_jsons, len(fragments))
+    keys = _fragment_keys(key_materials, len(fragments))
 
     init = InitInfo(init_bytes)
     sanitize_init(init)
     _patch_fragment_duration(init, _fragment_media_samples(fragments))
     yield b"".join(b.encode_tree(c) for c in init.tree)
 
-    for frag, kjson in zip(fragments, key_jsons):
-        with Temari.from_json(kjson) as temari:
-            decrypt_fragment(frag, init, temari)
+    for frag, key in zip(fragments, keys):
+        decrypt_fragment(frag, init, key)
         yield _encode_moof_without_encryption(frag)
         yield _encode_mdat(frag)
 
 
-def _fragment_key_jsons(key_jsons, n_fragments: int) -> List[str]:
-    """Normalise key templates to one JSON string per fragment."""
-    import json as _json
-
-    def _normalise(k):
-        if isinstance(k, dict):
-            return _json.dumps(k)
-        if isinstance(k, (bytes, bytearray)):
-            return bytes(k).decode("utf-8")
-        return k
-
-    if isinstance(key_jsons, (str, bytes, bytearray, dict)):
-        key_jsons = [_normalise(key_jsons)]
+def _fragment_keys(key_materials, n_fragments: int) -> List[KeyMaterial]:
+    """Normalise key captures to one material per fragment."""
+    if isinstance(key_materials, KeyMaterial):
+        key_materials = [key_materials]
     else:
-        key_jsons = [_normalise(k) for k in key_jsons]
-
+        key_materials = list(key_materials)
+    if not key_materials:
+        raise DecryptError("no key material supplied")
+    if not all(isinstance(key, KeyMaterial) for key in key_materials):
+        raise DecryptError("key material must be KeyMaterial instances")
     if not n_fragments:
         raise DecryptError("no fragments (moof+mdat) found in stream")
-    if len(key_jsons) == 1:
-        key_jsons = key_jsons * n_fragments
-    if len(key_jsons) != n_fragments:
+    if len(key_materials) == 1:
+        key_materials = key_materials * n_fragments
+    if len(key_materials) != n_fragments:
         raise DecryptError(
-            f"expected {n_fragments} key templates, got {len(key_jsons)}")
-    return key_jsons
+            f"expected {n_fragments} key captures, got {len(key_materials)}")
+    return key_materials
 
 
 class DecryptedTrack:
@@ -1273,9 +1240,9 @@ class DecryptedTrack:
     track first.  Safe to read from several threads at once.
     """
 
-    def __init__(self, encrypted_bytes, key_jsons):
+    def __init__(self, encrypted_bytes, key_materials):
         init_bytes, fragments = split_fragments(encrypted_bytes)
-        self._keys = _fragment_key_jsons(key_jsons, len(fragments))
+        self._keys = _fragment_keys(key_materials, len(fragments))
 
         init = InitInfo(init_bytes)
         sanitize_init(init)
@@ -1308,8 +1275,7 @@ class DecryptedTrack:
         with self._lock:
             # In-place decryption must only ever run once per fragment.
             if not self._decrypted[idx]:
-                with Temari.from_json(self._keys[idx]) as temari:
-                    decrypt_fragment(frag, self._init, temari)
+                decrypt_fragment(frag, self._init, self._keys[idx])
                 self._decrypted[idx] = True
         return _encode_mdat(frag)
 
