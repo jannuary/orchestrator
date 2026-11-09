@@ -153,10 +153,20 @@ def _native_compile_units(source: Path, temporary: Path, source_index: int) -> l
     return paths
 
 
-def _build_shared_library(sources: list[Path], output: Path, options: list[str]) -> Path:
+def _build_shared_library(
+    sources: list[Path],
+    output: Path,
+    options: list[str],
+    optimization_overrides: dict[Path, str] | None = None,
+) -> Path:
     compiler = os.environ.get("CC", "cc")
     output.parent.mkdir(parents=True, exist_ok=True)
-    signature = _build_signature(sources, options)
+    optimization_overrides = optimization_overrides or {}
+    override_signature = json.dumps({
+        source.relative_to(NATIVE).as_posix(): level
+        for source, level in optimization_overrides.items()
+    }, sort_keys=True)
+    signature = _build_signature(sources, [*options, override_signature])
     state_directory = output.parent / BUILD_STATE_DIRECTORY
     state_file = state_directory / output.name
     if output.is_file() and state_file.is_file():
@@ -177,7 +187,12 @@ def _build_shared_library(sources: list[Path], output: Path, options: list[str])
 
         def compile_source(job: tuple[Path, Path, Path]) -> None:
             source, compiled_source, object_path = job
-            _run([compiler, "-std=c99", "-fPIC", *options,
+            source_options = options
+            optimization = optimization_overrides.get(source)
+            if optimization is not None:
+                source_options = [option for option in options if not option.startswith("-O")]
+                source_options.append(optimization)
+            _run([compiler, "-std=c99", "-fPIC", *source_options,
                   f"-I{source.parent}", "-c", str(compiled_source), "-o", str(object_path)])
 
         with ThreadPoolExecutor(max_workers=_compile_workers()) as executor:
@@ -249,8 +264,15 @@ def build_fps_native(destination: Path) -> Path:
     )]
     sources.extend(generated_sources)
     output = destination / FPS_LIBRARY
-    return _build_shared_library(sources, output,
-                                 [FPS_OPTIMIZATION_LEVEL, "-Wall", "-Wextra", f"-I{source_root}"])
+    fallback_traces = (
+        "spc_context.c", "spc_initial.c", "spc_intervening.c",
+        "spc_continuation.c", "spc_payload.c",
+    )
+    return _build_shared_library(
+        sources, output,
+        [FPS_OPTIMIZATION_LEVEL, "-Wall", "-Wextra", f"-I{source_root}"],
+        {source_root / name: "-O0" for name in fallback_traces},
+    )
 
 
 def _build_auth_library(
