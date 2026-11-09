@@ -58,6 +58,13 @@ The FairPlay certificate defaults to [`certs/fps-certificate.bin`](certs)
   `{"status": "2fa_required"}`, and reposting the same headers plus
   `X-Apple-2FA-Code` finishes the login and writes the session directory.
   Successful logins return `200` with the storefront.
+- `GET /token` — the session's `dev_token`, `music_token` and storefront, in
+  the wrapper's `{"code", "msg", "data"}` envelope, so clients can adopt them
+  for Apple Music API calls.
+- `GET /key?adamId=<id>&uri=<skd://...>` — the CoreLSKD material for one
+  catalog FairPlay key URI (`ctx`, `state`, `rax`, `rcx`), also in the
+  wrapper's envelope. Used by clients that decrypt HLS segments themselves.
+  Live-radio `skd://linear/` keys are not served.
 - `GET /decrypt/<adamId>?quality=alac` — stream a decrypted track. `quality`
   accepts `hires`, `alac`, `256`, `128`, `64`; the closest available tier is
   used. `Range: bytes=...` is honoured. Returns `503` until a login exists.

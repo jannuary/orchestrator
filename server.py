@@ -43,6 +43,7 @@ stay cached, so a seek does not download the asset again.
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import logging
 import os
@@ -181,6 +182,7 @@ class SourceStore:
         self._session_directory = Path(session_directory)
         self._certificate_file = Path(certificate_file)
         self._lock = threading.Lock()
+        self._source = None
         self._cache = None
 
     def load_from_disk(self) -> None:
@@ -190,8 +192,15 @@ class SourceStore:
     def adopt(self, session_directory) -> str:
         source = SourceClient(Path(session_directory), self._certificate_file)
         with self._lock:
+            self._source = source
             self._cache = TrackCache(source)
         return source.storefront
+
+    def source(self) -> SourceClient:
+        with self._lock:
+            if self._source is None:
+                raise NotLoggedIn("no session; POST /login first")
+            return self._source
 
     def cache(self) -> TrackCache:
         with self._lock:
@@ -314,6 +323,14 @@ def make_handler(store: SourceStore, login_manager: LoginManager):
                 self.wfile.write(body)
                 return
 
+            if path == "/token":
+                self._handle_tokens()
+                return
+
+            if path == "/key":
+                self._handle_key(query)
+                return
+
             prefix = "/decrypt/"
             if path.startswith(prefix):
                 adam_id = urllib.parse.unquote(path[len(prefix):])
@@ -324,6 +341,69 @@ def make_handler(store: SourceStore, login_manager: LoginManager):
                 return
 
             self._send_error_json(404, "not found")
+
+        def _handle_tokens(self) -> None:
+            try:
+                source = store.source()
+            except NotLoggedIn as error:
+                self._send_json(500, {"code": 500, "msg": str(error)})
+                return
+            self._send_json(
+                200,
+                {
+                    "code": 0,
+                    "msg": "success",
+                    "data": {
+                        "dev_token": source.dev_token,
+                        "music_token": source.music_token,
+                        "storefront": source.storefront,
+                    },
+                },
+            )
+
+        def _handle_key(self, query) -> None:
+            adam_id = (query.get("adamId") or [""])[0]
+            key_uri = (query.get("uri") or [""])[0]
+            if not adam_id or not key_uri:
+                self._send_json(400, {"code": 400, "msg": "missing adamId or uri"})
+                return
+            if adam_id != PRESHARE_ADAMID and key_uri == PREFETCH_KEY:
+                self._send_json(
+                    400, {"code": 400, "msg": "invalid uri for adamId"})
+                return
+            try:
+                source = store.source()
+            except NotLoggedIn as error:
+                self._send_json(503, {"code": 503, "msg": str(error)})
+                return
+            try:
+                material = source.key_material(adam_id, key_uri)
+            except Exception as error:
+                log.exception("adamId=%s key retrieval failed", adam_id)
+                self._send_json(
+                    500,
+                    {"code": 500, "msg": f"key retrieval failed: {error}"},
+                )
+                return
+            self._send_json(
+                200,
+                {
+                    "code": 0,
+                    "msg": "success",
+                    "data": {
+                        "adamId": adam_id,
+                        "keyUri": key_uri,
+                        "aesKey": material.content_key().hex(),
+                        "ctx": base64.b64encode(material.context).decode(),
+                        "state": base64.b64encode(material.state).decode(),
+                        "rcx": hex(material.rcx),
+                        "rax": hex(material.rax),
+                        "rdx": "0x0",
+                        "r9": "0x0",
+                        "rbp": "0x0",
+                    },
+                },
+            )
 
         def _handle_decrypt(self, adam_id: str, quality: str = "") -> None:
             if quality == "":

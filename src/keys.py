@@ -23,6 +23,9 @@ class KeyMaterial:
     rax: int
     rcx: int
 
+    def content_key(self) -> bytes:
+        return corelskd.extract_key(self.context, self.state, self.rax, self.rcx)
+
     def decrypt_sample(self, sample: bytes) -> bytes:
         block_length = len(sample) - len(sample) % BLOCK_SIZE
         if block_length == 0:

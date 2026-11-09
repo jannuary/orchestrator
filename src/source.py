@@ -70,6 +70,14 @@ class SourceClient:
     def storefront(self) -> str:
         return self._tokens["storefront_id"]
 
+    @property
+    def dev_token(self) -> str:
+        return self._tokens["dev_token"]
+
+    @property
+    def music_token(self) -> str:
+        return self._tokens["music_token"]
+
     def master_playlist_url(self, adam_id: str) -> str:
         catalog_url = (
             f"{CATALOG_HOST}/v1/catalog/{self.storefront}"
