@@ -37,6 +37,7 @@ DEFAULT_COMPILE_WORKERS = 2
 NATIVE_BLOCKS_PER_COMPILE_UNIT = 32
 BUILD_STATE_DIRECTORY = ".build-state"
 AUTH_OPTIMIZATION_LEVEL = "-O1"
+FPS_OPTIMIZATION_LEVEL = "-O1"
 
 
 class BuildError(RuntimeError):
@@ -249,7 +250,7 @@ def build_fps_native(destination: Path) -> Path:
     sources.extend(generated_sources)
     output = destination / FPS_LIBRARY
     return _build_shared_library(sources, output,
-                                 ["-O0", "-Wall", "-Wextra", f"-I{source_root}"])
+                                 [FPS_OPTIMIZATION_LEVEL, "-Wall", "-Wextra", f"-I{source_root}"])
 
 
 def _build_auth_library(
