@@ -1242,6 +1242,10 @@ class DecryptedTrack:
 
     def __init__(self, encrypted_bytes, key_materials):
         init_bytes, fragments = split_fragments(encrypted_bytes)
+        self._initialize(init_bytes, fragments, key_materials)
+
+    def _initialize(self, init_bytes: bytes, fragments: List[Fragment],
+                    key_materials, payload_sizes: Optional[List[int]] = None) -> None:
         self._keys = _fragment_keys(key_materials, len(fragments))
 
         init = InitInfo(init_bytes)
@@ -1267,7 +1271,8 @@ class DecryptedTrack:
         for idx, frag in enumerate(fragments):
             moof = _encode_moof_without_encryption(frag)
             add(len(moof), moof)
-            add(frag.mdat_header_size + len(frag.mdat), idx)
+            payload_size = len(frag.mdat) if payload_sizes is None else payload_sizes[idx]
+            add(frag.mdat_header_size + payload_size, idx)
         self.size = offset
 
     def _mdat(self, idx: int) -> bytes:

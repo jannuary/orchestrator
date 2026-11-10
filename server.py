@@ -30,8 +30,8 @@ Endpoints
 ``GET /healthz``
     Simple liveness probe.
 
-The flow mirrors the Go ``runv4`` downloader: the whole asset (init segment +
-fragments) is fetched, then decrypted and re-serialised in place.
+Media box metadata is fetched separately from audio payloads. Audio fragments
+are fetched and decrypted only when playback or a seek reaches them.
 
 The decrypted size is known before anything is decrypted (see
 :class:`src.DecryptedTrack`), so responses carry a ``Content-Length`` and the
@@ -59,6 +59,8 @@ from pathlib import Path
 
 from src import (DecryptedTrack, SourceClient, load_media_playlist,
                  select_media_url, valid_qualities)
+from src.keys import KeyMaterial
+from src.streaming import StreamingTrack
 from src.login import DEFAULT_STOREFRONT, LoginError, LoginManager
 
 DEFAULT_CERTIFICATE = Path(__file__).resolve().parent / "certs" / "fps-certificate.bin"
@@ -95,7 +97,7 @@ def fetch_bytes(url: str, timeout: float = 120.0) -> bytes:
 
 
 def load_track(source: SourceClient, adam_id: str, quality: str = "alac") -> DecryptedTrack:
-    """Fetch a track's encrypted asset and key captures.
+    """Prepare a track's metadata and key captures.
 
     ``quality`` selects the encoding: ``"hires"``/``"alac"`` for lossless, or
     an AAC kbps tier (``"256"``/``"128"``/``"64"``).  If the exact tier is
@@ -112,18 +114,21 @@ def load_track(source: SourceClient, adam_id: str, quality: str = "alac") -> Dec
     if not pl.file_uri:
         raise ValueError("media playlist has no segment file URI")
 
-    key_uris: list = []
+    key_uris: list[str] = []
     for seg in pl.segments:
         uri = seg.key_uri or pl.key_uri
         if not uri:
             raise ValueError("media playlist has no #EXT-X-KEY URI")
         key_uris.append(uri)
-    key_materials = {uri: source.key_material(
-                         PRESHARE_ADAMID if uri == PREFETCH_KEY else adam_id, uri)
-                     for uri in dict.fromkeys(key_uris)}
+    def load_keys() -> list[KeyMaterial]:
+        key_materials = {
+            uri: source.key_material(
+                PRESHARE_ADAMID if uri == PREFETCH_KEY else adam_id, uri)
+            for uri in dict.fromkeys(key_uris)
+        }
+        return [key_materials[uri] for uri in key_uris]
 
-    asset = fetch_bytes(pl.file_uri)
-    return DecryptedTrack(asset, [key_materials[u] for u in key_uris])
+    return StreamingTrack(pl, load_keys)
 
 
 def decrypt_adamid(source: SourceClient, adam_id: str, quality: str = "alac"):
