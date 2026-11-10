@@ -160,7 +160,7 @@ Requirements:
 
 - Python 3.10 or newer;
 - a C compiler (`cc`) at wheel-build time;
-- Linux x86_64, glibc (the only platform verified);
+- Linux x86_64 or aarch64 with glibc;
 - no Python package dependencies and no network access.
 
 ```sh
@@ -340,5 +340,5 @@ assert packet.token == 0xdf65877e
 - CoreLSKD needs an existing key context; it does not acquire one.
 - `corelskd_r1_generated.inc` is source-reconstructed translation, not an
   independent cryptographic design review.
-- Linux x86_64 is the only tested build target.  Other POSIX systems may compile
-  the C, but are not claimed.
+- Linux x86_64 and aarch64 wheel builds are supported. Runtime verification
+  has only been performed on x86_64. Other POSIX systems are not claimed.

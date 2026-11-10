@@ -45,12 +45,17 @@ class BuildError(RuntimeError):
 
 
 def _platform_tag() -> str:
-    if sys.platform.startswith("linux") and platform.machine().lower() in ("x86_64", "amd64"):
-        return "linux_x86_64"
-    raise BuildError(
-        "this package currently builds a Linux x86_64 wheel only; "
-        "the C sources are portable, but no other platform is verified"
-    )
+    machine = platform.machine().lower()
+    linux_architectures = {
+        "x86_64": "x86_64",
+        "amd64": "x86_64",
+        "aarch64": "aarch64",
+        "arm64": "aarch64",
+    }
+    architecture = linux_architectures.get(machine)
+    if sys.platform.startswith("linux") and architecture is not None:
+        return f"linux_{architecture}"
+    raise BuildError(f"unsupported wheel platform: {sys.platform}/{machine}")
 
 
 def _run(command: list[str]) -> None:
