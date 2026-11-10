@@ -15026,6 +15026,168 @@ next_pc = x;
 ++s->steps;
 
 break;
+    case 146:
+next_pc=bias+UINT64_C(0x50d2b8);
+switch(s->pc-bias){
+case UINT64_C(0x50d283):goto kg_pc_50d283;
+case UINT64_C(0x50d285):goto kg_pc_50d285;
+case UINT64_C(0x50d287):goto kg_pc_50d287;
+case UINT64_C(0x50d28d):goto kg_pc_50d28d;
+case UINT64_C(0x50d290):goto kg_pc_50d290;
+case UINT64_C(0x50d294):goto kg_pc_50d294;
+case UINT64_C(0x50d297):goto kg_pc_50d297;
+case UINT64_C(0x50d29e):goto kg_pc_50d29e;
+case UINT64_C(0x50d2a1):goto kg_pc_50d2a1;
+case UINT64_C(0x50d2a4):goto kg_pc_50d2a4;
+case UINT64_C(0x50d2a6):goto kg_pc_50d2a6;
+case UINT64_C(0x50d2a8):goto kg_pc_50d2a8;
+case UINT64_C(0x50d2ac):goto kg_pc_50d2ac;
+case UINT64_C(0x50d2b3):goto kg_pc_50d2b3;
+case UINT64_C(0x50d2b6):goto kg_pc_50d2b6;
+default:return WRAPPER_KG_PAYLOAD_INVALID;}
+
+kg_pc_50d283: STEP(0x50d283);
+x = (s->gpr[3] & UINT64_C(0xffffffff)); y = (s->gpr[3] & UINT64_C(0xffffffff));
+s->gpr[3] = (uint32_t)(operation(s, OP_XOR, x, y, 32));
+++s->steps;
+kg_pc_50d285: STEP(0x50d285);
+x = (s->gpr[4] & UINT64_C(0xffffffff)); y = (s->gpr[4] & UINT64_C(0xffffffff));
+s->gpr[4] = (uint32_t)(operation(s, OP_XOR, x, y, 32));
+++s->steps;
+kg_pc_50d287: STEP(0x50d287);
+x = (s->gpr[2] & UINT64_C(0xffffffff)); y = UINT64_C(0x6008f3bf);
+(void)operation(s, OP_SUB, x, y, 32);
+++s->steps;
+kg_pc_50d28d: STEP(0x50d28d);
+s->gpr[3] = (s->gpr[3] & UINT64_C(0xffffffffffffff00)) | ((((uint64_t)condition(s, COND_NE)) & UINT64_C(0xff)) << 0);
+++s->steps;
+kg_pc_50d290: STEP(0x50d290);
+s->gpr[4] = (s->gpr[4] & UINT64_C(0xffffffffffffff00)) | ((((uint64_t)condition(s, COND_E)) & UINT64_C(0xff)) << 0);
+++s->steps;
+kg_pc_50d294: STEP(0x50d294);
+x = (s->gpr[4] & UINT64_C(0xffffffff)); y = UINT64_C(0xffffffffffffffe9);
+s->gpr[5] = (uint32_t)(operation(s, OP_IMUL, x, y, 32));
+++s->steps;
+kg_pc_50d297: STEP(0x50d297);
+x = (s->gpr[3] & UINT64_C(0xffffffff)); y = UINT64_C(0xfffff730);
+s->gpr[15] = (uint32_t)(operation(s, OP_IMUL, x, y, 32));
+++s->steps;
+kg_pc_50d29e: STEP(0x50d29e);
+x = (s->gpr[15] & UINT64_C(0xffffffff)); y = (s->gpr[5] & UINT64_C(0xffffffff));
+s->gpr[15] = (uint32_t)(operation(s, OP_ADD, x, y, 32));
+++s->steps;
+kg_pc_50d2a1: STEP(0x50d2a1);
+x = (s->gpr[15] & UINT64_C(0xffffffff)); y = (s->gpr[0] & UINT64_C(0xffffffff));
+s->gpr[15] = (uint32_t)(operation(s, OP_ADD, x, y, 32));
+++s->steps;
+kg_pc_50d2a4: STEP(0x50d2a4);
+x = (s->gpr[0] & UINT64_C(0xffffffff)); y = (s->gpr[4] & UINT64_C(0xffffffff));
+s->gpr[0] = (uint32_t)(operation(s, OP_ADD, x, y, 32));
+++s->steps;
+kg_pc_50d2a6: STEP(0x50d2a6);
+s->gpr[0] = ((s->gpr[0] & UINT64_C(0xffffffff)) ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000);
+++s->steps;
+kg_pc_50d2a8: STEP(0x50d2a8);
+READ(a, (UINT64_C(0x0) + s->gpr[11] + (s->gpr[0] * UINT64_C(0x4))), 4);
+s->gpr[0] = ((a ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000));
+++s->steps;
+kg_pc_50d2ac: STEP(0x50d2ac);
+s->gpr[3] = (UINT64_C(0xffffffffffffffd0) + (bias + UINT64_C(0x50d2b3)));
+++s->steps;
+kg_pc_50d2b3: STEP(0x50d2b3);
+x = s->gpr[3]; y = s->gpr[0];
+s->gpr[3] = operation(s, OP_ADD, x, y, 64);
+++s->steps;
+kg_pc_50d2b6: STEP(0x50d2b6);
+x = s->gpr[3];
+next_pc = x;
+++s->steps;
+
+break;
+    case 147:
+next_pc=bias+UINT64_C(0x50d7bb);
+switch(s->pc-bias){
+case UINT64_C(0x50d7a2):goto kg_pc_50d7a2;
+case UINT64_C(0x50d7a9):goto kg_pc_50d7a9;
+case UINT64_C(0x50d7ab):goto kg_pc_50d7ab;
+case UINT64_C(0x50d7af):goto kg_pc_50d7af;
+case UINT64_C(0x50d7b6):goto kg_pc_50d7b6;
+case UINT64_C(0x50d7b9):goto kg_pc_50d7b9;
+default:return WRAPPER_KG_PAYLOAD_INVALID;}
+
+kg_pc_50d7a2: STEP(0x50d7a2);
+s->gpr[0] = (uint32_t)((UINT64_C(0x8bd) + s->gpr[15]));
+++s->steps;
+kg_pc_50d7a9: STEP(0x50d7a9);
+s->gpr[0] = ((s->gpr[0] & UINT64_C(0xffffffff)) ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000);
+++s->steps;
+kg_pc_50d7ab: STEP(0x50d7ab);
+READ(a, (UINT64_C(0x0) + s->gpr[11] + (s->gpr[0] * UINT64_C(0x4))), 4);
+s->gpr[0] = ((a ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000));
+++s->steps;
+kg_pc_50d7af: STEP(0x50d7af);
+s->gpr[2] = (UINT64_C(0xffffffffffffffec) + (bias + UINT64_C(0x50d7b6)));
+++s->steps;
+kg_pc_50d7b6: STEP(0x50d7b6);
+x = s->gpr[2]; y = s->gpr[0];
+s->gpr[2] = operation(s, OP_ADD, x, y, 64);
+++s->steps;
+kg_pc_50d7b9: STEP(0x50d7b9);
+x = s->gpr[2];
+next_pc = x;
+++s->steps;
+
+break;
+    case 148:
+next_pc=bias+UINT64_C(0x50d7ef);
+switch(s->pc-bias){
+case UINT64_C(0x50d7bc):goto kg_pc_50d7bc;
+case UINT64_C(0x50d7c3):goto kg_pc_50d7c3;
+case UINT64_C(0x50d7ca):goto kg_pc_50d7ca;
+case UINT64_C(0x50d7d1):goto kg_pc_50d7d1;
+case UINT64_C(0x50d7d8):goto kg_pc_50d7d8;
+case UINT64_C(0x50d7da):goto kg_pc_50d7da;
+case UINT64_C(0x50d7de):goto kg_pc_50d7de;
+case UINT64_C(0x50d7e5):goto kg_pc_50d7e5;
+case UINT64_C(0x50d7e8):goto kg_pc_50d7e8;
+case UINT64_C(0x50d7ed):goto kg_pc_50d7ed;
+default:return WRAPPER_KG_PAYLOAD_INVALID;}
+
+kg_pc_50d7bc: STEP(0x50d7bc);
+s->gpr[0] = (uint32_t)((UINT64_C(0x8be) + s->gpr[15]));
+++s->steps;
+kg_pc_50d7c3: STEP(0x50d7c3);
+s->gpr[10] = (UINT64_C(0xffffffffffffcc44) + s->gpr[6]);
+++s->steps;
+kg_pc_50d7ca: STEP(0x50d7ca);
+s->gpr[8] = (UINT64_C(0xffffffffffce9c01) + (bias + UINT64_C(0x50d7d1)));
+++s->steps;
+kg_pc_50d7d1: STEP(0x50d7d1);
+WRITE((UINT64_C(0xfffffffffffff668) + s->gpr[6]), 8, s->gpr[8]);
+++s->steps;
+kg_pc_50d7d8: STEP(0x50d7d8);
+s->gpr[0] = ((s->gpr[0] & UINT64_C(0xffffffff)) ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000);
+++s->steps;
+kg_pc_50d7da: STEP(0x50d7da);
+READ(a, (UINT64_C(0x0) + s->gpr[11] + (s->gpr[0] * UINT64_C(0x4))), 4);
+s->gpr[0] = ((a ^ UINT64_C(0x80000000)) - UINT64_C(0x80000000));
+++s->steps;
+kg_pc_50d7de: STEP(0x50d7de);
+s->gpr[2] = (UINT64_C(0xffffffffffffffd7) + (bias + UINT64_C(0x50d7e5)));
+++s->steps;
+kg_pc_50d7e5: STEP(0x50d7e5);
+x = s->gpr[2]; y = s->gpr[0];
+s->gpr[2] = operation(s, OP_ADD, x, y, 64);
+++s->steps;
+kg_pc_50d7e8: STEP(0x50d7e8);
+s->gpr[9] = (s->gpr[9] & UINT64_C(0xffffffffffff0000)) | (((UINT64_C(0x6b)) & UINT64_C(0xffff)) << 0);
+++s->steps;
+kg_pc_50d7ed: STEP(0x50d7ed);
+x = s->gpr[2];
+next_pc = x;
+++s->steps;
+
+break;
     default:return WRAPPER_KG_PAYLOAD_INVALID;
     }
     NATIVE_DONE;
