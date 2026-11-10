@@ -10,6 +10,7 @@ from __future__ import annotations
 import ctypes
 import json
 import threading
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -30,6 +31,7 @@ from apple_music_source.auth import (
     post_fps_request,
 )
 from apple_music_source.crypto import SourceSession, SourceSessionError
+from apple_music_source.auth.fps import RADIO_FPS_URL
 
 CATALOG_HOST = "https://amp-api.music.apple.com"
 FPS_URL = "https://play.itunes.apple.com/WebObjects/MZPlay.woa/music/fps"
@@ -65,6 +67,7 @@ class SourceClient:
         self._probe = _load_r1_probe()
         self._lock = threading.Lock()
         self._keys: dict[tuple[str, str], KeyMaterial] = {}
+        self._radio_certificates: dict[str, bytes] = {}
 
     @property
     def storefront(self) -> str:
@@ -112,8 +115,54 @@ class SourceClient:
             self._keys[cache_key] = material
             return material
 
+    def _radio_certificate(self, adam_id: str) -> bytes:
+        cached = self._radio_certificates.get(adam_id)
+        if cached is not None:
+            return cached
+        station_id = "ra." + adam_id
+        headers = self._radio_headers()
+        station_url = f"{CATALOG_HOST}/v1/catalog/{self.storefront}/stations/{station_id}"
+        response = self._transport.get(station_url, headers, timeout=REQUEST_TIMEOUT_SECONDS)
+        if response.status != 200:
+            raise SourceError(f"radio station lookup failed: HTTP {response.status}")
+        records = json.loads(response.body).get("data") or []
+        if not records:
+            raise SourceError("radio station has no playback parameters")
+        parameters = dict(records[0].get("attributes", {}).get("playParams") or {})
+        parameters["keyFormat"] = "web"
+        assets_url = f"{CATALOG_HOST}/v1/play/assets?" + urllib.parse.urlencode(parameters)
+        response = self._transport.get(assets_url, headers, timeout=REQUEST_TIMEOUT_SECONDS)
+        if response.status != 200:
+            raise SourceError(f"radio asset lookup failed: HTTP {response.status}")
+        assets = json.loads(response.body).get("results", {}).get("assets") or []
+        if not assets:
+            raise SourceError("radio station has no playback assets")
+        asset = assets[0]
+        if asset.get("keyServerUrl") != RADIO_FPS_URL:
+            raise SourceError("radio station advertised an unsupported licence service")
+        certificate_url = asset.get("fairPlayKeyCertificateUrl")
+        response = self._transport.get(certificate_url, timeout=REQUEST_TIMEOUT_SECONDS)
+        if response.status != 200 or not response.body:
+            raise SourceError(f"radio certificate lookup failed: HTTP {response.status}")
+        self._radio_certificates[adam_id] = response.body
+        return response.body
+
+    def _radio_headers(self) -> dict[str, str]:
+        return {
+            "authorization": "Bearer " + self.dev_token,
+            "x-apple-music-user-token": self.music_token,
+            "user-agent": BROWSER_USER_AGENT,
+            "origin": MUSIC_WEB_ORIGIN.rstrip("/"),
+            "referer": MUSIC_WEB_ORIGIN,
+            "accept": "application/json",
+        }
+
     def _acquire_key(self, adam_id: str, key_uri: str) -> KeyMaterial:
+        certificate = self._certificate
         headers = self._native_session.headers(FPS_URL, SOURCE_USER_AGENT)
+        if key_uri.startswith("skd://linear/"):
+            certificate = self._radio_certificate(adam_id)
+            headers = self._radio_headers()
         metadata = {
             "guid": self._device["guid"],
             "adamId": adam_id,
@@ -121,7 +170,7 @@ class SourceClient:
         }
         with SourceSession(
             0,
-            self._certificate,
+            certificate,
             key_uri.encode(),
             self._device_seed,
             format_version=FPS_SESSION_FORMAT_VERSION,

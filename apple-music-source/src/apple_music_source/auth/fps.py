@@ -1,4 +1,4 @@
-"""Build and post an Apple catalog FPS request.
+"""Build and post Apple catalog and live-radio FPS requests.
 
 The caller supplies an SPC, a caller-owned authenticated header map, and an
 explicit transport. SourceSession in :mod:`apple_music_source.crypto.fps`
@@ -18,6 +18,8 @@ __all__ = ["FpsRequest", "FpsRequestError", "FpsResponse", "post_fps_request", "
 
 _ENDPOINT_HOST = "play.itunes.apple.com"
 _ENDPOINT_PATH = "/WebObjects/MZPlay.woa/music/fps"
+CATALOG_FPS_URL = "https://" + _ENDPOINT_HOST + _ENDPOINT_PATH
+RADIO_FPS_URL = "https://linear.tv.apple.com/v1/radio/streaming-key-delivery"
 _MAX_RESPONSE_SIZE = 4 * 1024 * 1024
 _EXCLUDED_HEADERS = {
     "host",
@@ -54,8 +56,11 @@ class FpsResponse:
 class FpsRequest:
     body: bytes = field(repr=False)
     headers: Mapping[str, str] = field(repr=False)
+    url: str = CATALOG_FPS_URL
 
     def __post_init__(self):
+        if self.url not in (CATALOG_FPS_URL, RADIO_FPS_URL):
+            raise FpsRequestError("unsupported FPS service URL")
         if not isinstance(self.body, bytes) or not self.body:
             raise FpsRequestError("FPS body must be nonempty bytes")
         if not isinstance(self.headers, Mapping):
@@ -74,13 +79,14 @@ def build_fps_request(
     spc: bytes,
     headers: Mapping[str, str],
 ) -> FpsRequest:
-    """Build one catalog FPS request from caller-owned inputs.
+    """Build one catalog or live-radio FPS request from caller-owned inputs.
 
     Required metadata keys are ``adamId``, ``keyUri`` and ``guid``.  The header
     map must contain either native account authentication (``cookie``,
     ``x-dsid``, ``x-token``, ``user-agent`` and an ``x-apple-store-front``) or a
     developer/Music-user-token pair (``authorization``,
-    ``x-apple-music-user-token`` and ``user-agent``).  Values are never logged.
+    ``x-apple-music-user-token`` and ``user-agent``). Live radio requires
+    the developer/Music-user-token pair. Values are never logged.
     """
     if not isinstance(metadata, Mapping):
         raise FpsRequestError("metadata must be a mapping")
@@ -94,11 +100,15 @@ def build_fps_request(
     guid = _safe(metadata.get("guid"), "guid")
     if not adam_id.isdigit():
         raise FpsRequestError("adamId must be decimal digits")
-    if not key_uri.startswith("skd://itunes.apple.com/"):
-        raise FpsRequestError("keyUri must be an iTunes skd:// URI")
-    body = {"guid": guid, "adamId": adam_id, "keyUri": key_uri,
-            "spc": base64.b64encode(spc).decode("ascii")}
-    if "offline" in metadata:
+    is_radio = key_uri.startswith("skd://linear/")
+    if not is_radio and not key_uri.startswith("skd://itunes.apple.com/"):
+        raise FpsRequestError("keyUri must be a catalog or live-radio skd:// URI")
+    challenge = base64.b64encode(spc).decode("ascii")
+    body = {"guid": guid, "adamId": adam_id, "keyUri": key_uri, "spc": challenge}
+    if is_radio:
+        body = {"challenge": challenge, "uri": key_uri,
+                "key-system": "com.apple.fps", "event": "beats1"}
+    if "offline" in metadata and not is_radio:
         if not isinstance(metadata["offline"], bool):
             raise FpsRequestError("offline must be boolean")
         body["offline"] = metadata["offline"]
@@ -118,6 +128,8 @@ def build_fps_request(
     if native_auth and not clean.get("x-apple-store-front"):
         raise FpsRequestError("native FPS authentication requires x-apple-store-front")
     web_auth = all(clean.get(key) for key in ("authorization", "x-apple-music-user-token", "user-agent"))
+    if is_radio and not web_auth:
+        raise FpsRequestError("live radio requires developer/user-token headers")
     if not (native_auth or web_auth):
         raise FpsRequestError("supply native account headers or developer/user-token headers")
     clean.update({
@@ -125,11 +137,12 @@ def build_fps_request(
         "accept-encoding": "gzip",
         "accept": "*/*",
     })
-    return FpsRequest(json.dumps(body, separators=(",", ":")).encode(), clean)
+    return FpsRequest(json.dumps(body, separators=(",", ":")).encode(), clean,
+                      RADIO_FPS_URL if is_radio else CATALOG_FPS_URL)
 
 
 def post_fps_request(request: FpsRequest, *, transport: _FpsTransport, timeout: float = 45.0) -> FpsResponse:
-    """Post one built request to the fixed Apple catalog FPS endpoint.
+    """Post one built request to its validated Apple FPS endpoint.
 
     The caller owns account credentials and the transport.
     Response bodies and CKCs are excluded from object representations.
@@ -141,7 +154,7 @@ def post_fps_request(request: FpsRequest, *, transport: _FpsTransport, timeout: 
     if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
         raise ValueError("timeout must be positive")
     response = transport.post(
-        "https://" + _ENDPOINT_HOST + _ENDPOINT_PATH,
+        request.url,
         request.body,
         request.headers,
         timeout=timeout,
@@ -158,7 +171,7 @@ def post_fps_request(request: FpsRequest, *, transport: _FpsTransport, timeout: 
     status = payload.get("status")
     if isinstance(status, bool) or (status is not None and not isinstance(status, int)):
         raise FpsRequestError("FPS response status must be an integer")
-    encoded_ckc = payload.get("ckc", "")
+    encoded_ckc = payload.get("license", "") if request.url == RADIO_FPS_URL else payload.get("ckc", "")
     if not isinstance(encoded_ckc, str):
         raise FpsRequestError("FPS response CKC must be base64 text")
     try:

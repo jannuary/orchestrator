@@ -74,9 +74,10 @@ The FairPlay certificate defaults to [`certs/fps-certificate.bin`](certs)
   the wrapper's `{"code", "msg", "data"}` envelope, so clients can adopt them
   for Apple Music API calls.
 - `GET /key?adamId=<id>&uri=<skd://...>` — the CoreLSKD material for one
-  catalog FairPlay key URI (`ctx`, `state`, `rax`, `rcx`), also in the
-  wrapper's envelope. Used by clients that decrypt HLS segments themselves.
-  Live-radio `skd://linear/` keys are not served.
+  catalog or live-radio FairPlay key URI (`ctx`, `state`, `rax`, `rcx`), also
+  in the wrapper's envelope. Used by clients that decrypt HLS segments
+  themselves. Live-radio `skd://linear/` keys use the station's playback
+  asset certificate and radio licence service.
 - `GET /decrypt/<adamId>?quality=alac` — stream a decrypted track. `quality`
   accepts `hires`, `alac`, `256`, `128`, `64`; the closest available tier is
   used. `Range: bytes=...` is honoured. Returns `503` until a login exists.
