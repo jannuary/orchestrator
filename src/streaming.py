@@ -19,6 +19,7 @@ FRAGMENT_CACHE_SIZE = 2
 BOX_HEADER_SIZE = 8
 EXTENDED_BOX_HEADER_SIZE = 16
 REQUEST_TIMEOUT_SECONDS = 45
+METADATA_PREFIX_BYTES = 16 * 1024
 
 
 @dataclass(frozen=True)
@@ -48,13 +49,20 @@ class MediaRange:
 
 
 def read_fragment_metadata(media_range: MediaRange) -> tuple[Fragment, int]:
+    prefix = media_range.read(0, min(METADATA_PREFIX_BYTES, media_range.length))
+
+    def read_metadata(offset: int, length: int) -> bytes:
+        if offset + length <= len(prefix):
+            return prefix[offset:offset + length]
+        return media_range.read(offset, length)
+
     offset = 0
     moof = None
     info = None
     preceding_boxes: list[str] = []
     while offset + BOX_HEADER_SIZE <= media_range.length:
         header_length = min(EXTENDED_BOX_HEADER_SIZE, media_range.length - offset)
-        header = media_range.read(offset, header_length)
+        header = read_metadata(offset, header_length)
         size, box_type = struct.unpack_from(">I4s", header)
         header_size = BOX_HEADER_SIZE
         if size == 1:
@@ -65,7 +73,7 @@ def read_fragment_metadata(media_range: MediaRange) -> tuple[Fragment, int]:
         if size < header_size or offset + size > media_range.length:
             raise DecryptError("invalid media fragment box size")
         if box_type == b"moof":
-            data = media_range.read(offset, size)
+            data = read_metadata(offset, size)
             moof = mp4box.find_child(mp4box.parse_boxes(data), "moof")
             if not isinstance(moof, mp4box.ContainerBox):
                 raise DecryptError("media fragment has no moof")
