@@ -18,14 +18,21 @@ enum { COND_E,COND_NE,COND_B,COND_AE,COND_A,COND_BE,
 #define ARITH (CF|PF|AF|ZF|SF|OF)
 static inline uint64_t mask(unsigned bits) { return UINT64_MAX >> (64-bits); }
 static inline uint64_t common(uint64_t r, unsigned bits) {
-    unsigned p=(unsigned)r & 255;
-    p ^= p>>4; p ^= p>>2; p ^= p>>1;
-    return ((p&1)?0:PF) | (r?0:ZF) |
+#if defined(__GNUC__)
+    unsigned byte_parity=(unsigned)__builtin_parity((unsigned char)r);
+#else
+    unsigned byte_parity=(unsigned)r & 255;
+    byte_parity ^= byte_parity>>4; byte_parity ^= byte_parity>>2; byte_parity ^= byte_parity>>1;
+#endif
+    return ((byte_parity&1)?0:PF) | (r?0:ZF) |
            ((r & (UINT64_C(1)<<(bits-1)))?SF:0);
 }
 static inline void logical(wrapper_kg_payload_state *s,uint64_t r,unsigned bits) {
     s->flags=(s->flags & ~ARITH)|common(r,bits);
 }
+#if defined(__GNUC__) && defined(__OPTIMIZE__)
+__attribute__((always_inline))
+#endif
 static inline uint64_t operation(wrapper_kg_payload_state *s,unsigned op,
                           uint64_t a,uint64_t b,unsigned bits) {
     uint64_t m=mask(bits),sign=UINT64_C(1)<<(bits-1),r=0,t,c=0,overflow=0;
