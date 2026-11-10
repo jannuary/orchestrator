@@ -6,6 +6,10 @@
 int wrapper_kg_native_lookup(uint64_t address,unsigned width,uint64_t *value);
 int wrapper_kg_native_read(const wrapper_kg_payload_region *regions,size_t count,
     uint64_t address,unsigned width,uint64_t *value);
+static inline void kg_byte_shadow_set(wrapper_kg_native_state *state,size_t index,wrapper_kg_byte_shadow shadow) {
+    state->ckc_byte_shadows[index]=shadow;
+    if(state->ckc_byte_shadow_limit<=index)state->ckc_byte_shadow_limit=index+1;
+}
 static inline int kg_shadow_overlap(const wrapper_kg_native_state *fs,uint64_t address,size_t size) {    if(!fs->ckc_shadow_active || fs->ckc_shadow_active>=3 || !size)return 0;
     return address<=fs->ckc_shadow_slot ? fs->ckc_shadow_slot-address<size : address-fs->ckc_shadow_slot<4;
 }
@@ -15,7 +19,7 @@ static inline int kg_shadow_cell_overlap(uint64_t address,size_t size,uint64_t c
 }
 static inline int kg_shadow_read_allowed(const wrapper_kg_native_state *fs,uint64_t address,size_t size) {
     size_t j;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         size_t width=(p->live&UINT64_C(0x100))?4:1;
         if((p->live&1) && kg_shadow_cell_overlap(address,size,p->first,width))return 0;
@@ -43,7 +47,7 @@ static inline void kg_pair_parity_reset(wrapper_kg_native_state *fs) {
 static inline int kg_pair_read_admit(wrapper_kg_native_state *fs,uint64_t address,size_t size) {
     size_t j,slots[WRAPPER_KG_BYTE_SHADOW_COUNT],count=0;
     if((fs->ckc_shadow_active!=30 && fs->ckc_shadow_active!=31) || !size)return 0;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         size_t width=(p->live&UINT64_C(0x100))?4:1;
         int first=(p->live&1)&&kg_shadow_cell_overlap(address,size,p->first,width);
@@ -61,7 +65,7 @@ static inline int kg_pair_read_admit(wrapper_kg_native_state *fs,uint64_t addres
 }
 static inline void kg_shadow_written(wrapper_kg_native_state *fs,uint64_t address,size_t size) {
     size_t j;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         size_t width=(p->live&UINT64_C(0x100))?4:1;
         if((p->live&1) && kg_shadow_cell_overlap(address,size,p->first,width)){
@@ -80,12 +84,12 @@ static inline void kg_shadow_written(wrapper_kg_native_state *fs,uint64_t addres
 }
 static inline int kg_shadow_any(const wrapper_kg_native_state *fs) {
     size_t j;if(fs->ckc_shadow_active)return 1;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j)if(fs->ckc_byte_shadows[j].live)return 1;
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j)if(fs->ckc_byte_shadows[j].live)return 1;
     return 0;
 }
 static inline uint64_t kg_shadow_fault_address(const wrapper_kg_native_state *fs) {
     size_t j;if(fs->ckc_shadow_active)return fs->ckc_shadow_slot;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         if(p->live&1)return p->first;
         if(p->live&2)return p->second;
@@ -95,7 +99,7 @@ static inline uint64_t kg_shadow_fault_address(const wrapper_kg_native_state *fs
 static inline void kg_shadow_return(wrapper_kg_native_state *fs,uint64_t stack) {
     size_t j;
     if(fs->ckc_shadow_active && fs->ckc_shadow_frame<=UINT64_MAX-8 && stack==fs->ckc_shadow_frame+8)fs->ckc_shadow_active=0;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         if(p->live && p->frame<=UINT64_MAX-8 && stack==p->frame+8)p->live=0;
     }
@@ -111,7 +115,7 @@ static inline int kg_byte_shadow_pair(wrapper_kg_native_state *fs,
     const wrapper_kg_payload_region *regions,size_t count,uint64_t first,uint64_t second,uint64_t *out) {
     size_t j;int found=0;uint64_t a,b;
     if(first==second || kg_shadow_overlap(fs,first,1) || kg_shadow_overlap(fs,second,1))return 0;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];
         size_t width=(p->live&UINT64_C(0x100))?4:1;
         int overlaps=((p->live&1) && (kg_shadow_cell_overlap(first,1,p->first,width) || kg_shadow_cell_overlap(second,1,p->first,width))) ||
@@ -130,7 +134,7 @@ static inline int kg_word_shadow_pair(wrapper_kg_native_state *fs,
     const wrapper_kg_payload_region *regions,size_t count,uint64_t first,uint64_t second,uint64_t *out) {
     size_t j;int found=0;uint64_t a,b;
     if(kg_shadow_cell_overlap(first,4,second,4)||kg_shadow_overlap(fs,first,4)||kg_shadow_overlap(fs,second,4))return 0;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];size_t width=(p->live&UINT64_C(0x100))?4:1;
         int overlaps=((p->live&1)&&(kg_shadow_cell_overlap(first,4,p->first,width)||kg_shadow_cell_overlap(second,4,p->first,width)))||
                      ((p->live&2)&&(kg_shadow_cell_overlap(first,4,p->second,width)||kg_shadow_cell_overlap(second,4,p->second,width)));
@@ -149,7 +153,7 @@ static inline int kg_word_shadow_read(wrapper_kg_native_state *fs,
     const wrapper_kg_payload_region *regions,size_t count,uint64_t address,uint64_t *out,size_t *tag) {
     size_t j;*tag=0;
     if(kg_shadow_overlap(fs,address,4))return 0;
-    for(j=0;j<WRAPPER_KG_BYTE_SHADOW_COUNT;++j){
+    for(j=0;j<fs->ckc_byte_shadow_limit;++j){
         const wrapper_kg_byte_shadow *p=&fs->ckc_byte_shadows[j];size_t width=(p->live&UINT64_C(0x100))?4:1;
         int overlaps=((p->live&1)&&kg_shadow_cell_overlap(address,4,p->first,width))||
                      ((p->live&2)&&kg_shadow_cell_overlap(address,4,p->second,width));

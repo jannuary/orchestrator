@@ -51360,7 +51360,7 @@ translate(regions,count,slot0_,1,2)&&translate(regions,count,slot1_,1,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,1,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,1,&pair_))){
 if(max_steps-s->steps<7)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,1,0);WRITE(slot1_,1,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3});
 s->gpr[1] = (s->gpr[1] & UINT64_C(0xffffffffffffff00)) | (((operation(s,OP_XOR,pair_,s->gpr[4]&255,8)) & UINT64_C(0xff)) << 0);
 s->gpr[3]=(uint32_t)(s->gpr[2]+s->gpr[13]);
 s->steps+=7;s->pc=bias+UINT64_C(0xfab4a);return WRAPPER_KG_PAYLOAD_OK;}}
@@ -52258,7 +52258,7 @@ translate(regions,count,slot0_,1,2)&&translate(regions,count,slot1_,1,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,1,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,1,&pair_))){
 if(max_steps-s->steps<8)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,1,0);WRITE(slot1_,1,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3});
 s->gpr[4]=(s->gpr[4]&~UINT64_C(255))|(pair_&255);
 s->gpr[1]=(s->gpr[1]&~UINT64_C(255))|operation(s,OP_XOR,s->gpr[1]&255,pair_,8);
 s->gpr[5]=(s->gpr[5]&~UINT64_C(255))|operation(s,OP_XOR,s->gpr[5]&255,pair_,8);
@@ -54400,7 +54400,7 @@ translate(regions,count,slot0_,1,2)&&translate(regions,count,slot1_,1,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,1,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,1,&pair_))){
 if(max_steps-s->steps<9)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,1,0);WRITE(slot1_,1,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],3});
 s->gpr[2]&=~UINT64_C(255);s->gpr[3]=(index_&~UINT64_C(255))|(pair_&255);
 s->gpr[0]=((uint32_t)s->gpr[2])^(uint32_t)pair_;
 s->gpr[15]=(s->gpr[15]&~UINT64_C(255))|operation(s,OP_XOR,s->gpr[15]&255,pair_,8);

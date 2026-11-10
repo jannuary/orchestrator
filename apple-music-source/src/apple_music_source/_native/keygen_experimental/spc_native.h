@@ -19,6 +19,7 @@ typedef struct wrapper_kg_native_state {
     wrapper_kg_byte_shadow ckc_byte_shadows[WRAPPER_KG_BYTE_SHADOW_COUNT];
     /* Odd/even cell reads of normalized word pairs during the CKC fold. */
     uint64_t ckc_pair_parity[4];
+    size_t ckc_byte_shadow_limit;
 } wrapper_kg_native_state;
 int wrapper_kg_native_run(uint64_t bias,wrapper_kg_native_state *state,
     const wrapper_kg_payload_region *regions,size_t count,size_t max_steps,

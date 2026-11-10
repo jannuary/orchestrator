@@ -308,7 +308,7 @@ if(!fs->ckc_shadow_active&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(regi
 ((first_<=UINT64_MAX-2&&wrapper_kg_ckc_integrity_word(first_,first_+2,4,&check_))||
 (first_>=UINT64_C(32766)&&wrapper_kg_ckc_integrity_word(first_,first_-UINT64_C(32766),4,&check_)))){
 if(max_steps-s->steps<1)return WRAPPER_KG_PAYLOAD_LIMIT;
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){first_,0,s->gpr[6],4};s->gpr[5]=0;
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){first_,0,s->gpr[6],4});s->gpr[5]=0;
 fs->ckc_shadow_slot=(UINT64_C(0x120198)<<32)|UINT64_C(0x1202e5);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=20;
 s->steps+=1;s->pc=bias+UINT64_C(0x120198);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[5] + (s->gpr[4] * UINT64_C(0x1))), 4);
@@ -557,7 +557,7 @@ if(found_==WRAPPER_KG_BYTE_SHADOW_COUNT||n_!=4||fs->ckc_byte_shadows[found_].fra
 !(wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){s->fault_address=second_;s->fault_size=4;return WRAPPER_KG_PAYLOAD_READ_FAULT;}
 if(max_steps-s->steps<3)return WRAPPER_KG_PAYLOAD_LIMIT;
 fs->ckc_byte_shadows[found_].live=0;WRITE(slot_,4,s->gpr[5]);
-for(j_=0;j_<4;++j_)fs->ckc_byte_shadows[free_[j_]]=(wrapper_kg_byte_shadow){slot_+j_,first_+j_,s->gpr[6],1};
+for(j_=0;j_<4;++j_)kg_byte_shadow_set(fs,free_[j_],(wrapper_kg_byte_shadow){slot_+j_,first_+j_,s->gpr[6],1});
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[5],pair_,32);
 fs->ckc_shadow_slot=(UINT64_C(0x1202f0)<<32)|UINT64_C(0x1205cd);fs->ckc_shadow_active=21;
 s->steps+=3;s->pc=bias+UINT64_C(0x1202f0);return WRAPPER_KG_PAYLOAD_OK;}
@@ -20316,7 +20316,7 @@ kg_shadow_read_allowed(fs,out_,4)&&!kg_shadow_cell_overlap(out_,4,slot_,4)&&!kg_
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 size_t free_=WRAPPER_KG_BYTE_SHADOW_COUNT;
 for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==1&&fs->ckc_byte_shadows[j_].frame==s->gpr[6]&&fs->ckc_byte_shadows[j_].first>=slot_&&fs->ckc_byte_shadows[j_].first-slot_<4){fs->ckc_byte_shadows[j_].live=0;if(free_==WRAPPER_KG_BYTE_SHADOW_COUNT)free_=j_;}
-WRITE(out_,4,pair_);fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){slot_,out_,s->gpr[6],UINT64_C(0x103)};
+WRITE(out_,4,pair_);kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){slot_,out_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;fs->ckc_shadow_slot=(UINT64_C(0x124b24)<<32)|UINT64_C(0x124b24);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=22;
 s->steps+=2;s->pc=bias+UINT64_C(0x124b24);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
@@ -20347,7 +20347,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b4b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20376,7 +20376,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b5b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20405,7 +20405,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b6b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20434,7 +20434,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b7b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20463,7 +20463,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b8b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20492,7 +20492,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124b9b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20521,7 +20521,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124bab);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20550,7 +20550,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124bbb);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20579,7 +20579,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124bcb);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20608,7 +20608,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124bdb);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20637,7 +20637,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124beb);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20666,7 +20666,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124bfb);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20689,7 +20689,7 @@ if(!translate(regions,count,first_,4,1)&&!translate(regions,count,second_,4,1)&&
 kg_shadow_read_allowed(fs,slot0_,4)&&kg_shadow_read_allowed(fs,slot1_,4)&&translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->gpr[12]=(uint32_t)pair_;fs->ckc_shadow_slot=(UINT64_C(0x124c0d)<<32)|UINT64_C(0x12527e);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=23;
 s->steps+=6;s->pc=bias+UINT64_C(0x124c0d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
@@ -20730,7 +20730,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c2d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20759,7 +20759,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c3d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20788,7 +20788,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c4d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20817,7 +20817,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c5d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20846,7 +20846,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c6d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20875,7 +20875,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c7d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20904,7 +20904,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c8d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20933,7 +20933,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124c9d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20962,7 +20962,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124cad);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -20991,7 +20991,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124cbd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21020,7 +21020,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124ccd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21049,7 +21049,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124cdd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21078,7 +21078,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124ced);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21107,7 +21107,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124cfd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21136,7 +21136,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d0d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21165,7 +21165,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d1d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21194,7 +21194,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d2d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21223,7 +21223,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d3d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21252,7 +21252,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d4d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21281,7 +21281,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d5d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21310,7 +21310,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d6d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21339,7 +21339,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d7d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21368,7 +21368,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->gpr[3]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124d8d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21408,7 +21408,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->gpr[3]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124dad);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[3] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21437,7 +21437,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->gpr[3]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124dbd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[3] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21466,7 +21466,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->gpr[3]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124dcd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[3] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21495,7 +21495,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->gpr[3]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x124ddd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[3] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21519,7 +21519,7 @@ if(!translate(regions,count,first_,4,1)&&!translate(regions,count,second_,4,1)&&
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<5)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[3]=index_;s->gpr[5]=(uint32_t)pair_;s->steps+=5;s->pc=bias+UINT64_C(0x124de6);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[3] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21549,7 +21549,7 @@ if((!fs->ckc_shadow_active||fs->ckc_shadow_active==23)&&shadow_<WRAPPER_KG_BYTE_
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x124dfa);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[15] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21575,7 +21575,7 @@ if((!fs->ckc_shadow_active||fs->ckc_shadow_active==23)&&shadow_<WRAPPER_KG_BYTE_
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x124e0e);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[9] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21601,7 +21601,7 @@ if(fs->ckc_shadow_active==23&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(r
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[5]=0;s->gpr[4]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x124e20);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[1] * UINT64_C(0x1))), 4);
 s->gpr[5] = (uint32_t)(a);
@@ -21627,7 +21627,7 @@ if(fs->ckc_shadow_active==23&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(r
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[3]=0;s->gpr[0]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x124e33);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[8] * UINT64_C(0x1))), 4);
 s->gpr[3] = (uint32_t)(a);
@@ -56718,7 +56718,7 @@ kg_shadow_read_allowed(fs,slot_,8)&&kg_shadow_read_allowed(fs,other_,8)&&transla
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<9)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(other_,8,pre_);s->gpr[0]=pre_&(uint32_t)s->gpr[13];s->gpr[2]=(uint32_t)(s->gpr[2]^UINT64_C(0x956e9bec));WRITE(slot_,8,s->gpr[2]);
-for(j_=0;j_<4;++j_)fs->ckc_byte_shadows[free_[j_]]=(wrapper_kg_byte_shadow){slot_+j_,first_+j_,s->gpr[6],1};
+for(j_=0;j_<4;++j_)kg_byte_shadow_set(fs,free_[j_],(wrapper_kg_byte_shadow){slot_+j_,first_+j_,s->gpr[6],1});
 s->gpr[1]=(uint32_t)operation(s,OP_XOR,pair_,s->gpr[2],32);
 fs->ckc_shadow_slot=(UINT64_C(0x12d80e)<<32)|UINT64_C(0x12d825);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=24;
 s->steps+=9;s->pc=bias+UINT64_C(0x12d80e);return WRAPPER_KG_PAYLOAD_OK;}}
@@ -60784,7 +60784,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e6fd);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60813,7 +60813,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e70d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60842,7 +60842,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e71d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60871,7 +60871,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e72d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60900,7 +60900,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e73d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60929,7 +60929,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e74d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60958,7 +60958,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e75d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -60987,7 +60987,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e76d);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61016,7 +61016,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e77a);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61045,7 +61045,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e78a);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61074,7 +61074,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e79a);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61103,7 +61103,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7aa);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61132,7 +61132,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7b7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61161,7 +61161,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7c7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61425,7 +61425,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7d7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61454,7 +61454,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7e7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61483,7 +61483,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e7f7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61512,7 +61512,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e807);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61541,7 +61541,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e817);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61570,7 +61570,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e827);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61599,7 +61599,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e837);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61628,7 +61628,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e847);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61657,7 +61657,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e857);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61686,7 +61686,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e867);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61715,7 +61715,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e877);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61744,7 +61744,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e887);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61773,7 +61773,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e897);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61802,7 +61802,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8a7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61831,7 +61831,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8b7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61860,7 +61860,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8c7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61889,7 +61889,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8d7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61918,7 +61918,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8e7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61947,7 +61947,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e8f7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -61976,7 +61976,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e907);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62005,7 +62005,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e917);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62034,7 +62034,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e927);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62063,7 +62063,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e937);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62092,7 +62092,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e947);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62121,7 +62121,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e957);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62150,7 +62150,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e967);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62179,7 +62179,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e977);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62208,7 +62208,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e987);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62237,7 +62237,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e997);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62266,7 +62266,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9a7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62295,7 +62295,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9b7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62324,7 +62324,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9c7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62353,7 +62353,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9d7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62382,7 +62382,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9e7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62411,7 +62411,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12e9f7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62440,7 +62440,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea07);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62469,7 +62469,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea17);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62498,7 +62498,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea27);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62527,7 +62527,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea37);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62556,7 +62556,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea47);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62585,7 +62585,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea57);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62614,7 +62614,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea67);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62643,7 +62643,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea77);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62672,7 +62672,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea87);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62701,7 +62701,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ea97);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62730,7 +62730,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eaa7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62759,7 +62759,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eab7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62788,7 +62788,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eac7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62817,7 +62817,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ead7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62846,7 +62846,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eae7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62875,7 +62875,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eaf7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62904,7 +62904,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb07);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62933,7 +62933,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb17);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62962,7 +62962,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb27);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -62991,7 +62991,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb37);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63020,7 +63020,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb47);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63049,7 +63049,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb57);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63078,7 +63078,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb67);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63107,7 +63107,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb77);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63136,7 +63136,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb87);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63165,7 +63165,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eb97);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63194,7 +63194,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12eba7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63223,7 +63223,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ebb7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63252,7 +63252,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ebc7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63281,7 +63281,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ebd7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63310,7 +63310,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ebe7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63339,7 +63339,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ebf7);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63368,7 +63368,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ec04);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63397,7 +63397,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=(uint32_t)pair_;s->gpr[15]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ec14);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63441,7 +63441,7 @@ translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<6)return WRAPPER_KG_PAYLOAD_LIMIT;
 WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);
-fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=(uint32_t)pair_;s->gpr[8]=next_;s->steps+=6;s->pc=bias+UINT64_C(0x12ec3b);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[4] * UINT64_C(0x1))), 4);
 s->gpr[4] = (uint32_t)(a);
@@ -63475,7 +63475,7 @@ if(!fs->ckc_shadow_active&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(regi
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[4]=0;s->gpr[3]=(uint32_t)pair_;fs->ckc_shadow_slot=(UINT64_C(0x12ec4e)<<32)|UINT64_C(0x12ee04);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=25;
 s->steps+=4;s->pc=bias+UINT64_C(0x12ec4e);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[14] * UINT64_C(0x1))), 4);
@@ -63502,7 +63502,7 @@ if(fs->ckc_shadow_active==25&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(r
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[3]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x12ec61);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[5] * UINT64_C(0x1))), 4);
 s->gpr[3] = (uint32_t)(a);
@@ -63611,7 +63611,7 @@ if(fs->ckc_shadow_active==25&&shadow_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!translate(r
 translate(regions,count,slot0_,4,2)&&translate(regions,count,slot1_,4,2)&&
 (wrapper_kg_ckc_integrity_word(first_,second_,4,&pair_)||wrapper_kg_ckc_integrity_word(second_,first_,4,&pair_))){
 if(max_steps-s->steps<4)return WRAPPER_KG_PAYLOAD_LIMIT;
-WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);fs->ckc_byte_shadows[shadow_]=(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)};
+WRITE(slot0_,4,0);WRITE(slot1_,4,pair_);kg_byte_shadow_set(fs,shadow_,(wrapper_kg_byte_shadow){slot0_,slot1_,s->gpr[6],UINT64_C(0x103)});
 s->gpr[3]=0;s->gpr[0]=(uint32_t)pair_;s->steps+=4;s->pc=bias+UINT64_C(0x12ec74);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0x0) + s->gpr[0] + (s->gpr[1] * UINT64_C(0x1))), 4);
 s->gpr[3] = (uint32_t)(a);
@@ -64994,7 +64994,7 @@ kg_shadow_read_allowed(fs,to_,4)&&translate(regions,count,to_,4,2)&&wrapper_kg_n
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 fs->ckc_shadow_slot=(UINT64_C(0x12f181)<<32)|UINT64_C(0x12f187);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=26;
 s->steps+=2;s->pc=bias+UINT64_C(0x12f181);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff258) + s->gpr[6]), 4);
@@ -65016,7 +65016,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 fs->ckc_shadow_slot=(UINT64_C(0x12f18d)<<32)|UINT64_C(0x12f1a1);
 s->steps+=2;s->pc=bias+UINT64_C(0x12f18d);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff6c8) + s->gpr[6]), 4);
@@ -65098,7 +65098,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 fs->ckc_shadow_slot=(UINT64_C(0x12f1ca)<<32)|UINT64_C(0x12f1d0);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=27;
 s->steps+=2;s->pc=bias+UINT64_C(0x12f1ca);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff990) + s->gpr[6]), 4);
@@ -65321,7 +65321,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 fs->ckc_shadow_slot=(UINT64_C(0x12f268)<<32)|UINT64_C(0x12f27c);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=28;
 s->steps+=2;s->pc=bias+UINT64_C(0x12f268);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffffad8) + s->gpr[6]), 4);
@@ -65372,7 +65372,7 @@ kg_shadow_read_allowed(fs,to_,4)&&translate(regions,count,to_,4,2)&&wrapper_kg_n
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 fs->ckc_shadow_slot=(UINT64_C(0x12f290)<<32)|UINT64_C(0x12f2a8);fs->ckc_shadow_frame=s->gpr[6];fs->ckc_shadow_active=29;
 s->steps+=2;s->pc=bias+UINT64_C(0x12f290);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffffb28) + s->gpr[6]), 4);
@@ -65745,7 +65745,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f2f2);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffffa68) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -65780,7 +65780,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f304);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff9d8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -65801,7 +65801,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f310);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffffad0) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -65855,7 +65855,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f328);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffffa50) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -65876,7 +65876,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f334);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffffa58) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -65911,7 +65911,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f346);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffffac8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -65932,7 +65932,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f352);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff9d0) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -65967,7 +65967,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f364);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffffa48) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -65992,7 +65992,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,8,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,8,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f378);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff9c8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -66026,7 +66026,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f38a);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff9c0) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -66047,7 +66047,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f396);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff930) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -66073,7 +66073,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,8,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,8,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f3aa);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff9b8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -66094,7 +66094,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f3b6);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff890) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -66709,7 +66709,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[3]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f464);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff6e8) + s->gpr[6]), 4);
 s->gpr[3] = (uint32_t)(a);
@@ -66731,7 +66731,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[3]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f470);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff6e0) + s->gpr[6]), 4);
 s->gpr[3] = (uint32_t)(a);
@@ -66794,7 +66794,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[3]=(uint32_t)operation(s,OP_XOR,s->gpr[3],value_,32);WRITE(to_,4,s->gpr[3]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f495);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff468) + s->gpr[6]), 4);
 x=(s->gpr[3] & UINT64_C(0xffffffff));y=b;
@@ -67455,7 +67455,7 @@ kg_pc_12f4e9: STEP(0x12f4e9); /* xor esi, dword ptr [rbp - 0xbb0] */
 if(fs->ckc_shadow_active==30&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&kg_word_shadow_pair(fs,regions,count,s->gpr[6]-UINT64_C(0xbb0),s->gpr[6]-UINT64_C(0x2c8),&pair_)){
 if(max_steps-s->steps<1)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[4]=(uint32_t)operation(s,OP_XOR,s->gpr[4],0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){s->gpr[6]-UINT64_C(0xbb0),s->gpr[6]-UINT64_C(0x2c8),s->gpr[6],UINT64_C(0x400)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){s->gpr[6]-UINT64_C(0xbb0),s->gpr[6]-UINT64_C(0x2c8),s->gpr[6],UINT64_C(0x400)});
 s->steps+=1;s->pc=bias+UINT64_C(0x12f4ef);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff450) + s->gpr[6]), 4);
 x=(s->gpr[4] & UINT64_C(0xffffffff));y=b;
@@ -67477,7 +67477,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,8,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,8,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f4fd);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff600) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -67516,7 +67516,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f517);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff448) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -67547,7 +67547,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f531);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff5e0) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -67587,7 +67587,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f54b);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff430) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -67618,7 +67618,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f565);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff420) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -67658,7 +67658,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)value_;WRITE(to_,4,operation(s,OP_XOR,saved_,value_,32));
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f57f);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(a, (UINT64_C(0xfffffffffffff5d0) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -68212,7 +68212,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f62c);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff860) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -68231,7 +68231,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f638);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xffffffffffffff10) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -68248,7 +68248,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f63e);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff8e8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -68315,7 +68315,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[2]=(uint32_t)operation(s,OP_XOR,s->gpr[2],value_,32);WRITE(to_,4,s->gpr[2]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f665);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xffffffffffffffc8) + s->gpr[6]), 4);
 x=(s->gpr[2] & UINT64_C(0xffffffff));y=b;
@@ -68814,7 +68814,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,8,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[2]=(uint32_t)operation(s,OP_XOR,s->gpr[2],value_,32);WRITE(to_,8,s->gpr[2]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f6be);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff858) + s->gpr[6]), 4);
 x=(s->gpr[2] & UINT64_C(0xffffffff));y=b;
@@ -68867,7 +68867,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f6d6);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff900) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69190,7 +69190,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f746);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xffffffffffffff38) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -69207,7 +69207,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f74c);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff3e8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69241,7 +69241,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f764);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xfffffffffffffdb8) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -69258,7 +69258,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f76a);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff5c0) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69277,7 +69277,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f776);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xffffffffffffff50) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -69294,7 +69294,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f77c);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff3f8) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69313,7 +69313,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f788);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xffffffffffffff58) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -69330,7 +69330,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f78e);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff400) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69349,7 +69349,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f79a);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xfffffffffffffed8) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
@@ -69366,7 +69366,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,4,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,4,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f7a0);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff408) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69387,7 +69387,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f7ad);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xfffffffffffffcf8) + s->gpr[6]), 8);
 s->gpr[0] = a;
@@ -69404,7 +69404,7 @@ wrapper_kg_native_read_guarded(fs,regions,count,to_,8,&saved_)&&translate(region
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,s->gpr[0],value_,32);WRITE(to_,8,s->gpr[0]);
 if(side_==0)fs->ckc_byte_shadows[found_].first=to_;else fs->ckc_byte_shadows[found_].second=to_;
-fs->ckc_byte_shadows[free_]=(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,free_,(wrapper_kg_byte_shadow){from_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f7b4);return WRAPPER_KG_PAYLOAD_OK;}}
 READ(b, (UINT64_C(0xfffffffffffff410) + s->gpr[6]), 4);
 x=(s->gpr[0] & UINT64_C(0xffffffff));y=b;
@@ -69423,7 +69423,7 @@ for(j_=0;j_<WRAPPER_KG_BYTE_SHADOW_COUNT;++j_)if(fs->ckc_byte_shadows[j_].live==
 if(hi_ok_&&j_<WRAPPER_KG_BYTE_SHADOW_COUNT&&!(fs->ckc_pair_parity[j_/64]&(UINT64_C(1)<<(j_%64)))){
 if(max_steps-s->steps<2)return WRAPPER_KG_PAYLOAD_LIMIT;
 s->gpr[0]=(uint32_t)operation(s,OP_XOR,pair_,0,32);
-fs->ckc_byte_shadows[j_]=(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)};
+kg_byte_shadow_set(fs,j_,(wrapper_kg_byte_shadow){second_,0,s->gpr[6],UINT64_C(0x101)});
 s->steps+=2;s->pc=bias+UINT64_C(0x12f7c0);return WRAPPER_KG_PAYLOAD_OK;}}}
 READ(a, (UINT64_C(0xfffffffffffffeb8) + s->gpr[6]), 4);
 s->gpr[0] = (uint32_t)(a);
