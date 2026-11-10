@@ -30,7 +30,7 @@ static inline uint64_t common(uint64_t r, unsigned bits) {
 static inline void logical(wrapper_kg_payload_state *s,uint64_t r,unsigned bits) {
     s->flags=(s->flags & ~ARITH)|common(r,bits);
 }
-#if defined(__GNUC__) && defined(__OPTIMIZE__)
+#if defined(__GNUC__) && defined(__OPTIMIZE__) && !defined(WRAPPER_KG_COMPACT_ARITHMETIC)
 __attribute__((always_inline))
 #endif
 static inline uint64_t operation(wrapper_kg_payload_state *s,unsigned op,

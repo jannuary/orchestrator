@@ -35,6 +35,11 @@ MESCAL_LIBRARY = "libmescal_source.so"
 FPS_LIBRARY = "libapple_music_fps_source.so"
 DEFAULT_COMPILE_WORKERS = 2
 NATIVE_BLOCKS_PER_COMPILE_UNIT = 32
+FALLBACK_SOURCE_BYTES_PER_COMPILE_UNIT = 1024 * 1024
+FALLBACK_TRACE_FILES = (
+    "spc_context.c", "spc_initial.c", "spc_intervening.c",
+    "spc_continuation.c", "spc_payload.c",
+)
 BUILD_STATE_DIRECTORY = ".build-state"
 AUTH_OPTIMIZATION_LEVEL = "-O1"
 FPS_OPTIMIZATION_LEVEL = "-O1"
@@ -147,7 +152,91 @@ def split_native_page(source: str) -> str:
     return preamble + "".join(functions) + dispatch
 
 
+def _fallback_compile_units(source: Path, temporary: Path, source_index: int) -> list[Path]:
+    contents = source.read_text()
+    function = re.search(r"^int (\w+)\((.*?)\)\s*\{", contents, re.MULTILINE | re.DOTALL)
+    if function is None:
+        raise BuildError(f"missing fallback entry point in {source.name}")
+    function_end = contents.index("\n}", function.end()) + len("\n}")
+    function_name, arguments = function.groups()
+    remaining_arguments = arguments.split(",", 1)[1]
+    argument_names = []
+    for argument in remaining_arguments.split(","):
+        name = re.search(r"(\w+)\s*$", argument)
+        if name is None:
+            raise BuildError(f"unsupported fallback argument in {source.name}")
+        argument_names.append(name[1])
+    call_arguments = ",".join(argument_names)
+    body = contents[function.end():function_end - 1]
+    switch = re.search(r"switch\s*\(path\)\s*\{", body)
+    if switch is None:
+        raise BuildError(f"missing fallback paths in {source.name}")
+    switch_end = body.index("\n#undef STEP", switch.end())
+    cases = body[switch.end():switch_end].rstrip()
+    if not cases.endswith("}"):
+        raise BuildError(f"missing fallback switch end in {source.name}")
+    cases = cases[:-1]
+    cases = re.sub(
+        r'^#include "([^"\n]+)"',
+        lambda match: (source.parent / match[1]).read_text(),
+        cases, flags=re.MULTILINE,
+    )
+    blocks = re.split(r"^\s*case (\d+):\s*\n", cases, flags=re.MULTILINE)
+    if blocks[0].strip():
+        raise BuildError(f"unexpected fallback path preamble in {source.name}")
+    preamble = contents[:function.start()]
+    functions: list[str] = []
+    declarations: list[str] = []
+    dispatch: list[str] = []
+    for index in range(1, len(blocks), 2):
+        path_number = blocks[index]
+        statements = blocks[index + 1].rstrip()
+        if not statements.endswith("break;"):
+            raise BuildError(f"missing fallback path terminator in {source.name}")
+        statements = statements.removesuffix("break;")
+        labels = set(re.findall(r"^\s*(\w+):", statements, flags=re.MULTILINE))
+        destinations = set(re.findall(r"\bgoto\s+(\w+)", statements))
+        if destinations - labels:
+            raise BuildError(f"cross-path jump in {source.name}")
+        path_function = f"{function_name}_path_{path_number}"
+        declaration = f'__attribute__((noinline,visibility("hidden"))) int {path_function}({remaining_arguments})'
+        declarations.append(declaration + ";\n")
+        functions.append(
+            declaration + "{\n"
+            f"const unsigned path={path_number};\n"
+            + body[:switch.start()] + statements + body[switch_end:] + "}\n"
+        )
+        dispatch.append(f"case {path_number}:return {path_function}({call_arguments});\n")
+    dispatcher = (
+        "".join(declarations) + f"int {function_name}({arguments}){{\nswitch(path){{\n"
+        + "".join(dispatch) + "default:return WRAPPER_KG_PAYLOAD_INVALID;}}\n"
+    )
+    units = [preamble + dispatcher + contents[function_end:]]
+    grouped_functions = ""
+    grouped_count = 0
+    for path_function in functions:
+        if grouped_functions and (
+            len(grouped_functions) + len(path_function) > FALLBACK_SOURCE_BYTES_PER_COMPILE_UNIT
+            or grouped_count == NATIVE_BLOCKS_PER_COMPILE_UNIT
+        ):
+            units.append(preamble + grouped_functions)
+            grouped_functions = ""
+            grouped_count = 0
+        grouped_functions += path_function
+        grouped_count += 1
+    if grouped_functions:
+        units.append(preamble + grouped_functions)
+    paths = []
+    for unit_index, unit in enumerate(units):
+        path = temporary / f"{source_index}_fallback_{unit_index}.c"
+        path.write_text(unit)
+        paths.append(path)
+    return paths
+
+
 def _native_compile_units(source: Path, temporary: Path, source_index: int) -> list[Path]:
+    if source.name in FALLBACK_TRACE_FILES:
+        return _fallback_compile_units(source, temporary, source_index)
     if "_page_" not in source.stem or source.parent.name not in ("generated", "native_generated", "app_generated"):
         return [source]
     preamble, functions, dispatch = _native_page_parts(source.read_text())
@@ -166,14 +255,14 @@ def _build_shared_library(
     sources: list[Path],
     output: Path,
     options: list[str],
-    optimization_overrides: dict[Path, str] | None = None,
+    source_options_overrides: dict[Path, tuple[str, ...]] | None = None,
 ) -> Path:
     compiler = native_compiler()
     output.parent.mkdir(parents=True, exist_ok=True)
-    optimization_overrides = optimization_overrides or {}
+    source_options_overrides = source_options_overrides or {}
     override_signature = json.dumps({
-        source.relative_to(NATIVE).as_posix(): level
-        for source, level in optimization_overrides.items()
+        source.relative_to(NATIVE).as_posix(): source_options
+        for source, source_options in source_options_overrides.items()
     }, sort_keys=True)
     signature = _build_signature(sources, [*options, override_signature])
     state_directory = output.parent / BUILD_STATE_DIRECTORY
@@ -197,10 +286,10 @@ def _build_shared_library(
         def compile_source(job: tuple[Path, Path, Path]) -> None:
             source, compiled_source, object_path = job
             source_options = options
-            optimization = optimization_overrides.get(source)
-            if optimization is not None:
+            source_override = source_options_overrides.get(source)
+            if source_override is not None:
                 source_options = [option for option in options if not option.startswith("-O")]
-                source_options.append(optimization)
+                source_options.extend(source_override)
             _run([compiler, "-std=c99", "-fPIC", *source_options,
                   f"-I{source.parent}", "-c", str(compiled_source), "-o", str(object_path)])
 
@@ -273,14 +362,13 @@ def build_fps_native(destination: Path) -> Path:
     )]
     sources.extend(generated_sources)
     output = destination / FPS_LIBRARY
-    fallback_traces = (
-        "spc_context.c", "spc_initial.c", "spc_intervening.c",
-        "spc_continuation.c", "spc_payload.c",
-    )
     return _build_shared_library(
         sources, output,
         [FPS_OPTIMIZATION_LEVEL, "-Wall", "-Wextra", f"-I{source_root}"],
-        {source_root / name: "-O0" for name in fallback_traces},
+        {
+            source_root / name: ("-Oz", "-DWRAPPER_KG_COMPACT_ARITHMETIC", "-fno-asynchronous-unwind-tables")
+            for name in FALLBACK_TRACE_FILES
+        },
     )
 
 
