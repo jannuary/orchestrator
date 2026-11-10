@@ -105,6 +105,7 @@ class StreamingTrack(DecryptedTrack):
             initialization = executor.submit(initialization_range.read, 0, initialization_range.length)
             metadata = list(executor.map(read_fragment_metadata, ranges))
             init_bytes = initialization.result()
+        self.durations = [segment.duration for segment in playlist.segments]
         self._ranges = ranges
         self._payload_sizes = [size for fragment, size in metadata]
         self._cached_payloads: OrderedDict[int, bytes] = OrderedDict()
@@ -130,3 +131,11 @@ class StreamingTrack(DecryptedTrack):
             while len(self._cached_payloads) > FRAGMENT_CACHE_SIZE:
                 self._cached_payloads.popitem(last=False)
             return decrypted
+
+    def segment(self, index: int) -> bytes:
+        if index < 0 or index >= len(self._fragments):
+            raise IndexError("media segment outside track")
+        return self._parts[1 + index * 2][2] + self._mdat(index)
+
+    def initialization(self) -> bytes:
+        return self._parts[0][2]

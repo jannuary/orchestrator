@@ -27,6 +27,11 @@ Endpoints
     ``Range: bytes=...`` requests are honoured with a ``206 Partial Content``
     response, so players can seek.
 
+``GET /stream/<adamId>/index.m3u8?quality=alac``
+    Serve a local HLS playlist with decrypted initialization and media segments.
+    Players request audio one segment at a time and can seek without a
+    download-to-disk buffer.
+
 ``GET /healthz``
     Simple liveness probe.
 
@@ -46,6 +51,7 @@ import argparse
 import base64
 import json
 import logging
+import math
 import os
 import re
 import sys
@@ -336,6 +342,10 @@ def make_handler(store: SourceStore, login_manager: LoginManager):
                 self._handle_key(query)
                 return
 
+            if path.startswith("/stream/"):
+                self._handle_stream(path, quality)
+                return
+
             prefix = "/decrypt/"
             if path.startswith(prefix):
                 adam_id = urllib.parse.unquote(path[len(prefix):])
@@ -346,6 +356,51 @@ def make_handler(store: SourceStore, login_manager: LoginManager):
                 return
 
             self._send_error_json(404, "not found")
+
+        def _handle_stream(self, path: str, quality: str) -> None:
+            components = path.split("/")
+            if len(components) != 4 or quality not in valid_qualities():
+                self._send_error_json(400, "invalid stream path or quality")
+                return
+            adam_id, resource = components[2:]
+            try:
+                track = store.cache().get(adam_id, quality)
+                suffix = "?" + urllib.parse.urlencode({"quality": quality})
+                if resource == "index.m3u8":
+                    target_duration = math.ceil(max(track.durations))
+                    lines = ["#EXTM3U", "#EXT-X-VERSION:7",
+                             f"#EXT-X-TARGETDURATION:{target_duration}",
+                             "#EXT-X-MEDIA-SEQUENCE:0", "#EXT-X-PLAYLIST-TYPE:VOD",
+                             f'#EXT-X-MAP:URI="init.mp4{suffix}"']
+                    for index, duration in enumerate(track.durations):
+                        lines.extend([f"#EXTINF:{duration:.6f},", f"{index}.m4s{suffix}"])
+                    lines.append("#EXT-X-ENDLIST")
+                    body = ("\n".join(lines) + "\n").encode()
+                    content_type = "application/vnd.apple.mpegurl"
+                elif resource == "init.mp4":
+                    body = track.initialization()
+                    content_type = "audio/mp4"
+                elif re.fullmatch(r"[0-9]+\.m4s", resource):
+                    body = track.segment(int(resource[:-4]))
+                    content_type = "audio/mp4"
+                else:
+                    self._send_error_json(404, "unknown stream resource")
+                    return
+            except IndexError:
+                self._send_error_json(404, "unknown media segment")
+                return
+            except Exception as error:
+                log.exception("adamId=%s stream preparation failed", adam_id)
+                self._send_error_json(500, str(error))
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            try:
+                self.wfile.write(body)
+            except (BrokenPipeError, ConnectionResetError):
+                self.close_connection = True
 
         def _handle_tokens(self) -> None:
             try:
