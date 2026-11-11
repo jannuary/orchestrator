@@ -31,7 +31,7 @@ CAPABILITIES = {
     "corelskd_block_cbc": "source-reconstructed C; requires caller key context",
     "corelskd_key_extract": "source-reconstructed C; requires caller key context",
     "login_protocol": "source-complete; caller supplies credentials and existing device provisioning",
-    "source_login": "source-reconstructed CoreADI/Mescal; anonymous login with existing adi.pb; fresh provisioning unavailable",
+    "source_login": "source-reconstructed CoreADI/Mescal; anonymous login with existing adi.pb; fresh provisioning wired through source CoreADI (end/destroy entries unverified against a live GSA exchange)",
     "source_fast_login": "source CoreADI Anisette headers; caller supplies device identity and GUID; account success unverified",
     "login_actions": "source-complete parser; side effects are caller-owned",
     "session_store": "source-complete; writes only a verified server session",
