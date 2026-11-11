@@ -15,6 +15,8 @@
 #define PROVISION_SIZE_LIMIT 0x100000
 #define ANDROID_ID_SIZE_LIMIT 4096
 #define SPIM_SIZE_LIMIT 0x100000
+#define PTM_SIZE_LIMIT 0x100000
+#define TK_SIZE_LIMIT 0x100000
 #define CPIM_POINTER_SLOT (HEAP+0x1000)
 #define CPIM_SIZE_SLOT (HEAP+0x1010)
 #define SESSION_SLOT (HEAP+0x1020)
@@ -23,12 +25,17 @@
 #define ADI_SUBSTITUTION_WORD_BYTES 4
 #define GF256_REDUCTION 0x1b
 #define GF256_INVERSE_EXPONENT 254
+#define READ_FD 10
+#define WRITE_FD 11
+#define CAPTURED_ADI_PB_LIMIT 0x100000
 struct runtime {
  wrapper_kg_native_state state;wrapper_kg_payload_region regions[RUNTIME_REGION_CAPACITY];size_t count;
  const wrapper_adi_request *request;uint64_t heap,steps,ticks;
  size_t position;int fd;int failure;
  void (*trace)(uint64_t,const uint64_t *,uint64_t,const kg_vec *,void *);void *trace_user;
+ int write_fd;unsigned char *captured;size_t captured_size,captured_capacity;
 };
+struct wrapper_adi_handle {struct runtime runtime;uint32_t session;int alive;};
 static uint8_t adi_linear_byte(const uint8_t columns[8],uint8_t value){uint8_t result=0;unsigned bit;for(bit=0;bit<8;++bit)if(value&(1u<<bit))result^=columns[bit];return result;}
 static uint32_t adi_linear_word(const uint32_t columns[8],uint8_t value){uint32_t result=0;unsigned bit;for(bit=0;bit<8;++bit)if(value&(1u<<bit))result^=columns[bit];return result;}
 static uint8_t adi_gf256_multiply(uint8_t left,uint8_t right){uint8_t result=0;while(right){if(right&1)result^=left;if(left&0x80)left=(uint8_t)((left<<1)^GF256_REDUCTION);else left=(uint8_t)(left<<1);right>>=1;}return result;}
@@ -49,6 +56,19 @@ static int entropy(struct runtime *r,unsigned char *p,size_t n){
  f=fopen("/dev/urandom","rb");if(!f)return 0;ok=fread(p,1,n,f)==n;fclose(f);return ok;
 }
 static uint64_t allocate(struct runtime *r,size_t n){uint64_t p=r->heap;if(n>0x1000000||p>HEAP+HEAP_SIZE-n-16)return 0;r->heap=(p+n+15)&~UINT64_C(15);return p;}
+static int capture_write(struct runtime *r,const unsigned char *data,size_t n){
+ size_t next_capacity;unsigned char *grown;
+ if(!r->captured_capacity){
+  next_capacity=n>4096?n:4096;if(next_capacity>CAPTURED_ADI_PB_LIMIT)return 0;
+  r->captured=malloc(next_capacity);if(!r->captured)return 0;r->captured_capacity=next_capacity;r->captured_size=0;
+ }
+ while(r->captured_size+n>r->captured_capacity){
+  next_capacity=r->captured_capacity*2;if(next_capacity>CAPTURED_ADI_PB_LIMIT)next_capacity=CAPTURED_ADI_PB_LIMIT;
+  if(r->captured_size+n>next_capacity)return 0;
+  grown=realloc(r->captured,next_capacity);if(!grown)return 0;r->captured=grown;r->captured_capacity=next_capacity;
+ }
+ memcpy(r->captured+r->captured_size,data,n);r->captured_size+=n;return 1;
+}
 static int external(struct runtime *r,const char *name){
  wrapper_kg_payload_state *s=&r->state.cpu;uint64_t *g=s->gpr;
  uint64_t a[6]={g[5],g[4],g[3],g[2],g[8],g[9]},ret=0,n,p;unsigned char *dst,*src;char text[4096];size_t j;
@@ -80,13 +100,25 @@ static int external(struct runtime *r,const char *name){
   unsigned char b[4];if(!entropy(r,b,4))return 0;for(j=0;j<4;++j)ret|=(uint64_t)b[j]<<(8*j);
  }else if(!strcmp(name,"arc4random_buf")){dst=memory(r,a[0],a[1],2);if(!dst||!entropy(r,dst,a[1]))return 0;}
  else if(!strcmp(name,"open")||!strcmp(name,"open64")){
+  int access_mode;
   if(!string(r,a[0],text,sizeof text))return 0;
-  if(strcmp(text,"/data/adi.pb")||a[1]&3||!r->request->provision_size)ret=UINT64_MAX;
-  else{r->position=0;r->fd=10;ret=10;}
+  access_mode=(int)(a[1]&3);
+  if(!strcmp(text,"/data/adi.pb")&&access_mode==0&&r->request->provision_size){r->position=0;r->fd=READ_FD;ret=READ_FD;}
+  else if(!strcmp(text,"/data/adi.pb")&&access_mode!=0){r->captured_size=0;r->write_fd=WRITE_FD;ret=WRITE_FD;}
+  else if(!strcmp(text,"/data/adi.pb.tmp")&&access_mode!=0){r->captured_size=0;r->write_fd=WRITE_FD;ret=WRITE_FD;}
+  else ret=UINT64_MAX;
  }else if(!strcmp(name,"read")){
   if(a[0]!=(uint64_t)r->fd||!r->fd)ret=UINT64_MAX;
   else{n=r->request->provision_size-r->position;if(n>a[2])n=a[2];dst=memory(r,a[1],n,2);if(!dst)return 0;memcpy(dst,r->request->provision+r->position,n);r->position+=n;ret=n;}
- }else if(!strcmp(name,"close")){r->fd=0;}
+ }else if(!strcmp(name,"write")){
+  if(a[0]!=(uint64_t)r->write_fd||!r->write_fd)ret=UINT64_MAX;
+  else{src=memory(r,a[1],a[2],1);if(!src)return 0;if(!capture_write(r,src,a[2]))return 0;ret=a[2];}
+ }else if(!strcmp(name,"close")){
+  if(a[0]==(uint64_t)r->fd&&r->fd)r->fd=0;
+  else if(a[0]==(uint64_t)r->write_fd&&r->write_fd)r->write_fd=0;
+ }
+ else if(!strcmp(name,"fsync")||!strcmp(name,"fdatasync")||!strcmp(name,"chmod")||!strcmp(name,"fchmod")||!strcmp(name,"unlink")||!strcmp(name,"ftruncate")||!strcmp(name,"mkdir")){ret=0;}
+ else if(!strcmp(name,"rename")){if(!string(r,a[0],text,sizeof text))return 0;ret=0;}
  else if(!strcmp(name,"lstat")||!strcmp(name,"stat")||!strcmp(name,"fstat")){
   int found=0,isfile=0;
   if(!strcmp(name,"fstat")){found=(a[0]==(uint64_t)r->fd&&r->fd);isfile=found;}
@@ -122,25 +154,41 @@ static int invoke(struct runtime *r,uint64_t entry,const uint64_t *args,size_t c
 }
 static uint64_t bytes(struct runtime *r,const unsigned char *data,size_t n){uint64_t p=allocate(r,n+1);unsigned char *dst=memory(r,p,n+1,2);if(!dst)return 0;memcpy(dst,data,n);dst[n]=0;return p;}
 static void clear(unsigned char *p,size_t n){volatile unsigned char *q=p;while(n--)*q++=0;}
+static void runtime_dispose(struct runtime *r){
+ size_t j;
+ for(j=0;j<r->count;++j)if(r->regions[j].permissions&2){clear(r->regions[j].data,r->regions[j].size);free(r->regions[j].data);}
+ r->count=0;
+ if(r->captured){clear(r->captured,r->captured_capacity);free(r->captured);r->captured=0;r->captured_size=0;r->captured_capacity=0;}
+}
+static int runtime_install_images(struct runtime *r){
+ size_t j;
+ for(j=0;j<sizeof images/sizeof images[0];++j){const struct image *im=images+j;unsigned char *data;
+  if(im->flags&2){data=malloc(im->size);if(!data)return 0;memcpy(data,im->data,im->size);}
+  else data=(unsigned char *)im->data;
+  r->regions[r->count++]=(wrapper_kg_payload_region){im->address,im->size,data,1|((im->flags&2)?2:0)};
+ }
+ for(j=0;j<2;++j){size_t size=j?HEAP_SIZE:0x200000;unsigned char *data=calloc(1,size);if(!data)return 0;r->regions[r->count++]=(wrapper_kg_payload_region){j?HEAP:STACK,size,data,3};}
+ return 1;
+}
+static int runtime_configure_paths(struct runtime *r){
+ uint64_t args[6],library_path,data_path,android_id;
+ library_path=bytes(r,(const unsigned char *)"/system/lib64",13);
+ data_path=bytes(r,(const unsigned char *)"/data",5);
+ android_id=bytes(r,r->request->android_id,r->request->android_id_size);
+ if(!library_path||!data_path||!android_id)return 0;
+ args[0]=library_path;if(!invoke(r,ENTRY_kq56gsgHG6,args,1)||(uint32_t)r->state.cpu.gpr[0])return 0;
+ args[0]=data_path;if(!invoke(r,ENTRY_nf92ngaK92,args,1)||(uint32_t)r->state.cpu.gpr[0])return 0;
+ args[0]=android_id;args[1]=r->request->android_id_size;if(!invoke(r,ENTRY_Sph98paBcz,args,2)||(uint32_t)r->state.cpu.gpr[0])return 0;
+ return 1;
+}
 static int generate(const wrapper_adi_request *request,unsigned char *mid,size_t mid_cap,unsigned char *otp,size_t otp_cap,wrapper_adi_result *result,void (*trace)(uint64_t,const uint64_t *,uint64_t,const kg_vec *,void *),void *trace_user){
- struct runtime r;size_t j;int status=-1;uint64_t args[6],p,n,midp,otpp,midn,otpn;
+ struct runtime r;int status=-1;uint64_t args[6],midp,otpp,midn,otpn;
  if(!result)return -1;memset(result,0,sizeof *result);
  if(!request||!request->provision||!request->provision_size||request->provision_size>PROVISION_SIZE_LIMIT||!request->android_id||!request->android_id_size||request->android_id_size>ANDROID_ID_SIZE_LIMIT||!mid||!otp)return -1;
  memset(&r,0,sizeof r);r.request=request;r.heap=HEAP+0x10000;r.trace=trace;r.trace_user=trace_user;
- for(j=0;j<sizeof images/sizeof images[0];++j){const struct image *im=images+j;unsigned char *data;
-  if(im->flags&2){data=malloc(im->size);if(!data)goto done;memcpy(data,im->data,im->size);}
-  else data=(unsigned char *)im->data;
-  r.regions[r.count++]=(wrapper_kg_payload_region){im->address,im->size,data,1|((im->flags&2)?2:0)};
- }
- for(j=0;j<2;++j){size_t size=j?HEAP_SIZE:0x200000;unsigned char *data=calloc(1,size);if(!data)goto done;r.regions[r.count++]=(wrapper_kg_payload_region){j?HEAP:STACK,size,data,3};}
+ if(!runtime_install_images(&r))goto done;
  status=-2;
- p=bytes(&r,(const unsigned char *)"/system/lib64",13);
- n=bytes(&r,(const unsigned char *)"/data",5);
- midp=bytes(&r,request->android_id,request->android_id_size);
- if(!p||!n||!midp)goto done;
- args[0]=p;if(!invoke(&r,ENTRY_kq56gsgHG6,args,1)||(uint32_t)r.state.cpu.gpr[0])goto done;
- args[0]=n;if(!invoke(&r,ENTRY_nf92ngaK92,args,1)||(uint32_t)r.state.cpu.gpr[0])goto done;
- args[0]=midp;args[1]=request->android_id_size;if(!invoke(&r,ENTRY_Sph98paBcz,args,2)||(uint32_t)r.state.cpu.gpr[0])goto done;
+ if(!runtime_configure_paths(&r))goto done;
  args[0]=UINT64_MAX;args[1]=HEAP+0x1000;args[2]=HEAP+0x1010;args[3]=HEAP+0x1020;args[4]=HEAP+0x1030;
  if(!invoke(&r,ENTRY_qi864985u0,args,5))goto done;
  status=-3;result->status=(int32_t)r.state.cpu.gpr[0];if(result->status)goto done;
@@ -148,38 +196,33 @@ static int generate(const wrapper_adi_request *request,unsigned char *mid,size_t
  if(!midn||!otpn||midn>mid_cap||otpn>otp_cap||!memory(&r,midp,midn,1)||!memory(&r,otpp,otpn,1))goto done;
  memcpy(mid,memory(&r,midp,midn,1),midn);memcpy(otp,memory(&r,otpp,otpn,1),otpn);result->mid_size=midn;result->otp_size=otpn;status=0;
  done:result->pc=r.state.cpu.pc;result->fault_address=r.state.cpu.fault_address;result->fault_size=r.state.cpu.fault_size;result->steps=r.steps;
- for(j=0;j<r.count;++j)if(r.regions[j].permissions&2){clear(r.regions[j].data,r.regions[j].size);free(r.regions[j].data);}
- (void)p;(void)n;return status;
+ runtime_dispose(&r);
+ return status;
+}
+
+static int provision_start_into(struct runtime *r,uint64_t ds_id,const unsigned char *spim,size_t spim_size,unsigned char *cpim,size_t cpim_cap,wrapper_adi_provision_result *result){
+ uint64_t args[6],spim_pointer,cpim_pointer,cpim_size_value,session_value;int status=-2;
+ spim_pointer=bytes(r,spim,spim_size);if(!spim_pointer)return -2;
+ args[0]=ds_id;args[1]=spim_pointer;args[2]=spim_size;args[3]=CPIM_POINTER_SLOT;args[4]=CPIM_SIZE_SLOT;args[5]=SESSION_SLOT;
+ if(!invoke(r,ENTRY_rsegvyrt87,args,6))return status;
+ status=-3;result->status=(int32_t)r->state.cpu.gpr[0];if(result->status)return 0;
+ if(!get(r,CPIM_POINTER_SLOT,&cpim_pointer,8)||!get(r,CPIM_SIZE_SLOT,&cpim_size_value,4)||!get(r,SESSION_SLOT,&session_value,4))return status;
+ if(!cpim_size_value||cpim_size_value>cpim_cap||session_value>UINT32_MAX||!memory(r,cpim_pointer,cpim_size_value,1))return status;
+ memcpy(cpim,memory(r,cpim_pointer,cpim_size_value,1),cpim_size_value);result->cpim_size=cpim_size_value;result->session=(uint32_t)session_value;
+ return 0;
 }
 
 static int start_provisioning(const wrapper_adi_request *request,uint64_t ds_id,const unsigned char *spim,size_t spim_size,unsigned char *cpim,size_t cpim_cap,wrapper_adi_provision_result *result){
- struct runtime r;wrapper_adi_request fresh_request;size_t j;int status=-1;uint64_t args[6],library_path,data_path,android_id,spim_pointer,cpim_pointer,cpim_size_value,session_value;
+ struct runtime r;int status=-1;
  if(!result)return -1;memset(result,0,sizeof *result);
  if(!request||!request->android_id||!request->android_id_size||request->android_id_size>ANDROID_ID_SIZE_LIMIT||!spim||!spim_size||spim_size>SPIM_SIZE_LIMIT||!cpim||!cpim_cap)return -1;
- memset(&r,0,sizeof r);fresh_request=*request;fresh_request.provision=0;fresh_request.provision_size=0;r.request=&fresh_request;r.heap=HEAP+0x10000;
- for(j=0;j<sizeof images/sizeof images[0];++j){const struct image *im=images+j;unsigned char *data;
-  if(im->flags&2){data=malloc(im->size);if(!data)goto done;memcpy(data,im->data,im->size);}
-  else data=(unsigned char *)im->data;
-  r.regions[r.count++]=(wrapper_kg_payload_region){im->address,im->size,data,1|((im->flags&2)?2:0)};
- }
- for(j=0;j<2;++j){size_t size=j?HEAP_SIZE:0x200000;unsigned char *data=calloc(1,size);if(!data)goto done;r.regions[r.count++]=(wrapper_kg_payload_region){j?HEAP:STACK,size,data,3};}
+ memset(&r,0,sizeof r);r.request=request;r.heap=HEAP+0x10000;
+ if(!runtime_install_images(&r))goto done;
  status=-2;
- library_path=bytes(&r,(const unsigned char *)"/system/lib64",13);
- data_path=bytes(&r,(const unsigned char *)"/data",5);
- android_id=bytes(&r,request->android_id,request->android_id_size);
- spim_pointer=bytes(&r,spim,spim_size);
- if(!library_path||!data_path||!android_id||!spim_pointer)goto done;
- args[0]=library_path;if(!invoke(&r,ENTRY_kq56gsgHG6,args,1)||(uint32_t)r.state.cpu.gpr[0])goto done;
- args[0]=data_path;if(!invoke(&r,ENTRY_nf92ngaK92,args,1)||(uint32_t)r.state.cpu.gpr[0])goto done;
- args[0]=android_id;args[1]=request->android_id_size;if(!invoke(&r,ENTRY_Sph98paBcz,args,2)||(uint32_t)r.state.cpu.gpr[0])goto done;
- args[0]=ds_id;args[1]=spim_pointer;args[2]=spim_size;args[3]=CPIM_POINTER_SLOT;args[4]=CPIM_SIZE_SLOT;args[5]=SESSION_SLOT;
- if(!invoke(&r,ENTRY_rsegvyrt87,args,6))goto done;
- status=-3;result->status=(int32_t)r.state.cpu.gpr[0];if(result->status){status=0;goto done;}
- if(!get(&r,CPIM_POINTER_SLOT,&cpim_pointer,8)||!get(&r,CPIM_SIZE_SLOT,&cpim_size_value,4)||!get(&r,SESSION_SLOT,&session_value,4))goto done;
- if(!cpim_size_value||cpim_size_value>cpim_cap||session_value>UINT32_MAX||!memory(&r,cpim_pointer,cpim_size_value,1))goto done;
- memcpy(cpim,memory(&r,cpim_pointer,cpim_size_value,1),cpim_size_value);result->cpim_size=cpim_size_value;result->session=(uint32_t)session_value;status=0;
+ if(!runtime_configure_paths(&r))goto done;
+ status=provision_start_into(&r,ds_id,spim,spim_size,cpim,cpim_cap,result);
  done:result->pc=r.state.cpu.pc;result->fault_address=r.state.cpu.fault_address;result->fault_size=r.state.cpu.fault_size;result->steps=r.steps;
- for(j=0;j<r.count;++j)if(r.regions[j].permissions&2){clear(r.regions[j].data,r.regions[j].size);free(r.regions[j].data);}
+ runtime_dispose(&r);
  return status;
 }
 
@@ -188,3 +231,45 @@ int wrapper_adi_provision_start(const wrapper_adi_request *r,uint64_t ds_id,cons
 /* Offline verifier only: CPU material is delivered in RAM to an explicit caller
  * callback. The production entry never enables or logs this trace. */
 int wrapper_adi_otp_trace(const wrapper_adi_request *r,unsigned char *mid,size_t mc,unsigned char *otp,size_t oc,wrapper_adi_result *result,void (*trace)(uint64_t,const uint64_t *,uint64_t,const kg_vec *,void *),void *user){return generate(r,mid,mc,otp,oc,result,trace,user);}
+
+wrapper_adi_handle *wrapper_adi_provision_open(const wrapper_adi_request *request,uint64_t ds_id,const unsigned char *spim,size_t spim_size,unsigned char *cpim,size_t cpim_cap,wrapper_adi_provision_result *result){
+ wrapper_adi_handle *handle;int status;
+ if(!result)return 0;memset(result,0,sizeof *result);
+ if(!request||!request->android_id||!request->android_id_size||request->android_id_size>ANDROID_ID_SIZE_LIMIT||!spim||!spim_size||spim_size>SPIM_SIZE_LIMIT||!cpim||!cpim_cap)return 0;
+ handle=calloc(1,sizeof *handle);if(!handle)return 0;
+ handle->runtime.request=request;handle->runtime.heap=HEAP+0x10000;
+ if(!runtime_install_images(&handle->runtime)){result->pc=handle->runtime.state.cpu.pc;runtime_dispose(&handle->runtime);free(handle);return 0;}
+ if(!runtime_configure_paths(&handle->runtime)){result->pc=handle->runtime.state.cpu.pc;runtime_dispose(&handle->runtime);free(handle);return 0;}
+ status=provision_start_into(&handle->runtime,ds_id,spim,spim_size,cpim,cpim_cap,result);
+ result->pc=handle->runtime.state.cpu.pc;result->fault_address=handle->runtime.state.cpu.fault_address;result->fault_size=handle->runtime.state.cpu.fault_size;result->steps=handle->runtime.steps;
+ if(status||result->status){runtime_dispose(&handle->runtime);free(handle);return 0;}
+ handle->session=result->session;handle->alive=1;
+ return handle;
+}
+
+int wrapper_adi_provision_finish(wrapper_adi_handle *handle,const unsigned char *ptm,size_t ptm_size,const unsigned char *tk,size_t tk_size,unsigned char *provision_out,size_t provision_cap,wrapper_adi_provision_finish_result *result){
+ struct runtime *r;uint64_t args[6],ptm_pointer,tk_pointer;int status=-1;
+ if(!result)return -1;memset(result,0,sizeof *result);
+ if(!handle||!handle->alive||!ptm||!ptm_size||ptm_size>PTM_SIZE_LIMIT||!tk||!tk_size||tk_size>TK_SIZE_LIMIT||!provision_out||!provision_cap)return -1;
+ r=&handle->runtime;
+ ptm_pointer=bytes(r,ptm,ptm_size);tk_pointer=bytes(r,tk,tk_size);
+ if(!ptm_pointer||!tk_pointer)goto done;
+ args[0]=(uint64_t)handle->session;args[1]=ptm_pointer;args[2]=ptm_size;args[3]=tk_pointer;args[4]=tk_size;
+ if(!invoke(r,ENTRY_uv5t6nhkui,args,5))goto done;
+ status=-3;result->status=(int32_t)r->state.cpu.gpr[0];if(result->status)goto done;
+ args[0]=(uint64_t)handle->session;if(!invoke(r,ENTRY_fy34trz2st,args,1))goto done;
+ if((int32_t)r->state.cpu.gpr[0]){result->status=(int32_t)r->state.cpu.gpr[0];goto done;}
+ if(!r->captured_size||r->captured_size>provision_cap)goto done;
+ memcpy(provision_out,r->captured,r->captured_size);result->provision_size=r->captured_size;status=0;
+ done:result->pc=r->state.cpu.pc;result->fault_address=r->state.cpu.fault_address;result->fault_size=r->state.cpu.fault_size;result->steps=r->steps;
+ handle->alive=0;runtime_dispose(r);free(handle);
+ return status;
+}
+
+void wrapper_adi_provision_abort(wrapper_adi_handle *handle){
+ struct runtime *r;uint64_t args[6];
+ if(!handle)return;
+ r=&handle->runtime;
+ if(handle->alive){args[0]=(uint64_t)handle->session;(void)invoke(r,ENTRY_fy34trz2st,args,1);handle->alive=0;}
+ runtime_dispose(r);free(handle);
+}
