@@ -30,25 +30,22 @@ def _plist(values):
 
 def _bag():
     return {
-        "Status": {"ec": 0},
         "urls": {"midStartProvisioning": START_URL,
                  "midFinishProvisioning": FINISH_URL},
     }
 
 
 def _start(spim=b"\x01spim"):
-    return {"Status": {"ec": 0},
-            "Response": {"spim": base64.b64encode(spim).decode("ascii")}}
+    return {"Response": {"Status": {"ec": 0},
+                         "spim": base64.b64encode(spim).decode("ascii")}}
 
 
 def _finish(ptm=b"\x02ptm", tk=b"\x03tk", code=0):
-    document = {"Status": {"ec": code}}
+    response = {"Status": {"ec": code}}
     if code == 0:
-        document["Response"] = {
-            "ptm": base64.b64encode(ptm).decode("ascii"),
-            "tk": base64.b64encode(tk).decode("ascii"),
-        }
-    return document
+        response["ptm"] = base64.b64encode(ptm).decode("ascii")
+        response["tk"] = base64.b64encode(tk).decode("ascii")
+    return {"Response": response}
 
 
 def _device():
@@ -146,20 +143,21 @@ class StatusTests(unittest.TestCase):
         for code in (0, "0"):
             with self.subTest(code=code):
                 self.assertEqual(
-                    check_status({"Status": {"ec": code}, "Response": {"x": 1}}),
-                    {"x": 1})
+                    check_status({"Response": {"Status": {"ec": code}, "x": 1}}),
+                    {"Status": {"ec": code}, "x": 1})
         self.assertEqual(check_status({"urls": {}}, require_response=False), {})
 
     def test_nonzero_status_raises_with_code_and_message(self):
         with self.assertRaises(ProvisioningError) as raised:
-            check_status({"Status": {"ec": 434, "em": "message"}})
+            check_status({"Response": {"Status": {"ec": 434, "em": "message"}}})
         self.assertEqual((raised.exception.code, raised.exception.message),
                          (434, "message"))
         self.assertNotIn("message", str(raised.exception))
 
     def test_rejects_malformed_documents(self):
-        for document in ({}, {"Status": {"ec": "x"}}, {"Status": {"ec": True}},
-                         {"Status": {"ec": 0}}, []):
+        for document in ({}, {"Response": {"Status": {"ec": "x"}}},
+                         {"Response": {"Status": {"ec": True}}},
+                         {"Response": {}}, []):
             with self.subTest(document=document):
                 with self.assertRaises(ValueError):
                     check_status(document)
@@ -217,22 +215,21 @@ class ProvisioningTests(unittest.TestCase):
             AdiProvisioning(backend, Transport(finish=finish), _device()).provision()
         self.assertEqual(backend.calls[-1], ("destroy", 7))
 
-    def test_lookup_accepts_a_bag_without_status(self):
+    def test_lookup_accepts_a_bag_without_response(self):
         transport = Transport(bag=_bag())
-        del transport.bag["Status"]
         self.assertEqual(AdiProvisioning(Backend(), transport, _device()).lookup(),
                          {"start": START_URL, "finish": FINISH_URL})
 
     def test_lookup_failure_never_touches_backend(self):
         backend = Backend()
-        transport = Transport(bag={"Status": {"ec": 433}})
+        transport = Transport(bag={"Response": {"Status": {"ec": 433}}})
         with self.assertRaises(ProvisioningError):
             AdiProvisioning(backend, transport, _device()).provision()
         self.assertEqual(backend.calls, [])
         self.assertEqual(len(transport.calls), 1)
 
     def test_bag_without_provisioning_urls_is_rejected(self):
-        transport = Transport(bag={"Status": {"ec": 0}, "urls": {}})
+        transport = Transport(bag={"urls": {}})
         with self.assertRaises(ValueError):
             AdiProvisioning(Backend(), transport, _device()).lookup()
 
@@ -240,7 +237,6 @@ class ProvisioningTests(unittest.TestCase):
         for bad in ("not-a-url", "https://user:pw@gsa.apple.com/x", "/relative"):
             with self.subTest(url=bad):
                 transport = Transport(bag={
-                    "Status": {"ec": 0},
                     "urls": {"midStartProvisioning": bad,
                              "midFinishProvisioning": FINISH_URL},
                 })
@@ -269,7 +265,7 @@ class ProvisioningTests(unittest.TestCase):
     def test_start_failure_does_not_attempt_teardown(self):
         backend = Backend()
         with self.assertRaises(ProvisioningError):
-            AdiProvisioning(backend, Transport(start={"Status": {"ec": 433}}),
+            AdiProvisioning(backend, Transport(start={"Response": {"Status": {"ec": 433}}}),
                             _device()).provision()
         self.assertEqual(backend.calls, [])
 
@@ -278,8 +274,8 @@ class ProvisioningTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             AdiProvisioning(
                 backend,
-                Transport(start={"Status": {"ec": 0},
-                                 "Response": {"spim": "not base64!"}}),
+                Transport(start={"Response": {"Status": {"ec": 0},
+                                              "spim": "not base64!"}}),
                 _device(),
             ).provision()
         self.assertEqual(backend.calls, [])

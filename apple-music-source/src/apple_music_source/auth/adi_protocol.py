@@ -66,14 +66,19 @@ def _plist_response(body):
 def check_status(document, *, require_response=True):
     """Return `Response` from a GSA plist, raising on a nonzero `Status.ec`.
 
+    GSA provisioning wraps everything in a top-level `Response` dictionary
+    that itself contains `Status` (with `ec`/`em`) alongside the payload.
     A URL-bag lookup has `urls` at the top level and no `Response`; pass
     `require_response=False` for that document.
     """
     if not isinstance(document, Mapping):
         raise ValueError('provisioning document must be a dictionary')
-    status = document.get('Status')
-    if status is None and not require_response:
+    response = document.get('Response')
+    if response is None and not require_response:
         return {}
+    if not isinstance(response, Mapping):
+        raise ValueError('provisioning response is missing Response')
+    status = response.get('Status')
     if not isinstance(status, Mapping):
         raise ValueError('provisioning response is missing Status')
     code = status.get('ec')
@@ -86,11 +91,6 @@ def check_status(document, *, require_response=True):
         if not isinstance(message, str):
             message = ''
         raise ProvisioningError(code, message)
-    response = document.get('Response')
-    if not require_response:
-        return response if isinstance(response, Mapping) else {}
-    if not isinstance(response, Mapping):
-        raise ValueError('provisioning response is missing Response')
     return response
 
 
