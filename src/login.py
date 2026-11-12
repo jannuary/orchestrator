@@ -39,6 +39,25 @@ class LoginError(RuntimeError):
     pass
 
 
+def describe_rejection(outcome: SourceLoginOutcome) -> str:
+    classification = outcome.login.classification
+    description = "Apple rejected the credentials"
+    customer_message = classification.customer_message.strip()
+    if customer_message:
+        description += f": {customer_message}"
+    codes = [
+        f"{name} {value}"
+        for name, value in (
+            ("failureType", classification.failure_type),
+            ("errorCode", classification.error_code),
+        )
+        if value is not None
+    ]
+    if codes:
+        description += f" ({', '.join(codes)})"
+    return description
+
+
 @dataclass(frozen=True)
 class LoginResult:
     session_saved: bool
@@ -149,7 +168,7 @@ class LoginManager:
             self._park(client)
             return LoginResult(False, True, "")
         client.close()
-        raise LoginError("Apple rejected the credentials")
+        raise LoginError(describe_rejection(outcome))
 
     def _staging_directory(self) -> Path:
         parent = self._session_directory.parent
