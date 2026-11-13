@@ -1,0 +1,4 @@
+build/
+.dub/
+*.o
+dub.selections.json

@@ -1,0 +1,18 @@
+name "provision"
+description "Dadoum/Provision — vendored for apple-music-source."
+authors "Dadoum"
+copyright "Copyright © 2023, Dadoum"
+license "LGPL-2.1-or-later"
+
+targetType "library"
+
+sourcePaths "provision" "std_edit"
+importPaths "."
+
+dependency "requests" version="~>2"
+dependency "slf4d" version="~>2"
+
+configuration "libplist" {
+    versions "LibPlist"
+    dependency "plist-d" repository="git+https://github.com/Dadoum/libplist-d.git" version="6fdaa60d62bbf7c55044069e8f03cbe74401c444"
+}

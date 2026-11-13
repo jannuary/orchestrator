@@ -87,6 +87,7 @@ from .omnisette_source import (
     OmnisetteCoreADI,
     OmnisetteUnavailable,
 )
+from .provision_source import ProvisionCoreADI, ProvisionError
 from .mescal_source import SourceMescal, SourceMescalError
 from .source_login import SourceLoginClient, SourceLoginOutcome
 from .fast_login import FastLoginProfile, SourceFastLoginClient
@@ -157,6 +158,8 @@ __all__ = [
     "OMNISETTE_URL_ENV",
     "OmnisetteCoreADI",
     "OmnisetteUnavailable",
+    "ProvisionCoreADI",
+    "ProvisionError",
     "SourceCoreADI",
     "SourceFastLoginClient",
     "SourceLoginClient",

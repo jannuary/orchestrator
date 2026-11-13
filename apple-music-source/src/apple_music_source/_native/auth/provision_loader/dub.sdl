@@ -1,0 +1,15 @@
+name "ams_provision"
+description "C-ABI shim around Dadoum/Provision for apple-music-source."
+license "LGPL-2.1-or-later"
+
+targetType "dynamicLibrary"
+targetName "ams_provision"
+targetPath "build"
+
+sourcePaths "source"
+importPaths "source"
+
+dependency "provision" path="./vendor"
+subConfiguration "provision" "libplist"
+
+dflags "-fvisibility=hidden" platform="ldc"
