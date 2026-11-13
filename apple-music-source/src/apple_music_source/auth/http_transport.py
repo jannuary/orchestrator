@@ -9,15 +9,29 @@ import gzip
 import http.client
 import http.cookiejar
 import io
+import os
 import ssl
 import time
 import urllib.request
+from pathlib import Path
 from urllib.parse import urlsplit
 
 from .login_client import HttpResult
 from .protocol_actions import ActionEffects, parse_protocol_actions
 
 MAX_BODY = 4 * 1024 * 1024
+APPLE_ROOT_CA_FILE = Path(__file__).resolve().parent / 'AppleIncRootCertificate.pem'
+APPLE_ROOT_CA_ENV = 'APPLE_MUSIC_SOURCE_CA_BUNDLE'
+
+
+def _default_apple_ssl_context():
+    context = ssl.create_default_context()
+    extra = os.environ.get(APPLE_ROOT_CA_ENV)
+    if extra:
+        context.load_verify_locations(cafile=extra)
+    if APPLE_ROOT_CA_FILE.is_file():
+        context.load_verify_locations(cafile=str(APPLE_ROOT_CA_FILE))
+    return context
 
 
 def apple_https_url(url):
@@ -43,7 +57,7 @@ class _CookieResponse:
 class HttpsTransport:
     def __init__(self, *, cookie_jar=None, ssl_context=None, max_body=MAX_BODY):
         self.cookies = cookie_jar if cookie_jar is not None else http.cookiejar.CookieJar()
-        self.context = ssl_context if ssl_context is not None else ssl.create_default_context()
+        self.context = ssl_context if ssl_context is not None else _default_apple_ssl_context()
         if self.context.verify_mode != ssl.CERT_REQUIRED or not self.context.check_hostname:
             raise ValueError('authentication requires certificate and hostname verification')
         if not isinstance(max_body, int) or isinstance(max_body, bool) or not 0 < max_body <= MAX_BODY:
