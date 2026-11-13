@@ -546,7 +546,8 @@ def make_server(session_directory, certificate_file=DEFAULT_CERTIFICATE,
                 host: str = "127.0.0.1", port: int = 8123,
                 verbose: bool = False, device_state=None,
                 storefront: str = DEFAULT_STOREFRONT,
-                bag_file=None) -> ThreadingHTTPServer:
+                bag_file=None,
+                anisette_url=None) -> ThreadingHTTPServer:
     """Build a configured server instance for programmatic use.
 
     Start it with ``httpd.serve_forever()`` (optionally in a thread) and stop
@@ -565,6 +566,7 @@ def make_server(session_directory, certificate_file=DEFAULT_CERTIFICATE,
         storefront=storefront,
         bag_file=Path(bag_file) if bag_file else None,
         on_session_saved=store.adopt,
+        anisette_url=anisette_url,
     )
     httpd = ThreadingHTTPServer((host, port), make_handler(store, login_manager))
     httpd.login_manager = login_manager
@@ -575,10 +577,11 @@ def serve(session_directory, certificate_file=DEFAULT_CERTIFICATE,
           host: str = "127.0.0.1", port: int = 8123,
           verbose: bool = False, device_state=None,
           storefront: str = DEFAULT_STOREFRONT,
-          bag_file=None) -> None:
+          bag_file=None, anisette_url=None) -> None:
     """Run the orchestrator server in the foreground (Ctrl-C to stop)."""
     httpd = make_server(session_directory, certificate_file, host, port,
-                        verbose, device_state, storefront, bag_file)
+                        verbose, device_state, storefront, bag_file,
+                        anisette_url=anisette_url)
     print(f"listening on http://{host}:{port}", file=sys.stderr, flush=True)
     try:
         httpd.serve_forever()
@@ -607,6 +610,11 @@ def main(argv=None) -> int:
                     help="FairPlay certificate used for SPC generation")
     ap.add_argument("--verbose", action="store_true",
                     help="log per-chunk streaming progress")
+    ap.add_argument("--anisette-url",
+                    default=os.environ.get("AMS_OMNISETTE_URL"),
+                    help="anisette v1 server URL used by POST /login; the "
+                         "literal 'discover' picks a V1 server from the "
+                         "SideStore directory. Honors AMS_OMNISETTE_URL.")
     args = ap.parse_args(argv)
     if not args.session:
         ap.error("--session or APPLE_MUSIC_SOURCE_SESSION is required")
@@ -614,7 +622,7 @@ def main(argv=None) -> int:
     serve(session_directory=args.session, certificate_file=args.certificate,
           host=args.host, port=args.port, verbose=args.verbose,
           device_state=args.device_state, storefront=args.storefront,
-          bag_file=args.bag_file)
+          bag_file=args.bag_file, anisette_url=args.anisette_url)
     return 0
 
 

@@ -1,0 +1,6 @@
+{
+    global:
+        ams_provision_*;
+    local:
+        *;
+};

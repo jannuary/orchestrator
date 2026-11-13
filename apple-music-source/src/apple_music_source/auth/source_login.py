@@ -12,7 +12,7 @@ from .device_identity import derive_android_guid_fields, format_android_guid, lo
 from .http_transport import HttpsTransport
 from .login_client import LoginClient, LoginResult
 from .mescal_source import SourceMescal
-from .native_adjuster import NativeRequestAdjuster
+from .native_adjuster import MachineData, NativeRequestAdjuster
 from .sap import establish_signer
 from .token_client import TokenClient, WebTokens, verify_amp_tokens
 
@@ -50,6 +50,7 @@ class SourceLoginClient:
         mac_address: bytes | None = None,
         sap_device_id: bytes | None = None,
         user_agent: str = _USER_AGENT,
+        machine_data: MachineData | None = None,
     ):
         self.device_state = Path(device_state)
         self.destination = Path(destination)
@@ -62,12 +63,9 @@ class SourceLoginClient:
         if not isinstance(transport, HttpsTransport):
             raise TypeError('source login requires the verified HttpsTransport')
         self._transport = transport
-        self._provision = (self.device_state / 'adi.pb').read_bytes()
         self._android_id = (self.device_state / 'ANDROID_ID').read_bytes().strip()
         self._mac_address = mac_address if mac_address is not None else local_hardware_mac()
         self._sap_device_id = sap_device_id if sap_device_id is not None else sha1(self._android_id).digest()
-        if not 0 < len(self._provision) <= 1024 * 1024:
-            raise ValueError('provisioning state must contain 1..1048576 bytes')
         if not 0 < len(self._android_id) <= 4096:
             raise ValueError('Android identifier must contain 1..4096 bytes')
         if not isinstance(self._sap_device_id, bytes) or not 1 <= len(self._sap_device_id) <= 20:
@@ -82,7 +80,14 @@ class SourceLoginClient:
             raise ValueError('URL bag has an unsupported SAP version')
         self._guid_fields = derive_android_guid_fields(self._android_id, self._mac_address)
         self.guid = format_android_guid(self._android_id, self._guid_fields)
-        self.machine_data = SourceCoreADI(self._provision, self._android_id)
+        if machine_data is not None:
+            self._provision = None
+            self.machine_data = machine_data
+        else:
+            self._provision = (self.device_state / 'adi.pb').read_bytes()
+            if not 0 < len(self._provision) <= 1024 * 1024:
+                raise ValueError('provisioning state must contain 1..1048576 bytes')
+            self.machine_data = SourceCoreADI(self._provision, self._android_id)
         self._signer = SourceMescal(self._sap_device_id, mode=mode)
         self._session_saved = False
         try:

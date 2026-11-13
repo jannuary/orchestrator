@@ -13,3 +13,4 @@ dependency "provision" path="./vendor"
 subConfiguration "provision" "libplist"
 
 dflags "-fvisibility=hidden" platform="ldc"
+lflags "-Wl,--version-script=export.map" "-Wl,-rpath,$$ORIGIN" platform="ldc"

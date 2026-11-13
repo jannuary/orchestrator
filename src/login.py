@@ -23,6 +23,7 @@ ensure_importable()
 
 from apple_music_source.auth import (
     HttpsTransport,
+    OmnisetteCoreADI,
     SourceLoginClient,
     SourceLoginOutcome,
     load_bag,
@@ -92,12 +93,14 @@ class LoginManager:
         storefront: str = DEFAULT_STOREFRONT,
         bag_file: Optional[Path] = None,
         on_session_saved: Optional[Callable[[Path], str]] = None,
+        anisette_url: Optional[str] = None,
     ):
         self._session_directory = Path(session_directory)
         self._device_state = Path(device_state)
         self._storefront = storefront
         self._bag_file = None if bag_file is None else Path(bag_file)
         self._on_session_saved = on_session_saved
+        self._anisette_url = anisette_url
         self._lock = threading.Lock()
         self._parked_client: Optional[SourceLoginClient] = None
         self._parked_at = 0.0
@@ -123,12 +126,19 @@ class LoginManager:
     ) -> LoginResult:
         transport = HttpsTransport()
         bag = load_source_bag(transport, self._bag_file)
+        machine_data = None
+        if self._anisette_url is not None:
+            machine_data = (
+                OmnisetteCoreADI.discover() if self._anisette_url == 'discover'
+                else OmnisetteCoreADI(self._anisette_url)
+            )
         client = SourceLoginClient(
             device_state=self._device_state,
             destination=self._staging_directory(),
             bag=bag,
             transport=transport,
             storefront=self._storefront,
+            machine_data=machine_data,
         )
         return self._run(client, username, password, code)
 

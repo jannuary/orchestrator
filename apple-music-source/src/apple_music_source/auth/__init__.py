@@ -82,10 +82,11 @@ from .login_protocol import (
 from .native_adjuster import BodySigner, MachineData, NativeRequestAdjuster
 from .coreadi_source import SourceCoreADI
 from .omnisette_source import (
-    DEFAULT_OMNISETTE_URL,
     OMNISETTE_URL_ENV,
+    SIDESTORE_DIRECTORY_URL,
     OmnisetteCoreADI,
     OmnisetteUnavailable,
+    fetch_sidestore_servers,
 )
 from .provision_source import ProvisionCoreADI, ProvisionError
 from .mescal_source import SourceMescal, SourceMescalError
@@ -154,10 +155,11 @@ __all__ = [
     "ROUTING_INFO",
     "SessionAccount",
     "SessionCookie",
-    "DEFAULT_OMNISETTE_URL",
     "OMNISETTE_URL_ENV",
     "OmnisetteCoreADI",
     "OmnisetteUnavailable",
+    "SIDESTORE_DIRECTORY_URL",
+    "fetch_sidestore_servers",
     "ProvisionCoreADI",
     "ProvisionError",
     "SourceCoreADI",
