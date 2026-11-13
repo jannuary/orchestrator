@@ -152,13 +152,14 @@ class SourceLoginClient:
     def _finish(self, result: LoginResult, acquire_web_tokens: bool) -> SourceLoginOutcome:
         if not result.created_account:
             return SourceLoginOutcome(result, False)
+        has_provision = self._provision is not None
         result.commit(
             self.destination,
             cookies=self._transport.cookies,
             guid=self.guid,
             device_seed=self._android_id,
-            provision=self._provision,
-            android_id=self._android_id,
+            provision=self._provision if has_provision else None,
+            android_id=self._android_id if has_provision else None,
         )
         self._session_saved = True
         if not acquire_web_tokens:

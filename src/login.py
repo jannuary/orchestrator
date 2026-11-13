@@ -9,10 +9,13 @@ created for the first attempt is the one that is completed.
 
 from __future__ import annotations
 
+import os
 import plistlib
+import secrets
 import shutil
 import threading
 import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
@@ -22,8 +25,12 @@ from .source_package import ensure_importable
 ensure_importable()
 
 from apple_music_source.auth import (
+    AdiProvisioning,
+    CLIENT_INFO,
+    DeviceIdentity,
     HttpsTransport,
     OmnisetteCoreADI,
+    ProvisionCoreADI,
     SourceLoginClient,
     SourceLoginOutcome,
     load_bag,
@@ -126,12 +133,14 @@ class LoginManager:
     ) -> LoginResult:
         transport = HttpsTransport()
         bag = load_source_bag(transport, self._bag_file)
-        machine_data = None
+        machine_data: Optional[object] = None
         if self._anisette_url is not None:
             machine_data = (
                 OmnisetteCoreADI.discover() if self._anisette_url == 'discover'
                 else OmnisetteCoreADI(self._anisette_url)
             )
+        else:
+            machine_data = self._ensure_local_provisioning(transport)
         client = SourceLoginClient(
             device_state=self._device_state,
             destination=self._staging_directory(),
@@ -141,6 +150,54 @@ class LoginManager:
             machine_data=machine_data,
         )
         return self._run(client, username, password, code)
+
+    def _ensure_local_provisioning(self, transport: HttpsTransport):
+        """Return a ProvisionCoreADI if a fresh provisioning was needed.
+
+        A missing or empty adi.pb in device_state triggers the full
+        SPIM->CPIM->PTM/TK exchange against Apple using the in-tree
+        Dadoum/Provision loader; the resulting state is written back to
+        device_state so later logins reuse it. When adi.pb is already
+        present this returns None and SourceLoginClient uses it directly.
+        """
+        self._device_state.mkdir(parents=True, exist_ok=True)
+        adi_pb = self._device_state / 'adi.pb'
+        android_id_path = self._device_state / 'ANDROID_ID'
+        local_uuid_path = self._device_state / 'LOCAL_USER_UUID'
+        device_uuid_path = self._device_state / 'DEVICE_IDENTIFIER'
+        if adi_pb.is_file() and adi_pb.stat().st_size > 0:
+            return None
+        if android_id_path.is_file():
+            identifier = android_id_path.read_bytes().strip().decode('ascii')
+        else:
+            identifier = secrets.token_hex(8).upper()
+            android_id_path.write_bytes(identifier.encode('ascii'))
+            os.chmod(android_id_path, 0o600)
+        if local_uuid_path.is_file():
+            local_uuid = local_uuid_path.read_text().strip()
+        else:
+            local_uuid = secrets.token_hex(32).upper()
+            local_uuid_path.write_text(local_uuid)
+            os.chmod(local_uuid_path, 0o600)
+        if device_uuid_path.is_file():
+            device_identifier = device_uuid_path.read_text().strip()
+        else:
+            device_identifier = str(uuid.uuid4()).upper()
+            device_uuid_path.write_text(device_identifier)
+            os.chmod(device_uuid_path, 0o600)
+        backend = ProvisionCoreADI(
+            provisioning_path=self._device_state,
+            identifier=identifier,
+        )
+        device = DeviceIdentity(
+            device_identifier=device_identifier,
+            local_user_uuid=local_uuid,
+            client_info=CLIENT_INFO,
+        )
+        AdiProvisioning(
+            backend=backend, transport=transport, device=device,
+        ).provision()
+        return backend
 
     def _continue_login(
         self, username: str, password: str, code: str
