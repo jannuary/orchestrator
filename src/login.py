@@ -111,6 +111,7 @@ class LoginManager:
         self._lock = threading.Lock()
         self._parked_client: Optional[SourceLoginClient] = None
         self._parked_at = 0.0
+        self._local_backend: Optional[ProvisionCoreADI] = None
 
     def authenticate(
         self, username: str, password: str, code: Optional[str] = None
@@ -127,6 +128,9 @@ class LoginManager:
     def close(self) -> None:
         with self._lock:
             self._close_parked()
+            if self._local_backend is not None:
+                self._local_backend.close()
+                self._local_backend = None
 
     def _begin_login(
         self, username: str, password: str, code: Optional[str]
@@ -152,21 +156,24 @@ class LoginManager:
         return self._run(client, username, password, code)
 
     def _ensure_local_provisioning(self, transport: HttpsTransport):
-        """Return a ProvisionCoreADI if a fresh provisioning was needed.
+        """Return a long-lived ProvisionCoreADI bound to this device-state dir.
 
-        A missing or empty adi.pb in device_state triggers the full
-        SPIM->CPIM->PTM/TK exchange against Apple using the in-tree
-        Dadoum/Provision loader; the resulting state is written back to
-        device_state so later logins reuse it. When adi.pb is already
-        present this returns None and SourceLoginClient uses it directly.
+        The backend is created once per LoginManager and reused for every
+        login, matching the way anisette-v3-server pins a single ADI instance
+        per process; libstoreservicescore keeps in-process state a fresh
+        instance cannot pick back up from adi.pb alone.
+
+        Missing device identifiers are generated once and persisted alongside
+        adi.pb. The full SPIM->CPIM->PTM/TK exchange against Apple runs only
+        when adi.pb does not yet exist; later logins reuse the stored state.
         """
+        if self._local_backend is not None:
+            return self._local_backend
         self._device_state.mkdir(parents=True, exist_ok=True)
         adi_pb = self._device_state / 'adi.pb'
         android_id_path = self._device_state / 'ANDROID_ID'
         local_uuid_path = self._device_state / 'LOCAL_USER_UUID'
         device_uuid_path = self._device_state / 'DEVICE_IDENTIFIER'
-        if adi_pb.is_file() and adi_pb.stat().st_size > 0:
-            return None
         if android_id_path.is_file():
             identifier = android_id_path.read_bytes().strip().decode('ascii')
         else:
@@ -189,14 +196,16 @@ class LoginManager:
             provisioning_path=self._device_state,
             identifier=identifier,
         )
-        device = DeviceIdentity(
-            device_identifier=device_identifier,
-            local_user_uuid=local_uuid,
-            client_info=CLIENT_INFO,
-        )
-        AdiProvisioning(
-            backend=backend, transport=transport, device=device,
-        ).provision()
+        if not adi_pb.is_file() or adi_pb.stat().st_size == 0:
+            device = DeviceIdentity(
+                device_identifier=device_identifier,
+                local_user_uuid=local_uuid,
+                client_info=CLIENT_INFO,
+            )
+            AdiProvisioning(
+                backend=backend, transport=transport, device=device,
+            ).provision()
+        self._local_backend = backend
         return backend
 
     def _continue_login(
