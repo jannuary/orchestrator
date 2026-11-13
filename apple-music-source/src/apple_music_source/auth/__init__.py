@@ -81,6 +81,12 @@ from .login_protocol import (
 )
 from .native_adjuster import BodySigner, MachineData, NativeRequestAdjuster
 from .coreadi_source import SourceCoreADI
+from .omnisette_source import (
+    DEFAULT_OMNISETTE_URL,
+    OMNISETTE_URL_ENV,
+    OmnisetteCoreADI,
+    OmnisetteUnavailable,
+)
 from .mescal_source import SourceMescal, SourceMescalError
 from .source_login import SourceLoginClient, SourceLoginOutcome
 from .fast_login import FastLoginProfile, SourceFastLoginClient
@@ -147,6 +153,10 @@ __all__ = [
     "ROUTING_INFO",
     "SessionAccount",
     "SessionCookie",
+    "DEFAULT_OMNISETTE_URL",
+    "OMNISETTE_URL_ENV",
+    "OmnisetteCoreADI",
+    "OmnisetteUnavailable",
     "SourceCoreADI",
     "SourceFastLoginClient",
     "SourceLoginClient",
