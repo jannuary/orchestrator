@@ -177,6 +177,12 @@ def parse_login_actions(fields, headers=()):
                     unknown.append('action.Goto')
             elif kind in ('reset', 'setuserandreset'):
                 reset = True
+            elif kind == 'setuse':
+                # SetUse asks the client to adopt the just-authenticated account
+                # as the current iTunes user. We have no previous session to
+                # switch away from, so committing the response is the only
+                # side effect required.
+                pass
             else:
                 unknown.append('action.kind')
     dialog = fields.get('dialog')
