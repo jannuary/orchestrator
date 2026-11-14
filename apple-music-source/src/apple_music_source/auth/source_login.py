@@ -20,6 +20,25 @@ from .sap import establish_signer
 from .token_client import TokenClient, WebTokens, verify_amp_tokens
 
 _MAX_AMD_PROVISIONING_RETRIES = 2
+_MAX_AUTHENTICATE_LOOP_ITERATIONS = 4
+
+
+def _is_set_use_response(result: LoginResult) -> bool:
+    """Detect the SetUse acknowledgment-required response.
+
+    Apple returns ``action.kind = SetUse`` with accountInfo for an existing
+    Apple ID that has sessions elsewhere. The follow-up is to re-POST
+    authenticate; the session cookies the response carries (mz_at_*, X-Dsid,
+    ...) ride in the cookie jar and tell Apple to skip the SetUse prompt.
+    """
+    fields = result.parsed.fields
+    if not isinstance(fields, Mapping):
+        return False
+    action = fields.get('action')
+    if not isinstance(action, Mapping):
+        return False
+    kind = action.get('kind')
+    return isinstance(kind, str) and kind.lower() == 'setuse'
 
 _USER_AGENT = 'Music/5.0.2 Android/10 model/Pixel 8 build/7663314 (dt:66)'
 _DEFAULT_STOREFRONT = '143480-2,31'
@@ -121,7 +140,7 @@ class SourceLoginClient:
         attempt: int = 0,
     ) -> SourceLoginOutcome:
         self._require_unsaved_session()
-        for _ in range(_MAX_AMD_PROVISIONING_RETRIES + 1):
+        for _ in range(_MAX_AUTHENTICATE_LOOP_ITERATIONS):
             result = self._client.authenticate_with_verification_code(
                 username=username,
                 password=password,
@@ -134,8 +153,11 @@ class SourceLoginClient:
                 guid=self.guid,
                 attempt=attempt,
             )
-            if not self._handle_amd_action(result):
-                break
+            if self._handle_amd_action(result):
+                continue
+            if _is_set_use_response(result):
+                continue
+            break
         return self._finish(result, acquire_web_tokens)
 
     def _handle_amd_action(self, result: LoginResult) -> bool:
@@ -166,7 +188,7 @@ class SourceLoginClient:
         attempt: int = 1,
     ) -> SourceLoginOutcome:
         self._require_unsaved_session()
-        for _ in range(_MAX_AMD_PROVISIONING_RETRIES + 1):
+        for _ in range(_MAX_AUTHENTICATE_LOOP_ITERATIONS):
             result = self._client.authenticate_with_verification_code(
                 username=username,
                 password=password,
@@ -174,8 +196,11 @@ class SourceLoginClient:
                 guid=self.guid,
                 attempt=attempt,
             )
-            if not self._handle_amd_action(result):
-                break
+            if self._handle_amd_action(result):
+                continue
+            if _is_set_use_response(result):
+                continue
+            break
         return self._finish(result, acquire_web_tokens)
 
     def _finish(self, result: LoginResult, acquire_web_tokens: bool) -> SourceLoginOutcome:
