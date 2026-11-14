@@ -28,9 +28,11 @@ class CreatedAccount:
 
     @property
     def credentials_ready(self):
-        # The SDK publishes a nonzero-DSID/nonempty-name candidate even without
-        # a token; persistence additionally needs usable credentials.
-        return (0 < self.dsid < (1 << 63) and bool(self.account_id) and bool(self.token)
+        # Apple's modern native-auth path carries the session in Set-Cookie
+        # (amp, mz_at0-<dsid>, X-Dsid, ...) and omits xToken/passwordToken
+        # entirely; the token slot stays empty for those sessions. A nonzero
+        # DSID and non-empty Apple-ID account name are the stable signal.
+        return (0 < self.dsid < (1 << 63) and bool(self.account_id)
                 and not any(c in self.account_id + self.token for c in '\r\n\0'))
 
 
@@ -51,9 +53,13 @@ class LoginActions:
 
     @property
     def can_persist_account(self):
+        # ``reset_requested`` reflects the SDK's action.kind == Reset /
+        # SetUserAndReset directive, which only instructs the client to
+        # discard previously-cached state before adopting the new user.
+        # For a fresh login it is a no-op; it does not reject the account.
         return (self.account is not None and self.account.credentials_ready
                 and self.classification.response_type == 6
-                and not self.authenticate_requested and not self.reset_requested
+                and not self.authenticate_requested
                 and self.redirect_url is None and not self.unhandled_actions)
 
 
@@ -131,6 +137,14 @@ def _account(fields, headers):
     dsid = _integer(info, 'dsPersonId') or _integer(fields, 'dsPersonId')
     if not dsid and nested is not None:
         dsid = _integer(nested, 'dsPersonId')
+    if not dsid:
+        download_queue = fields.get('download-queue-info')
+        if isinstance(download_queue, Mapping):
+            dsid = _integer(download_queue, 'dsid') or _integer(download_queue, 'dsPersonId')
+    if not dsid:
+        account_dict = fields.get('account')
+        if isinstance(account_dict, Mapping):
+            dsid = _integer(account_dict, 'dsid') or _integer(account_dict, 'dsPersonId')
     token = _first_string(fields, 'xToken', 'passwordToken')
     credit = _first_string(info, 'creditDisplay')
     if nested is not None:
