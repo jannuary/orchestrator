@@ -37,7 +37,7 @@ class NativeRequestAdjuster:
                 raise ValueError('invalid native header value')
         self.machine_data = machine_data
         self.signer = signer
-        self.base = {'User-Agent': user_agent, 'Accept-Language': language}
+        self.base = {'User-Agent': user_agent, 'Accept-Language': language, 'Expect': ''}
         if storefront:
             self.base['X-Apple-Store-Front'] = storefront
 

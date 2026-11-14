@@ -26,7 +26,6 @@ ensure_importable()
 
 from apple_music_source.auth import (
     AdiProvisioning,
-    CLIENT_INFO,
     DeviceIdentity,
     HttpsTransport,
     OmnisetteCoreADI,
@@ -36,9 +35,10 @@ from apple_music_source.auth import (
     load_bag,
 )
 
-BAG_URL = "https://init.itunes.apple.com/bag.xml?ix=6"
+BAG_URL = "https://init.itunes.apple.com/bag.xml?ix=6&locale=en-US"
 SOURCE_USER_AGENT = "Music/5.0.2 Android/10 model/Pixel 8 build/7663314 (dt:66)"
-DEFAULT_STOREFRONT = "143480-2,31"
+SOURCE_CLIENT_INFO = "<Pixel 8> <Android;10;7663314> <com.apple.Music/5.0.2>"
+DEFAULT_STOREFRONT = "143441-1,32 t:music31"
 REQUEST_TIMEOUT_SECONDS = 45.0
 PARK_TIMEOUT_SECONDS = 300.0
 
@@ -58,11 +58,22 @@ def describe_rejection(outcome: SourceLoginOutcome) -> str:
         for name, value in (
             ("failureType", classification.failure_type),
             ("errorCode", classification.error_code),
+            ("responseType", classification.response_type),
+            ("statusType", classification.status_type),
         )
         if value is not None
     ]
     if codes:
         description += f" ({', '.join(codes)})"
+    try:
+        parsed = getattr(outcome.login, 'parsed', None)
+        fields = getattr(parsed, 'fields', None) if parsed is not None else None
+        if isinstance(fields, dict):
+            summary = ', '.join(f"{k}={fields[k]!r}" for k in sorted(fields)
+                                if k not in ('password', 'appleId', 'spd', 'adsid', 'ServiceIdentifier'))
+            description += f" [response: {summary[:600]}]"
+    except Exception:
+        pass
     return description
 
 
@@ -177,7 +188,7 @@ class LoginManager:
         if android_id_path.is_file():
             identifier = android_id_path.read_bytes().strip().decode('ascii')
         else:
-            identifier = secrets.token_hex(8).upper()
+            identifier = secrets.token_hex(8)
             android_id_path.write_bytes(identifier.encode('ascii'))
             os.chmod(android_id_path, 0o600)
         if local_uuid_path.is_file():
@@ -200,10 +211,11 @@ class LoginManager:
             device = DeviceIdentity(
                 device_identifier=device_identifier,
                 local_user_uuid=local_uuid,
-                client_info=CLIENT_INFO,
+                client_info=SOURCE_CLIENT_INFO,
             )
             AdiProvisioning(
                 backend=backend, transport=transport, device=device,
+                user_agent=SOURCE_USER_AGENT,
             ).provision()
         self._local_backend = backend
         return backend

@@ -307,17 +307,21 @@ class AdiProvisioning:
 
     def __init__(self, backend: CoreADI, transport: Transport,
                  device: DeviceIdentity, *, ds_id: int = DS_ID_PRODUCTION,
-                 timeout: float = 45.0, clock=time.time):
+                 timeout: float = 45.0, clock=time.time,
+                 user_agent: str = AKD_USER_AGENT):
         if isinstance(ds_id, bool) or not isinstance(ds_id, int):
             raise ValueError('ds_id must be an integer')
         if timeout <= 0:
             raise ValueError('timeout must be positive')
+        if not isinstance(user_agent, str) or not user_agent or any(c in user_agent for c in '\r\n\x00'):
+            raise ValueError('provisioning user agent must be a non-empty string')
         self._backend = backend
         self._transport = transport
         self._device = device
         self._ds_id = ds_id
         self._timeout = float(timeout)
         self._clock = clock
+        self._user_agent = user_agent
         self._urls = None
         self._routing_info = None
 
@@ -325,7 +329,7 @@ class AdiProvisioning:
 
     def _headers(self, *, with_time=False):
         headers = {
-            'User-Agent': AKD_USER_AGENT,
+            'User-Agent': self._user_agent,
             'Content-Type': CONTENT_TYPE,
             'X-Mme-Client-Info': self._device.client_info,
             'X-Mme-Device-Id': self._device.device_identifier,
