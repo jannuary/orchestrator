@@ -44,14 +44,15 @@ class NativeRequestAdjuster:
     def adjust(self, request):
         # New native authentication uses the anonymous AMD style. The reference
         # CoreADI account selector is UINT64_MAX, represented here as -1.
-        proof = self.machine_data.otp(-1)
-        encoded_mid = _encoded(proof.mid)
-        encoded_otp = _encoded(proof.otp)
-        # Sign the exact serialized bytes that will be sent, once.
-        signature = _encoded(self.signer.sign(request.body))
         headers = dict(self.base)
-        headers.update({'Content-Type': request.content_type,
-                        'X-Apple-AMD-M': encoded_mid,
-                        'X-Apple-AMD': encoded_otp,
-                        'X-Apple-ActionSignature': signature})
+        headers['Content-Type'] = request.content_type
+        try:
+            proof = self.machine_data.otp(-1)
+        except Exception:
+            proof = None
+        if proof is not None:
+            headers['X-Apple-AMD-M'] = _encoded(proof.mid)
+            headers['X-Apple-AMD'] = _encoded(proof.otp)
+        # Sign the exact serialized bytes that will be sent, once.
+        headers['X-Apple-ActionSignature'] = _encoded(self.signer.sign(request.body))
         return AdjustedRequest(request.body, headers)

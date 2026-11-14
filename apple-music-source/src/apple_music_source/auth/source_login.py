@@ -7,6 +7,9 @@ from hashlib import sha1
 from pathlib import Path
 from typing import Mapping
 
+from .amd_provisioning import (
+    extract_amd_spim, perform_amd_finish_provisioning,
+)
 from .coreadi_source import SourceCoreADI
 from .device_identity import derive_android_guid_fields, format_android_guid, local_hardware_mac
 from .http_transport import HttpsTransport
@@ -15,6 +18,8 @@ from .mescal_source import SourceMescal
 from .native_adjuster import MachineData, NativeRequestAdjuster
 from .sap import establish_signer
 from .token_client import TokenClient, WebTokens, verify_amp_tokens
+
+_MAX_AMD_PROVISIONING_RETRIES = 2
 
 _USER_AGENT = 'Music/5.0.2 Android/10 model/Pixel 8 build/7663314 (dt:66)'
 _DEFAULT_STOREFRONT = '143480-2,31'
@@ -116,19 +121,40 @@ class SourceLoginClient:
         attempt: int = 0,
     ) -> SourceLoginOutcome:
         self._require_unsaved_session()
-        result = self._client.authenticate_with_verification_code(
-            username=username,
-            password=password,
-            code=verification_code,
-            guid=self.guid,
-            attempt=attempt,
-        ) if verification_code is not None else self._client.authenticate(
-            username=username,
-            password=password,
-            guid=self.guid,
-            attempt=attempt,
-        )
+        for _ in range(_MAX_AMD_PROVISIONING_RETRIES + 1):
+            result = self._client.authenticate_with_verification_code(
+                username=username,
+                password=password,
+                code=verification_code,
+                guid=self.guid,
+                attempt=attempt,
+            ) if verification_code is not None else self._client.authenticate(
+                username=username,
+                password=password,
+                guid=self.guid,
+                attempt=attempt,
+            )
+            if not self._handle_amd_action(result):
+                break
         return self._finish(result, acquire_web_tokens)
+
+    def _handle_amd_action(self, result: LoginResult) -> bool:
+        """Drive /otp/1.5/finish when Apple asks for AMD provisioning."""
+        spim = extract_amd_spim(result.response.headers)
+        if spim is None:
+            return False
+        if not hasattr(self.machine_data, 'start_provisioning'):
+            return False
+        perform_amd_finish_provisioning(
+            backend=self.machine_data,
+            transport=self._transport,
+            bag=self._bag,
+            guid=self.guid,
+            user_agent=self._user_agent,
+            storefront=self._storefront,
+            spim=spim,
+        )
+        return True
 
     def submit_verification_code(
         self,
@@ -140,13 +166,16 @@ class SourceLoginClient:
         attempt: int = 1,
     ) -> SourceLoginOutcome:
         self._require_unsaved_session()
-        result = self._client.authenticate_with_verification_code(
-            username=username,
-            password=password,
-            code=code,
-            guid=self.guid,
-            attempt=attempt,
-        )
+        for _ in range(_MAX_AMD_PROVISIONING_RETRIES + 1):
+            result = self._client.authenticate_with_verification_code(
+                username=username,
+                password=password,
+                code=code,
+                guid=self.guid,
+                attempt=attempt,
+            )
+            if not self._handle_amd_action(result):
+                break
         return self._finish(result, acquire_web_tokens)
 
     def _finish(self, result: LoginResult, acquire_web_tokens: bool) -> SourceLoginOutcome:

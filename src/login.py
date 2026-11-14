@@ -15,7 +15,6 @@ import secrets
 import shutil
 import threading
 import time
-import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
@@ -25,8 +24,6 @@ from .source_package import ensure_importable
 ensure_importable()
 
 from apple_music_source.auth import (
-    AdiProvisioning,
-    DeviceIdentity,
     HttpsTransport,
     OmnisetteCoreADI,
     ProvisionCoreADI,
@@ -174,51 +171,26 @@ class LoginManager:
         per process; libstoreservicescore keeps in-process state a fresh
         instance cannot pick back up from adi.pb alone.
 
-        Missing device identifiers are generated once and persisted alongside
-        adi.pb. The full SPIM->CPIM->PTM/TK exchange against Apple runs only
-        when adi.pb does not yet exist; later logins reuse the stored state.
+        ANDROID_ID is generated once and persisted alongside adi.pb. The
+        SPIM->CPIM->PTM/TK handshake against Apple runs lazily inside
+        ``SourceLoginClient.authenticate`` the first time the server returns
+        ``x-apple-amd-action: SP``; no separate provisioning call is made here.
         """
         if self._local_backend is not None:
             return self._local_backend
         self._device_state.mkdir(parents=True, exist_ok=True)
-        adi_pb = self._device_state / 'adi.pb'
         android_id_path = self._device_state / 'ANDROID_ID'
-        local_uuid_path = self._device_state / 'LOCAL_USER_UUID'
-        device_uuid_path = self._device_state / 'DEVICE_IDENTIFIER'
         if android_id_path.is_file():
             identifier = android_id_path.read_bytes().strip().decode('ascii')
         else:
             identifier = secrets.token_hex(8)
             android_id_path.write_bytes(identifier.encode('ascii'))
             os.chmod(android_id_path, 0o600)
-        if local_uuid_path.is_file():
-            local_uuid = local_uuid_path.read_text().strip()
-        else:
-            local_uuid = secrets.token_hex(32).upper()
-            local_uuid_path.write_text(local_uuid)
-            os.chmod(local_uuid_path, 0o600)
-        if device_uuid_path.is_file():
-            device_identifier = device_uuid_path.read_text().strip()
-        else:
-            device_identifier = str(uuid.uuid4()).upper()
-            device_uuid_path.write_text(device_identifier)
-            os.chmod(device_uuid_path, 0o600)
-        backend = ProvisionCoreADI(
+        self._local_backend = ProvisionCoreADI(
             provisioning_path=self._device_state,
             identifier=identifier,
         )
-        if not adi_pb.is_file() or adi_pb.stat().st_size == 0:
-            device = DeviceIdentity(
-                device_identifier=device_identifier,
-                local_user_uuid=local_uuid,
-                client_info=SOURCE_CLIENT_INFO,
-            )
-            AdiProvisioning(
-                backend=backend, transport=transport, device=device,
-                user_agent=SOURCE_USER_AGENT,
-            ).provision()
-        self._local_backend = backend
-        return backend
+        return self._local_backend
 
     def _continue_login(
         self, username: str, password: str, code: str
