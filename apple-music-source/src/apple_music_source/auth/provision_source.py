@@ -184,16 +184,12 @@ class ProvisionCoreADI:
     def otp(self, account: int = _ANONYMOUS_ACCOUNT) -> OTP:
         if isinstance(account, bool) or not isinstance(account, int):
             raise ValueError('account must be an integer')
-        # Apple provisions anonymous machine data under the production
-        # ds_id; callers that ask for the legacy UINT64_MAX alias get the
-        # same OTP they would pick up through the production channel.
-        effective_account = _PRODUCTION_DS_ID if account == _ANONYMOUS_ACCOUNT else account
         otp_buffer = ctypes.create_string_buffer(_MAX_BUFFER)
         mid_buffer = ctypes.create_string_buffer(_MAX_BUFFER)
         result = _AmsOtpResult()
         with self._lock:
             status = self._library.ams_provision_adi_request_otp(
-                self._handle, ctypes.c_int64(effective_account),
+                self._handle, ctypes.c_int64(account),
                 otp_buffer, _MAX_BUFFER,
                 mid_buffer, _MAX_BUFFER,
                 ctypes.byref(result))
